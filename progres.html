@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dialecte – Mes progrès</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- pas d’import Firebase ici, on initialise dans le script module -->
+</head>
+<body>
+  <header class="header">
+    <a href="index.html" class="home-icon">🏠</a>
+    <h1 class="logo">Mes progrès</h1>
+  </header>
+
+  <nav class="mobile-nav">
+    <a href="index.html">Lexique</a>
+    <a href="signup.html">S’inscrire</a>
+    <a href="login.html">Se connecter</a>
+    <a href="quiz.html">Quiz</a>
+    <a href="progres.html" class="active">Mes progrès</a>
+  </nav>
+
+  <div class="layout">
+    <nav class="sidebar">
+      <ul>
+        <li><a href="index.html">Lexique</a></li>
+        <li><a href="signup.html">S’inscrire</a></li>
+        <li><a href="login.html">Se connecter</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="progres.html" class="active">Mes progrès</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <div id="welcome" class="greeting">Bienvenue !</div>
+      <!-- Ici tu pourras plus tard lister tes progrès -->
+    </main>
+  </div>
+
+  <script type="module">
+    import { initAuthListener } from "./firebase.js";
+
+    initAuthListener(user => {
+      const w = document.getElementById('welcome');
+      if (user && user.displayName) {
+        w.textContent = `Bonjour ${user.displayName}, bienvenue dans ton espace !`;
+      } else {
+        w.textContent = 'Bienvenue invité ! Connecte-toi pour voir tes progrès.';
+      }
+    });
+  </script>
+</body>
+</html>
