@@ -3,33 +3,43 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dialecte – Accueil</title>
+  <title>Dialecte – Quiz Kabyle</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- Icône maison (FontAwesome CDN) -->
-  <script src="https://kit.fontawesome.com/a2e0e6b131.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
   <header class="header">
-    <a href="index.html" class="home-icon"><i class="fas fa-home"></i></a>
-    <h1 class="logo">Dialecte</h1>
+    <a href="index.html" class="home-icon">🏠</a>
+    <h1 class="logo">Dialecte – Quiz</h1>
   </header>
 
   <div class="layout">
     <nav class="sidebar">
       <ul>
-        <li><a href="#">Lexique</a></li>
-        <li><a href="#">S’entraîner</a></li>
-        <li><a href="#">Mes progrès</a></li>
+        <li><a href="index.html">Lexique</a></li>
+        <li><a href="index.html">S’entraîner</a></li>
+        <li><a href="index.html">Mes progrès</a></li>
         <li><a href="quiz.html" class="active">Quiz</a></li>
       </ul>
     </nav>
 
     <main class="main">
-      <div class="auth-buttons">
-        <button disabled>Se connecter</button>
-        <button disabled>S’inscrire</button>
+      <div class="card">
+        <div id="front" class="face">Chargement…</div>
+        <div id="back" class="face"></div>
+      </div>
+
+      <div id="choices" class="choices"></div>
+
+      <div class="controls">
+        <button id="prev">Précédent</button>
+        <button id="reveal">Révéler</button>
+        <button id="speak">🔊 Prononcer</button>
+        <button id="next">Suivant</button>
       </div>
     </main>
   </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
