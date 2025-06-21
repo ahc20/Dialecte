@@ -56,7 +56,12 @@ h1 {
   font-weight: 600;
 }
 .hidden {
-  visibility: hidden;
+  display: none;
+}
+
+/* Quand la face arrière est visible, on lui donne un peu de marge */
+#back {
+  margin-top: 1rem;
 }
 
 /* ---------------------------------------------------
