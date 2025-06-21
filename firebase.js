@@ -4,19 +4,15 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut,
   updateProfile
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import {
   getFirestore,
   doc,
-  setDoc,
-  updateDoc,
-  arrayUnion
+  setDoc
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-// → Vérifié : storageBucket doit être .appspot.com
+// → Vérifie que ça correspond exactement à ta console Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCI5yQhUVJKKktWCG2svsxx4RaiCTHBahc",
   authDomain: "dialecte-e23ae.firebaseapp.com",
@@ -30,30 +26,22 @@ const app  = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db   = getFirestore(app);
 
-export function initAuthListener(onChange) {
-  onAuthStateChanged(auth, user => onChange(user));
-}
-
+// Inscription
 export async function signup(firstName, email, password) {
   const { user } = await createUserWithEmailAndPassword(auth, email, password);
+  // Ajoute le prénom dans le profil
   await updateProfile(user, { displayName: firstName });
+  // Crée un doc user en base
   await setDoc(doc(db, "users", user.uid), {
-    firstName, email, progress: []
+    firstName,
+    email,
+    progress: []
   });
   return user;
 }
 
+// Connexion
 export async function login(email, password) {
   const { user } = await signInWithEmailAndPassword(auth, email, password);
   return user;
-}
-
-export async function saveProgress(uid, word, correct) {
-  await updateDoc(doc(db, "users", uid), {
-    progress: arrayUnion({ word, correct, timestamp: Date.now() })
-  });
-}
-
-export function logout() {
-  return signOut(auth);
 }

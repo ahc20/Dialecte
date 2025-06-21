@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dialecte – S’inscrire</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- On charge firebase.js avant tout -->
   <script type="module" src="firebase.js"></script>
 </head>
 <body>
@@ -30,12 +31,13 @@
 
   <script type="module">
     import { signup } from "./firebase.js";
+
     document.getElementById('signup-form').addEventListener('submit', async e => {
       e.preventDefault();
       const f = e.target;
       try {
         await signup(f.firstName.value, f.email.value, f.password.value);
-        alert('Inscription réussie ! Vous êtes maintenant connecté.');
+        alert('Inscription réussie ! Vous êtes connecté.');
         window.location.href = 'quiz.html';
       } catch (err) {
         alert('Erreur inscription : ' + err.message);
