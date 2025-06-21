@@ -10,9 +10,11 @@
   <header class="header">
     <a href="index.html" class="home-icon">🏠</a>
     <h1 class="logo">Dialecte</h1>
+    <div class="header-auth" id="header-auth">
+      <!-- Les boutons seront injectés ici par le script -->
+    </div>
   </header>
 
-  <!-- Barre de nav mobile -->
   <nav class="mobile-nav">
     <a href="#">Lexique</a>
     <a href="#">S’entraîner</a>
@@ -25,17 +27,50 @@
       <ul>
         <li><a href="#">Lexique</a></li>
         <li><a href="#">S’entraîner</a></li>
-        <li><a href="#">Mes progrès</a></li>
+        <li><a href="progres.html">Mes progrès</a></li>
         <li><a href="quiz.html">Quiz</a></li>
       </ul>
     </nav>
 
     <main class="main">
-      <div class="auth-buttons">
-        <a href="login.html" class="btn auth">Se connecter</a>
-        <a href="signup.html" class="btn auth">S’inscrire</a>
-      </div>
+      <h2>Bienvenue sur Dialecte !</h2>
     </main>
   </div>
+
+  <script type="module">
+    import { auth, logout, initAuthListener } from "./firebase.js";
+
+    const headerAuth = document.getElementById('header-auth');
+
+    function renderAuthButtons(user) {
+      headerAuth.innerHTML = '';
+      if (user) {
+        // Si connecté, afficher Se déconnecter
+        const btn = document.createElement('button');
+        btn.textContent = 'Se déconnecter';
+        btn.className = 'btn auth';
+        btn.onclick = async () => {
+          await logout();
+          location.reload();
+        };
+        headerAuth.appendChild(btn);
+      } else {
+        // si non connecté, afficher Se connecter / S’inscrire
+        const login = document.createElement('a');
+        login.href = 'login.html';
+        login.textContent = 'Se connecter';
+        login.className = 'btn auth';
+        const signup = document.createElement('a');
+        signup.href = 'signup.html';
+        signup.textContent = 'S’inscrire';
+        signup.className = 'btn auth';
+        headerAuth.append(login, signup);
+      }
+    }
+
+    initAuthListener(user => {
+      renderAuthButtons(user);
+    });
+  </script>
 </body>
 </html>

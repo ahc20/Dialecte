@@ -241,6 +241,35 @@ body, html {
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
   font-size: 0.95rem;
 }
+/* HEADER AUTH BUTTONS */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* pour séparer logo des boutons */
+  padding: 0.5rem 1rem;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.header .header-auth {
+  display: flex;
+  gap: 1rem;
+}
+.btn.auth {
+  background: var(--primary);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s;
+}
+.btn.auth:hover {
+  background: var(--primary-hover);
+}
 /* RESPONSIVE */
 @media(max-width:768px){
   .layout{flex-direction:column;}
