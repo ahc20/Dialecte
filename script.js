@@ -1,6 +1,6 @@
 let cards = [];
 
-// Poids pondérés selon Catégorie Fréquence
+// Poids pondérés (ajuste tes fréquences si besoin)
 const weights = {
   "Très courant": 5,
   "Courant": 3,
@@ -9,7 +9,7 @@ const weights = {
   "Très rare": 1
 };
 
-// Tirage aléatoire pondéré
+// Tirage pondéré
 function weightedRandomIndex() {
   const total = cards.reduce((sum, c) => sum + (weights[c.frequency] || 1), 0);
   let r = Math.random() * total;
@@ -20,56 +20,73 @@ function weightedRandomIndex() {
   return 0;
 }
 
-// Affiche la carte suivante
+// Affiche une nouvelle carte
 function showRandomCard() {
   const i = weightedRandomIndex();
   const { fr, kab } = cards[i];
-  document.getElementById('front').textContent = fr;
-  const back = document.getElementById('back');
+  document.getElementById("front").textContent = fr;
+  const back = document.getElementById("back");
   back.textContent = kab;
-  back.classList.remove('visible');
+  back.classList.remove("visible");
 }
 
-// Prononciation AI via endpoint serverless Vercel
-async function speakAI() {
-  const text = document.getElementById('back').textContent.trim();
-  if (!text) return;
-  try {
-    const res = await fetch(`/api/tts?text=${encodeURIComponent(text)}`);
-    if (!res.ok) {
-      const err = await res.text();
-      console.error('TTS AI error body:', err);
-      alert('Erreur TTS : ' + err);
-      return;
-    }
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    new Audio(url).play();
-  } catch (err) {
-    console.error('Erreur fetch TTS :', err);
-    alert('Erreur réseau TTS : ' + err.message);
-  }
-}
-
-// Chargement et parsing du CSV
-Papa.parse('data.csv', {
+// Initialise le chargement du CSV
+Papa.parse("data.csv", {
   download: true,
   header: true,
-  complete: res => {
-    cards = res.data.map(r => ({
+  complete: (res) => {
+    cards = res.data.map((r) => ({
       fr: r.Français,
       kab: r.Kabyle,
-      frequency: r["Catégorie Fréquence"]
+      frequency: r["Catégorie Fréquence"],
     }));
     showRandomCard();
   },
-  error: err => console.error('Erreur CSV :', err)
+  error: (err) => console.error("Erreur CSV :", err),
 });
 
-// Listeners des boutons
-document.getElementById('reveal').addEventListener('click', () => {
-  document.getElementById('back').classList.toggle('visible');
+// Bouton Révéler
+document.getElementById("reveal").addEventListener("click", () => {
+  document.getElementById("back").classList.toggle("visible");
 });
-document.getElementById('speakAI').addEventListener('click', speakAI);
-document.getElementById('next').addEventListener('click', showRandomCard);
-document.getElementById('prev').addEventListener('click', showRandomCard);
+
+// Prononciation via Web Speech API
+function speakKabyle() {
+  const text = document.getElementById("back").textContent.trim();
+  if (!text) return;
+
+  // Attendre que les voix soient chargées
+  const synth = window.speechSynthesis;
+  let voices = synth.getVoices();
+  if (!voices.length) {
+    synth.onvoiceschanged = () => {
+      voices = synth.getVoices();
+      _speak(text, voices);
+    };
+  } else {
+    _speak(text, voices);
+  }
+}
+
+// Fonction interne de prononciation avec réglages
+function _speak(text, voices) {
+  // Choisir de préférence une voix francophone
+  const voice =
+    voices.find((v) => /fr(-|_)/i.test(v.lang)) ||
+    voices.find((v) => v.lang.startsWith("en")) ||
+    voices[0];
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.voice = voice;
+  utter.lang = voice.lang;
+  utter.rate = 0.9;   // 0.8–1.1 pour ajuster la vitesse
+  utter.pitch = 1.0;  // 0.8–1.2 pour ajuster la tonalité
+  window.speechSynthesis.speak(utter);
+}
+
+// Listener Prononcer
+document.getElementById("speak").addEventListener("click", speakKabyle);
+
+// Précédent / Suivant
+document.getElementById("next").addEventListener("click", showRandomCard);
+document.getElementById("prev").addEventListener("click", showRandomCard);
