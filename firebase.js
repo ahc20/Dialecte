@@ -45,3 +45,25 @@ export async function login(email, password) {
   const { user } = await signInWithEmailAndPassword(auth, email, password);
   return user;
 }
+
+// 5) Sauvegarder une réponse dans le parcours
+export async function saveProgress(uid, frWord, wasCorrect) {
+    await updateDoc(doc(db, "users", uid), {
+      progress: arrayUnion({ word: frWord, correct: wasCorrect, timestamp: Date.now() })
+    });
+  }
+  
+  // 6) Récupérer le tableau des progrès de l’utilisateur
+  import { getDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+  export async function getProgress(uid) {
+    const snap = await getDoc(doc(db, "users", uid));
+    if (snap.exists()) {
+      return snap.data().progress;  // renvoie un array de { word, correct, timestamp }
+    }
+    return [];
+  }
+  
+  // 7) Déconnexion
+  export function logout() {
+    return signOut(auth);
+  }

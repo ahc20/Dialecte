@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Dialecte – Mes progrès</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
   <script type="module" src="firebase.js"></script>
 </head>
 <body>
@@ -35,22 +35,41 @@
     <main class="main">
       <div id="welcome" class="welcome-text">Bienvenue !</div>
       <div id="username" class="username-text"></div>
-      <!-- Ici tu pourras plus tard lister tes progrès -->
+      <div id="progress-list" class="progress-list"></div>
     </main>
   </div>
 
   <script type="module">
-    import { initAuthListener } from "./firebase.js";
+    import { initAuthListener, getProgress } from "./firebase.js";
 
-    initAuthListener(user => {
+    initAuthListener(async user => {
       const w = document.getElementById('welcome');
       const u = document.getElementById('username');
+      const list = document.getElementById('progress-list');
+      list.innerHTML = '';
+
       if (user && user.displayName) {
         w.textContent = 'Bienvenue !';
         u.textContent = user.displayName;
+
+        // Charge les progrès depuis Firestore
+        const prog = await getProgress(user.uid);
+        if (prog.length === 0) {
+          list.textContent = "Vous n'avez pas encore de progrès.";
+        } else {
+          const ul = document.createElement('ul');
+          prog.forEach(item => {
+            const li = document.createElement('li');
+            const date = new Date(item.timestamp).toLocaleString();
+            li.textContent = `${item.word} — ${item.correct ? '✓ Correct' : '✗ Incorrect'} (${date})`;
+            ul.appendChild(li);
+          });
+          list.appendChild(ul);
+        }
       } else {
         w.textContent = 'Bienvenue invité !';
         u.textContent = '';
+        list.textContent = "Connectez-vous pour voir vos progrès.";
       }
     });
   </script>

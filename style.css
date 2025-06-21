@@ -224,6 +224,23 @@ body, html {
   text-align: center;
   margin-bottom: 2rem;
 }
+.progress-list {
+  margin-top: 2rem;
+  width: 100%;
+  max-width: 480px;
+}
+.progress-list ul {
+  list-style: none;
+  padding: 0;
+}
+.progress-list li {
+  background: #fff;
+  margin-bottom: 0.5rem;
+  padding: 0.75rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  font-size: 0.95rem;
+}
 /* RESPONSIVE */
 @media(max-width:768px){
   .layout{flex-direction:column;}
