@@ -1,8 +1,8 @@
 let cards = [];
 let history = [];    // pile des indices affichés
-let pointer = -1;    // position courante dans l’historique
+let pointer = -1;    // index courant dans l’historique
 
-// 1) Charge et parse le CSV
+// 1) Charger et parser le CSV
 Papa.parse('data.csv', {
   download: true,
   header: true,
@@ -11,38 +11,39 @@ Papa.parse('data.csv', {
       fr: r.Français,
       kab: r.Kabyle
     }));
-    showNextCard();  // affiche la première
+    showNextCard(); // Affiche la première carte
   },
   error: err => console.error('Erreur CSV :', err)
 });
 
-// Affiche la carte à l’index donné, en manipulant history/pointer
-function displayCardAt(index) {
-  const { fr, kab } = cards[index];
+// 2) Afficher la carte à l’index donné
+function displayCardAt(idx) {
+  const { fr, kab } = cards[idx];
   document.getElementById('front').textContent = fr;
   const back = document.getElementById('back');
   back.textContent = kab;
   back.classList.remove('visible');
+  renderChoices(kab);
 }
 
-// Génère un nouvel indice aléatoire différent du précédent historique
+// 3) Tirage aléatoire différent du précédent
 function getRandomIndex() {
-  if (!cards.length) return 0;
+  if (cards.length < 2) return 0;
   let i;
   do {
     i = Math.floor(Math.random() * cards.length);
-  } while (cards.length > 1 && history[pointer] === i);
+  } while (history[pointer] === i);
   return i;
 }
 
-// Affiche la carte suivante (logique historique)
+// 4) Suivant avec historique
 function showNextCard() {
-  // Si on n’est pas en fin d’historique, on avance le pointer sans ajouter
   if (pointer < history.length - 1) {
+    // on navigue vers l’avant dans l’historique
     pointer++;
     displayCardAt(history[pointer]);
   } else {
-    // On génère un nouvel index puis on pousse dans l’historique
+    // on génère une nouvelle carte
     const idx = getRandomIndex();
     history.push(idx);
     pointer = history.length - 1;
@@ -50,45 +51,77 @@ function showNextCard() {
   }
 }
 
-// Affiche la carte précédente
+// 5) Précédent avec historique
 function showPrevCard() {
   if (pointer > 0) {
     pointer--;
     displayCardAt(history[pointer]);
   }
-  // sinon on reste sur la première carte
 }
 
-// Bouton Révéler
+// 6) Générer le QCM pour la carte courante
+function renderChoices(correctKab) {
+  const container = document.getElementById('choices');
+  container.innerHTML = '';
+  // récupérer 3 distracteurs
+  const distractors = new Set();
+  while (distractors.size < 3) {
+    const rand = cards[Math.floor(Math.random() * cards.length)].kab;
+    if (rand !== correctKab) distractors.add(rand);
+  }
+  const options = [correctKab, ...distractors];
+  // shuffle
+  options.sort(() => Math.random() - 0.5);
+  // créer les boutons
+  options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.textContent = opt;
+    btn.addEventListener('click', () => handleChoice(btn, opt === correctKab));
+    container.appendChild(btn);
+  });
+}
+
+// 7) Gestion du clic QCM
+function handleChoice(btn, isCorrect) {
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  // désactiver tous les boutons
+  document.querySelectorAll('#choices button').forEach(b => b.disabled = true);
+  if (isCorrect) {
+    document.getElementById('back').classList.add('visible');
+  }
+  setTimeout(showNextCard, 1500);
+}
+
+// 8) Révéler le mot kabyle
 document.getElementById('reveal').addEventListener('click', () => {
   document.getElementById('back').classList.toggle('visible');
 });
 
-// Bouton Prononcer (Web Speech API optimisé)
+// 9) Prononcer via Web Speech API optimisée
 document.getElementById('speak').addEventListener('click', () => {
   const text = document.getElementById('back').textContent.trim();
   if (!text) return;
   const synth = window.speechSynthesis;
   let voices = synth.getVoices();
+  const speakText = (voicesList) => {
+    const voice = voicesList.find(v => /fr(-|_)/i.test(v.lang)) || voicesList[0];
+    const ut = new SpeechSynthesisUtterance(text);
+    ut.voice = voice;
+    ut.lang = voice.lang;
+    ut.rate = 0.9;
+    ut.pitch = 1.1;
+    synth.speak(ut);
+  };
   if (!voices.length) {
     synth.onvoiceschanged = () => {
       voices = synth.getVoices();
-      speak(text, voices);
+      speakText(voices);
     };
   } else {
-    speak(text, voices);
+    speakText(voices);
   }
 });
-function speak(text, voices) {
-  const voice = voices.find(v => /fr(-|_)/i.test(v.lang)) || voices[0];
-  const u = new SpeechSynthesisUtterance(text);
-  u.voice = voice;
-  u.lang = voice.lang;
-  u.rate = 0.9;
-  u.pitch = 1.1;
-  window.speechSynthesis.speak(u);
-}
 
-// Boutons Précédent / Suivant
+// 10) Listeners Précédent / Suivant
 document.getElementById('prev').addEventListener('click', showPrevCard);
 document.getElementById('next').addEventListener('click', showNextCard);
