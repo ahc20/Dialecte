@@ -1,6 +1,6 @@
 let cards = [];
 
-// Poids pondérés selon Catégorie Fréquence
+// Poids pondérés selon Catégorie Fréquence (ajuste si besoin)
 const weights = {
   "Très courant": 5,
   "Courant": 3,
@@ -28,18 +28,6 @@ function showRandomCard() {
   const back = document.getElementById('back');
   back.textContent = kab;
   back.classList.remove('visible');
-}
-
-// Prononciation locale via Web Speech API
-function speakLocal() {
-  const text = document.getElementById('back').textContent.trim();
-  if (!text) return;
-  const utter = new SpeechSynthesisUtterance(text);
-  const voices = window.speechSynthesis.getVoices();
-  // Tente de choisir une voix berbère ou francophone
-  utter.voice = voices.find(v => /berb|fr/i.test(v.lang)) || voices[0];
-  utter.lang = utter.voice.lang;
-  speechSynthesis.speak(utter);
 }
 
 // Prononciation AI via endpoint serverless Vercel
@@ -76,7 +64,6 @@ Papa.parse('data.csv', {
 document.getElementById('reveal').addEventListener('click', () => {
   document.getElementById('back').classList.toggle('visible');
 });
-document.getElementById('speak').addEventListener('click', speakLocal);
 document.getElementById('speakAI').addEventListener('click', speakAI);
 document.getElementById('next').addEventListener('click', showRandomCard);
 document.getElementById('prev').addEventListener('click', showRandomCard);
