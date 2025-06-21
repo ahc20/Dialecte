@@ -88,104 +88,67 @@ body, html {
   color: #1F4827;
 }
 
-/* MAIN CONTENT */
+/* MAIN ACCUEIL */
 .main {
   flex: 1;
   padding: 1rem 2rem 2rem;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.card {
-  width: 320px;
-  background: var(--card-bg);
-  border-radius: 16px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-  padding: 2rem 1rem;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-.face {
-  font-size: 1.6rem;
-  font-weight: 600;
-}
-#back {
-  display: none;
-  margin-top: 1rem;
-  color: var(--primary);
-}
-#back.visible {
-  display: block;
-}
-
-/* CHOICES */
-.choices {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  width: 320px;
-  margin-bottom: 1.5rem;
-}
-.choices button {
-  background: var(--card-bg);
-  color: var(--text);
-  border: 2px solid var(--primary);
-  border-radius: 8px;
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
-}
-.choices button:hover {
-  border-color: var(--primary-hover);
-}
-.choices button.correct {
-  background: var(--correct);
-  color: white;
-  border-color: var(--correct);
-}
-.choices button.wrong {
-  background: var(--wrong);
-  color: white;
-  border-color: var(--wrong);
-}
-
-/* CONTROLS */
-.controls {
-  display: flex;
-  gap: 1rem;
   justify-content: center;
+  align-items: flex-start;
 }
-.controls button {
+.auth-buttons {
+  display: flex;
+  gap: 1.5rem;
+}
+.btn.auth {
   background: var(--primary);
   color: white;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
+  padding: 1rem 2rem;
+  font-size: 1.25rem;
   font-weight: 600;
   border-radius: 8px;
-  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
   transition: background 0.2s, transform 0.1s;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
-.controls button:hover {
+.btn.auth:hover {
   background: var(--primary-hover);
-}
-.controls button:active {
-  transform: translateY(2px);
 }
 
 /* RESPONSIVE */
-@media(max-width:768px){
-  .layout{flex-direction:column;}
-  .sidebar{width:100%;border-right:none;border-bottom:1px solid #e5e7eb;}
-  .main{padding:1rem;}
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .main {
+    padding: 1rem;
+  }
 }
-@media(max-width:480px){
-  .mobile-nav{display:flex;background:white;border-bottom:1px solid #e5e7eb;}
-  .sidebar{display:none;}
-  .main{padding:0.5rem 0.75rem;}
-  .card,.choices{width:100%;padding:1.5rem 0.75rem;}
-  .controls{flex-direction:column;gap:0.75rem;}
-  .controls button{width:100%;padding:0.8rem;}
+@media (max-width: 480px) {
+  .mobile-nav {
+    display: flex;
+    background: white;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .sidebar {
+    display: none;
+  }
+  .main {
+    padding: 0.5rem 0.75rem;
+  }
+  .auth-buttons {
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+  .auth-buttons .btn.auth {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+  }
 }
