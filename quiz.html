@@ -6,6 +6,7 @@
   <title>Dialecte – Quiz Kabyle</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+  <script type="module" src="firebase.js"></script>
 </head>
 <body>
   <header class="header">
@@ -13,7 +14,6 @@
     <h1 class="logo">Dialecte – Quiz</h1>
   </header>
 
-  <!-- Barre de nav mobile (visible ≤480px) -->
   <nav class="mobile-nav">
     <a href="index.html">Lexique</a>
     <a href="index.html">S’entraîner</a>
@@ -32,9 +32,10 @@
     </nav>
 
     <main class="main">
+      <div id="user-greeting" class="greeting"></div>
       <div class="card">
         <div id="front" class="face">Chargement…</div>
-        <div id="back" class="face"></div>
+        <div id="back"  class="face"></div>
       </div>
       <div id="choices" class="choices"></div>
       <div class="controls">
@@ -46,6 +47,13 @@
     </main>
   </div>
 
+  <script type="module">
+    import { initAuthListener } from "./firebase.js";
+    initAuthListener(user => {
+      if (!user) return window.location.href = 'login.html';
+      document.getElementById('user-greeting').textContent = `Bonjour ${user.displayName}`;
+    });
+  </script>
   <script src="script.js"></script>
 </body>
 </html>

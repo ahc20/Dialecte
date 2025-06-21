@@ -13,23 +13,22 @@ import {
   getFirestore,
   doc,
   setDoc,
-  getDoc,
   updateDoc,
   arrayUnion
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-// 1) Initialisation
+// 1) Initialisation — remplace storageBucket par “.appspot.com”
 const firebaseConfig = {
   apiKey: "AIzaSyCI5yQhUVJKKktWCG2svsxx4RaiCTHBahc",
   authDomain: "dialecte-e23ae.firebaseapp.com",
   projectId: "dialecte-e23ae",
-  storageBucket: "dialecte-e23ae.firebasestorage.app",
+  storageBucket: "dialecte-e23ae.appspot.com",
   messagingSenderId: "455539698432",
   appId: "G-2RCV5ZR5WN"
 };
-const app = initializeApp(firebaseConfig);
+const app  = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const db   = getFirestore(app);
 
 // 2) Observer l'état de connexion
 export function initAuthListener(onUserChange) {
@@ -40,7 +39,6 @@ export function initAuthListener(onUserChange) {
 export async function signup(firstName, email, password) {
   const userCred = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(userCred.user, { displayName: firstName });
-  // Créer doc Firestore pour stocker le parcours
   await setDoc(doc(db, "users", userCred.user.uid), {
     firstName,
     email,
@@ -57,8 +55,7 @@ export async function login(email, password) {
 
 // 5) Sauvegarder une réponse dans le parcours
 export async function saveProgress(uid, frWord, wasCorrect) {
-  const userDoc = doc(db, "users", uid);
-  await updateDoc(userDoc, {
+  await updateDoc(doc(db, "users", uid), {
     progress: arrayUnion({ word: frWord, correct: wasCorrect, timestamp: Date.now() })
   });
 }

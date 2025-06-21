@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dialecte – S’inscrire</title>
   <link rel="stylesheet" href="style.css" />
+  <script type="module" src="firebase.js"></script>
 </head>
 <body>
   <header class="header">
@@ -14,25 +15,25 @@
 
   <main class="form-container">
     <form id="signup-form">
-      <label>Prénom
-        <input type="text" name="firstName" required />
-      </label>
-      <label>Email
-        <input type="email" name="email" required />
-      </label>
-      <label>Mot de passe
-        <input type="password" name="password" required minlength="6" />
-      </label>
+      <label>Prénom<input type="text" name="firstName" required /></label>
+      <label>Email<input type="email" name="email" required /></label>
+      <label>Mot de passe<input type="password" name="password" required minlength="6" /></label>
       <button type="submit" class="btn submit">S’inscrire</button>
     </form>
   </main>
 
-  <script>
-    document.getElementById('signup-form').addEventListener('submit', e => {
+  <script type="module">
+    import { signup } from "./firebase.js";
+    document.getElementById('signup-form').addEventListener('submit', async e => {
       e.preventDefault();
-      // ici, en prod, tu appellerais ton API pour créer l’utilisateur
-      alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
-      window.location.href = 'login.html';
+      const f = e.target;
+      try {
+        await signup(f.firstName.value, f.email.value, f.password.value);
+        alert('Inscription réussie ! Vous êtes connecté.');
+        window.location.href = 'quiz.html';
+      } catch (err) {
+        alert('Erreur inscription : ' + err.message);
+      }
     });
   </script>
 </body>

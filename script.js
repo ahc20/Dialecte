@@ -3,24 +3,21 @@ import { saveProgress } from "./firebase.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
 let cards = [];
-let history = [];    // pile des indices affichés
-let pointer = -1;    // position dans l’historique
+let history = [];
+let pointer = -1;
 
-// 1) Charger et parser le CSV
+// 1) Charger CSV
 Papa.parse('data.csv', {
   download: true,
   header: true,
   complete: ({ data }) => {
-    cards = data.map(r => ({
-      fr: r.Français,
-      kab: r.Kabyle
-    }));
-    showNextCard();  // affiche la première carte
+    cards = data.map(r => ({ fr: r.Français, kab: r.Kabyle }));
+    showNextCard();
   },
   error: err => console.error('Erreur CSV :', err)
 });
 
-// 2) Afficher la carte à l’index donné
+// 2) Afficher
 function displayCardAt(idx) {
   const { fr, kab } = cards[idx];
   document.getElementById('front').textContent = fr;
@@ -30,17 +27,16 @@ function displayCardAt(idx) {
   renderChoices(kab);
 }
 
-// 3) Tirage aléatoire différent du précédent
+// 3) Tirage
 function getRandomIndex() {
   if (cards.length < 2) return 0;
   let i;
-  do {
-    i = Math.floor(Math.random() * cards.length);
-  } while (history[pointer] === i);
+  do { i = Math.floor(Math.random() * cards.length); }
+  while (history[pointer] === i);
   return i;
 }
 
-// 4) Suivant avec historique
+// 4) Suivant
 function showNextCard() {
   if (pointer < history.length - 1) {
     pointer++;
@@ -53,7 +49,7 @@ function showNextCard() {
   }
 }
 
-// 5) Précédent avec historique
+// 5) Précédent
 function showPrevCard() {
   if (pointer > 0) {
     pointer--;
@@ -61,90 +57,64 @@ function showPrevCard() {
   }
 }
 
-// 6) Générer le QCM pour la carte courante
+// 6) QCM
 function renderChoices(correctKab) {
   const container = document.getElementById('choices');
   container.innerHTML = '';
-
-  // Récupérer 3 distracteurs uniques
-  const distractors = new Set();
-  while (distractors.size < 3) {
-    const rand = cards[Math.floor(Math.random() * cards.length)].kab;
-    if (rand !== correctKab) distractors.add(rand);
+  const dist = new Set();
+  while (dist.size < 3) {
+    const r = cards[Math.floor(Math.random()*cards.length)].kab;
+    if (r !== correctKab) dist.add(r);
   }
-
-  const options = [correctKab, ...distractors];
-  options.sort(() => Math.random() - 0.5);
-
-  options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.textContent = opt;
-    btn.addEventListener('click', () => handleChoice(btn, opt === correctKab, correctKab));
-    container.appendChild(btn);
+  const opts = [correctKab, ...dist].sort(() => Math.random()-0.5);
+  opts.forEach(opt => {
+    const b = document.createElement('button');
+    b.textContent = opt;
+    b.addEventListener('click', () => handleChoice(b, opt===correctKab, correctKab));
+    container.appendChild(b);
   });
 }
 
-// 7) Gestion du clic QCM
-async function handleChoice(btn, isCorrect, correctKab) {
-  // colorer le bouton cliqué
-  btn.classList.add(isCorrect ? 'correct' : 'wrong');
-  // désactiver tous les boutons
-  document.querySelectorAll('#choices button').forEach(b => b.disabled = true);
-
-  // si incorrect, montrer aussi la bonne réponse
-  if (!isCorrect) {
-    const correctBtn = Array.from(document.querySelectorAll('#choices button'))
-      .find(b => b.textContent === correctKab);
-    if (correctBtn) correctBtn.classList.add('correct');
+// 7) Clic QCM
+async function handleChoice(btn, ok, correct) {
+  btn.classList.add(ok?'correct':'wrong');
+  document.querySelectorAll('#choices button').forEach(b=>b.disabled=true);
+  if (!ok) {
+    const cb = Array.from(document.querySelectorAll('#choices button'))
+      .find(x=>x.textContent===correct);
+    if (cb) cb.classList.add('correct');
   } else {
     document.getElementById('back').classList.add('visible');
   }
-
-  // sauvegarder le résultat
   try {
     const uid = getAuth().currentUser.uid;
     const frWord = document.getElementById('front').textContent;
-    await saveProgress(uid, frWord, isCorrect);
-  } catch (e) {
-    console.error('Erreur saveProgress:', e);
-  }
-
-  // passer à la question suivante après 1,5s
-  setTimeout(showNextCard, 1500);
+    await saveProgress(uid, frWord, ok);
+  } catch(e){console.error(e);}
+  setTimeout(showNextCard,1500);
 }
 
-// 8) Révéler le mot kabyle
-document.getElementById('reveal').addEventListener('click', () => {
-  document.getElementById('back').classList.toggle('visible');
-});
+// 8) Révéler
+document.getElementById('reveal').addEventListener('click', ()=>
+  document.getElementById('back').classList.toggle('visible')
+);
 
-// 9) Prononcer via Web Speech API
-document.getElementById('speak').addEventListener('click', () => {
-  const text = document.getElementById('back').textContent.trim();
-  if (!text) return;
-
+// 9) Prononcer
+document.getElementById('speak').addEventListener('click',()=>{
+  const t = document.getElementById('back').textContent.trim();
+  if (!t) return;
   const synth = window.speechSynthesis;
-  let voices = synth.getVoices();
-  const speakText = (voicesList) => {
-    const voice = voicesList.find(v => /fr(-|_)/i.test(v.lang)) || voicesList[0];
-    const ut = new SpeechSynthesisUtterance(text);
-    ut.voice = voice;
-    ut.lang = voice.lang;
-    ut.rate = 0.9;
-    ut.pitch = 1.1;
-    synth.speak(ut);
+  let v = synth.getVoices();
+  const speakIt = voices=>{
+    const vc = voices.find(vi=>/fr(-|_)/i.test(vi.lang))||voices[0];
+    const u = new SpeechSynthesisUtterance(t);
+    u.voice=vc; u.lang=vc.lang; u.rate=0.9; u.pitch=1.1;
+    synth.speak(u);
   };
-
-  if (!voices.length) {
-    synth.onvoiceschanged = () => {
-      voices = synth.getVoices();
-      speakText(voices);
-    };
-  } else {
-    speakText(voices);
-  }
+  if (!v.length) synth.onvoiceschanged=()=>{v=synth.getVoices();speakIt(v)};
+  else speakIt(v);
 });
 
-// 10) Listeners Précédent / Suivant
+// 10) Prev/Next
 document.getElementById('prev').addEventListener('click', showPrevCard);
 document.getElementById('next').addEventListener('click', showNextCard);
