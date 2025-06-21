@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dialecte – Se connecter</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <a href="index.html" class="home-icon">🏠</a>
+    <h1 class="logo">Se connecter</h1>
+  </header>
+
+  <main class="form-container">
+    <form id="login-form">
+      <label>Email
+        <input type="email" name="email" required />
+      </label>
+      <label>Mot de passe
+        <input type="password" name="password" required />
+      </label>
+      <button type="submit" class="btn submit">Se connecter</button>
+    </form>
+  </main>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', e => {
+      e.preventDefault();
+      // ici, tu vérifierais les identifiants via ton API
+      alert('Connexion réussie ! Bienvenue dans votre espace.');
+      // rediriger vers espace personnel (à créer)
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dialecte – S’inscrire</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <a href="index.html" class="home-icon">🏠</a>
+    <h1 class="logo">Créer un compte</h1>
+  </header>
+
+  <main class="form-container">
+    <form id="signup-form">
+      <label>Prénom
+        <input type="text" name="firstName" required />
+      </label>
+      <label>Email
+        <input type="email" name="email" required />
+      </label>
+      <label>Mot de passe
+        <input type="password" name="password" required minlength="6" />
+      </label>
+      <button type="submit" class="btn submit">S’inscrire</button>
+    </form>
+  </main>
+
+  <script>
+    document.getElementById('signup-form').addEventListener('submit', e => {
+      e.preventDefault();
+      // ici, en prod, tu appellerais ton API pour créer l’utilisateur
+      alert('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>
