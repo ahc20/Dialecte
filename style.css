@@ -43,7 +43,7 @@ body, html {
 /* ========== LAYOUT ========== */
 .layout {
   display: flex;
-  height: calc(100% - 56px); /* header height */
+  height: calc(100% - 56px);
 }
 .sidebar {
   width: 200px;
@@ -53,8 +53,6 @@ body, html {
 }
 .sidebar ul {
   list-style: none;
-  margin: 0;
-  padding: 0;
 }
 .sidebar li {
   margin: 0.5rem 0;
@@ -75,20 +73,16 @@ body, html {
 /* ========== PAGE ACCUEIL ========== */
 .main {
   flex: 1;
-  /* on remonte un peu le contenu principal */
-  padding: 1rem 2rem 2rem; 
+  padding: 1rem 2rem 2rem;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* start au lieu de center */
+  justify-content: flex-start;
   align-items: center;
 }
 .auth-buttons {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
   justify-content: center;
-  align-items: center;
-  width: 100%;
-  /* margin-top réduit pour remonter les boutons */
   margin-top: 2rem;
 }
 .auth-buttons button {
@@ -116,7 +110,6 @@ body, html {
   border-radius: 16px;
   box-shadow: 0 8px 16px rgba(0,0,0,0.1);
   padding: 2rem 1rem;
-  text-align: center;
   margin: 0 auto 1rem;
 }
 .face {
@@ -189,7 +182,7 @@ body, html {
   transform: translateY(2px);
 }
 
-/* ========== RESPONSIVE ========== */
+/* ========== RESPONSIVE TABLET ========== */
 @media (max-width: 768px) {
   .layout {
     flex-direction: column;
@@ -201,5 +194,57 @@ body, html {
   }
   .main {
     padding: 1rem;
+  }
+}
+
+/* ========== RESPONSIVE SMARTPHONE ========== */
+@media (max-width: 480px) {
+  /* Header smaller */
+  .header {
+    padding: 0.5rem;
+  }
+  .header .logo {
+    font-size: 1.1rem;
+  }
+
+  /* Sidebar turns into top nav */
+  .sidebar {
+    display: none;
+  }
+  .layout {
+    flex-direction: column;
+  }
+
+  /* Main padding reduced */
+  .main {
+    padding: 0.5rem;
+  }
+
+  /* Auth buttons full width */
+  .auth-buttons {
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+    width: 100%;
+  }
+  .auth-buttons button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+  }
+
+  /* Card & choices adjust to screen width */
+  .card, .choices {
+    width: 100%;
+    margin: 0 auto 1rem;
+    padding: 1.5rem 0.75rem;
+  }
+  .controls {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .controls button {
+    width: 100%;
+    padding: 0.8rem;
   }
 }
