@@ -43,7 +43,7 @@ h1 {
   font-size: 1.6rem;
   font-weight: 600;
 }
-/* back caché par défaut */
+/* back caché */
 #back {
   display: none;
   margin-top: 1rem;
