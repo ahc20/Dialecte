@@ -1,33 +1,50 @@
 let cards = [];
-let idx = 0;
+const weights = {
+  "Très courant": 5,
+  "Courant":      3,
+  "Moyennement courant":2,
+  "Peu courant":  1
+};
 
-async function loadCards() {
-  const res = await fetch('data.json');
-  cards = await res.json();
-  showCard();
+// Choisit un index au hasard en pondérant par weights[row["Catégorie Fréquence"]]
+function weightedRandomIndex() {
+  const total = cards.reduce((sum, c) => sum + (weights[c.frequency]||1), 0);
+  let r = Math.random() * total;
+  for (let i = 0; i < cards.length; i++) {
+    r -= (weights[cards[i].frequency]||1);
+    if (r <= 0) return i;
+  }
+  return 0;
 }
 
-function showCard() {
-  const front = document.getElementById('front');
-  const back  = document.getElementById('back');
-  const card  = cards[idx];
-  front.textContent = card.fr;
-  back.textContent  = card.kab;
+// Affiche une carte tirée au hasard
+function showRandomCard() {
+  const i = weightedRandomIndex();
+  const { fr, kab } = cards[i];
+  document.getElementById('front').textContent = fr;
+  const back = document.getElementById('back');
+  back.textContent = kab;
   back.classList.add('hidden');
 }
 
+// Charge et parse le CSV
+Papa.parse('data.csv', {
+  download: true,
+  header: true,
+  complete: (results) => {
+    cards = results.data.map(row => ({
+      fr: row.Français,
+      kab: row.Kabyle,
+      // on lit la colonne "Catégorie Fréquence"
+      frequency: row["Catégorie Fréquence"]
+    }));
+    showRandomCard();
+  }
+});
+
+// Boutons
 document.getElementById('reveal').addEventListener('click', () => {
   document.getElementById('back').classList.toggle('hidden');
 });
-
-document.getElementById('next').addEventListener('click', () => {
-  idx = (idx + 1) % cards.length;
-  showCard();
-});
-
-document.getElementById('prev').addEventListener('click', () => {
-  idx = (idx - 1 + cards.length) % cards.length;
-  showCard();
-});
-
-loadCards();
+document.getElementById('next').addEventListener('click', showRandomCard);
+document.getElementById('prev').addEventListener('click', showRandomCard);
