@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dialecte – Mes progrès</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- pas d’import Firebase ici, on initialise dans le script module -->
+  <script type="module" src="firebase.js"></script>
 </head>
 <body>
   <header class="header">
@@ -33,7 +33,8 @@
     </nav>
 
     <main class="main">
-      <div id="welcome" class="greeting">Bienvenue !</div>
+      <div id="welcome" class="welcome-text">Bienvenue !</div>
+      <div id="username" class="username-text"></div>
       <!-- Ici tu pourras plus tard lister tes progrès -->
     </main>
   </div>
@@ -43,10 +44,13 @@
 
     initAuthListener(user => {
       const w = document.getElementById('welcome');
+      const u = document.getElementById('username');
       if (user && user.displayName) {
-        w.textContent = `Bonjour ${user.displayName}, bienvenue dans ton espace !`;
+        w.textContent = 'Bienvenue !';
+        u.textContent = user.displayName;
       } else {
-        w.textContent = 'Bienvenue invité ! Connecte-toi pour voir tes progrès.';
+        w.textContent = 'Bienvenue invité !';
+        u.textContent = '';
       }
     });
   </script>
