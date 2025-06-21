@@ -3,10 +3,10 @@ let cards = [];
 // Poids pondérés selon Catégorie Fréquence
 const weights = {
   "Très courant": 5,
-  "Courant":      3,
+  "Courant": 3,
   "Moyennement courant": 2,
-  "Peu courant":  1,
-  "Très rare":    1
+  "Peu courant": 1,
+  "Très rare": 1
 };
 
 // Tirage aléatoire pondéré
@@ -20,7 +20,7 @@ function weightedRandomIndex() {
   return 0;
 }
 
-// Affiche la carte
+// Affiche la carte suivante
 function showRandomCard() {
   const i = weightedRandomIndex();
   const { fr, kab } = cards[i];
@@ -30,16 +30,31 @@ function showRandomCard() {
   back.classList.remove('visible');
 }
 
-// Prononciation par Web Speech API
-function speakKabyle() {
+// Prononciation locale via Web Speech API
+function speakLocal() {
   const text = document.getElementById('back').textContent.trim();
   if (!text) return;
   const utter = new SpeechSynthesisUtterance(text);
   const voices = window.speechSynthesis.getVoices();
-  // Essayer de choisir une voix berbère ou francophone
+  // Tente de choisir une voix berbère ou francophone
   utter.voice = voices.find(v => /berb|fr/i.test(v.lang)) || voices[0];
   utter.lang = utter.voice.lang;
   speechSynthesis.speak(utter);
+}
+
+// Prononciation AI via endpoint serverless Vercel
+async function speakAI() {
+  const text = document.getElementById('back').textContent.trim();
+  if (!text) return;
+  try {
+    const res = await fetch(`/api/tts?text=${encodeURIComponent(text)}`);
+    if (!res.ok) throw new Error(await res.text());
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    new Audio(url).play();
+  } catch (err) {
+    console.error('Erreur TTS AI :', err);
+  }
 }
 
 // Chargement et parsing du CSV
@@ -61,6 +76,7 @@ Papa.parse('data.csv', {
 document.getElementById('reveal').addEventListener('click', () => {
   document.getElementById('back').classList.toggle('visible');
 });
-document.getElementById('speak').addEventListener('click', speakKabyle);
+document.getElementById('speak').addEventListener('click', speakLocal);
+document.getElementById('speakAI').addEventListener('click', speakAI);
 document.getElementById('next').addEventListener('click', showRandomCard);
 document.getElementById('prev').addEventListener('click', showRandomCard);
