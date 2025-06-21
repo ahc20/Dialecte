@@ -1,15 +1,21 @@
 let cards = [];
 
-// 1) Charge le CSV
+// 1) Charge et parse le CSV
 Papa.parse('data.csv', {
-  download: true, header: true,
+  download: true,
+  header: true,
   complete: ({ data }) => {
-    cards = data.map(r => ({ fr: r.Français, kab: r.Kabyle }));
+    cards = data.map(r => ({
+      fr: r.Français,
+      kab: r.Kabyle,
+      frequency: r["Catégorie Fréquence"]
+    }));
     showRandomCard();
-  }
+  },
+  error: err => console.error('Erreur CSV :', err)
 });
 
-// 2) Affiche une carte
+// 2) Affiche une carte aléatoire
 function showRandomCard() {
   const i = Math.floor(Math.random() * cards.length);
   const { fr, kab } = cards[i];
@@ -19,44 +25,41 @@ function showRandomCard() {
   back.classList.remove('visible');
 }
 
-// 3) Révéler
-document.getElementById('reveal').onclick = () => {
+// 3) Révéler le mot
+document.getElementById('reveal').addEventListener('click', () => {
   document.getElementById('back').classList.toggle('visible');
-};
+});
 
-// 4) Prononcer via Hugging Face Space
-async function speakKabyle() {
+// 4) Prononcer via Web Speech API
+function speakKabyle() {
   const text = document.getElementById('back').textContent.trim();
   if (!text) return;
-  try {
-    // Envoi
-    const push = await fetch(
-      'https://hf.space/embed/ayymen/Amazigh-tts/api/queue/push/',
-      { method:'POST',
-        headers:{ 'Content-Type':'application/json' },
-        body: JSON.stringify({ data:[text], fn_index:0 })
-      }
-    );
-    const { hash } = await push.json();
-    // Polling
-    let url;
-    for (let i=0; i<15; i++) {
-      await new Promise(r=>setTimeout(r,1000));
-      const status = await fetch(
-        `https://hf.space/embed/ayymen/Amazigh-tts/api/queue/status/?hash=${hash}`
-      );
-      const j = await status.json();
-      if (j.data?.[0]) { url = j.data[0]; break; }
-    }
-    if (!url) throw new Error('Timeout TTS');
-    new Audio(url).play();
-  } catch(e) {
-    console.error(e);
-    alert('TTS IA failed: '+ e.message);
+
+  const synth = window.speechSynthesis;
+  let voices = synth.getVoices();
+  if (!voices.length) {
+    synth.onvoiceschanged = () => {
+      voices = synth.getVoices();
+      doSpeak(text, voices);
+    };
+  } else {
+    doSpeak(text, voices);
   }
 }
-document.getElementById('speak').onclick = speakKabyle;
 
-// 5) Précédent / Suivant
-document.getElementById('next').onclick = showRandomCard;
-document.getElementById('prev').onclick = showRandomCard;
+function doSpeak(text, voices) {
+  const voice = voices.find(v => /fr(-|_)/i.test(v.lang)) || voices[0];
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.voice = voice;
+  utter.lang = voice.lang;
+  utter.rate = 0.9;    // vitesse plus naturelle
+  utter.pitch = 1.1;   // hauteur légèrement rehaussée
+  window.speechSynthesis.speak(utter);
+}
+
+// 5) Listener Prononcer
+document.getElementById('speak').addEventListener('click', speakKabyle);
+
+// 6) Précédent & Suivant
+document.getElementById('prev').addEventListener('click', showRandomCard);
+document.getElementById('next').addEventListener('click', showRandomCard);
