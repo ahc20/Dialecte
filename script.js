@@ -1,23 +1,18 @@
-// script.js
-import { saveProgress } from "./firebase.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
 let cards = [];
 let history = [];
 let pointer = -1;
 
-// 1) Charger CSV
+// Charger et parser le CSV
 Papa.parse('data.csv', {
   download: true,
   header: true,
   complete: ({ data }) => {
     cards = data.map(r => ({ fr: r.Français, kab: r.Kabyle }));
     showNextCard();
-  },
-  error: err => console.error('Erreur CSV :', err)
+  }
 });
 
-// 2) Afficher
+// Afficher carte
 function displayCardAt(idx) {
   const { fr, kab } = cards[idx];
   document.getElementById('front').textContent = fr;
@@ -27,7 +22,7 @@ function displayCardAt(idx) {
   renderChoices(kab);
 }
 
-// 3) Tirage
+// Tirage aléatoire
 function getRandomIndex() {
   if (cards.length < 2) return 0;
   let i;
@@ -36,7 +31,7 @@ function getRandomIndex() {
   return i;
 }
 
-// 4) Suivant
+// Suivant
 function showNextCard() {
   if (pointer < history.length - 1) {
     pointer++;
@@ -49,7 +44,7 @@ function showNextCard() {
   }
 }
 
-// 5) Précédent
+// Précédent
 function showPrevCard() {
   if (pointer > 0) {
     pointer--;
@@ -57,10 +52,10 @@ function showPrevCard() {
   }
 }
 
-// 6) QCM
+// QCM
 function renderChoices(correctKab) {
-  const container = document.getElementById('choices');
-  container.innerHTML = '';
+  const c = document.getElementById('choices');
+  c.innerHTML = '';
   const dist = new Set();
   while (dist.size < 3) {
     const r = cards[Math.floor(Math.random()*cards.length)].kab;
@@ -70,13 +65,13 @@ function renderChoices(correctKab) {
   opts.forEach(opt => {
     const b = document.createElement('button');
     b.textContent = opt;
-    b.addEventListener('click', () => handleChoice(b, opt===correctKab, correctKab));
-    container.appendChild(b);
+    b.onclick = () => handleChoice(b, opt===correctKab, correctKab);
+    c.appendChild(b);
   });
 }
 
-// 7) Clic QCM
-async function handleChoice(btn, ok, correct) {
+// Clic QCM
+function handleChoice(btn, ok, correct) {
   btn.classList.add(ok?'correct':'wrong');
   document.querySelectorAll('#choices button').forEach(b=>b.disabled=true);
   if (!ok) {
@@ -86,35 +81,31 @@ async function handleChoice(btn, ok, correct) {
   } else {
     document.getElementById('back').classList.add('visible');
   }
-  try {
-    const uid = getAuth().currentUser.uid;
-    const frWord = document.getElementById('front').textContent;
-    await saveProgress(uid, frWord, ok);
-  } catch(e){console.error(e);}
   setTimeout(showNextCard,1500);
 }
 
-// 8) Révéler
-document.getElementById('reveal').addEventListener('click', ()=>
-  document.getElementById('back').classList.toggle('visible')
-);
+// Révéler
+document.getElementById('reveal').onclick = () =>
+  document.getElementById('back').classList.toggle('visible');
 
-// 9) Prononcer
-document.getElementById('speak').addEventListener('click',()=>{
-  const t = document.getElementById('back').textContent.trim();
-  if (!t) return;
-  const synth = window.speechSynthesis;
-  let v = synth.getVoices();
-  const speakIt = voices=>{
-    const vc = voices.find(vi=>/fr(-|_)/i.test(vi.lang))||voices[0];
-    const u = new SpeechSynthesisUtterance(t);
-    u.voice=vc; u.lang=vc.lang; u.rate=0.9; u.pitch=1.1;
+// Prononcer
+document.getElementById('speak').onclick = () => {
+  const text = document.getElementById('back').textContent.trim();
+  if (!text) return;
+  const synth = speechSynthesis;
+  let voices = synth.getVoices();
+  const speakIt = vList => {
+    const v = vList.find(v=>/fr(-|_)/i.test(v.lang))||vList[0];
+    const u = new SpeechSynthesisUtterance(text);
+    u.voice=v; u.lang=v.lang; u.rate=0.9; u.pitch=1.1;
     synth.speak(u);
   };
-  if (!v.length) synth.onvoiceschanged=()=>{v=synth.getVoices();speakIt(v)};
-  else speakIt(v);
-});
+  if (!voices.length) synth.onvoiceschanged = () => {
+    voices = synth.getVoices(); speakIt(voices);
+  };
+  else speakIt(voices);
+};
 
-// 10) Prev/Next
-document.getElementById('prev').addEventListener('click', showPrevCard);
-document.getElementById('next').addEventListener('click', showNextCard);
+// Prev/Next
+document.getElementById('prev').onclick = showPrevCard;
+document.getElementById('next').onclick = showNextCard;
