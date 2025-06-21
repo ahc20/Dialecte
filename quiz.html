@@ -11,6 +11,7 @@
   <header class="header">
     <a href="index.html" class="home-icon">🏠</a>
     <h1 class="logo">Dialecte – Quiz</h1>
+    <div class="header-auth" id="header-auth"></div>
   </header>
 
   <nav class="mobile-nav">
@@ -18,6 +19,7 @@
     <a href="signup.html">S’inscrire</a>
     <a href="login.html">Se connecter</a>
     <a href="quiz.html" class="active">Quiz</a>
+    <a href="progres.html">Mes progrès</a>
   </nav>
 
   <div class="layout">
@@ -27,6 +29,7 @@
         <li><a href="signup.html">S’inscrire</a></li>
         <li><a href="login.html">Se connecter</a></li>
         <li><a href="quiz.html" class="active">Quiz</a></li>
+        <li><a href="progres.html">Mes progrès</a></li>
       </ul>
     </nav>
 
@@ -35,9 +38,7 @@
         <div id="front" class="face">Chargement…</div>
         <div id="back"  class="face"></div>
       </div>
-
       <div id="choices" class="choices"></div>
-
       <div class="controls">
         <button id="prev">Précédent</button>
         <button id="reveal">Révéler</button>
@@ -46,6 +47,36 @@
       </div>
     </main>
   </div>
+
+  <script type="module">
+    import { auth, logout, initAuthListener } from "./firebase.js";
+
+    // Gère les boutons auth dans l'en-tête
+    const headerAuth = document.getElementById('header-auth');
+    function renderAuthButtons(user) {
+      headerAuth.innerHTML = '';
+      if (user) {
+        const btn = document.createElement('button');
+        btn.textContent = 'Se déconnecter';
+        btn.className = 'btn auth';
+        btn.onclick = async () => { await logout(); location.reload(); };
+        headerAuth.appendChild(btn);
+      } else {
+        const login = document.createElement('a');
+        login.href = 'login.html';
+        login.textContent = 'Se connecter';
+        login.className = 'btn auth';
+        const signup = document.createElement('a');
+        signup.href = 'signup.html';
+        signup.textContent = 'S’inscrire';
+        signup.className = 'btn auth';
+        headerAuth.append(login, signup);
+      }
+    }
+    initAuthListener(user => {
+      renderAuthButtons(user);
+    });
+  </script>
 
   <script src="script.js"></script>
 </body>
