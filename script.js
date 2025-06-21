@@ -2,32 +2,32 @@ let cards = [];
 const weights = {
   "Très courant": 5,
   "Courant":      3,
-  "Moyennement courant":2,
+  "Moyennement courant": 2,
   "Peu courant":  1
 };
 
-// Choisit un index au hasard en pondérant par weights[row["Catégorie Fréquence"]]
+// Fonction de tirage aléatoire pondéré
 function weightedRandomIndex() {
-  const total = cards.reduce((sum, c) => sum + (weights[c.frequency]||1), 0);
+  const total = cards.reduce((sum, c) => sum + (weights[c.frequency] || 1), 0);
   let r = Math.random() * total;
   for (let i = 0; i < cards.length; i++) {
-    r -= (weights[cards[i].frequency]||1);
+    r -= (weights[cards[i].frequency] || 1);
     if (r <= 0) return i;
   }
   return 0;
 }
 
-// Affiche une carte tirée au hasard
+// Affiche une nouvelle carte
 function showRandomCard() {
   const i = weightedRandomIndex();
   const { fr, kab } = cards[i];
   document.getElementById('front').textContent = fr;
   const back = document.getElementById('back');
   back.textContent = kab;
-  back.classList.add('hidden');
+  back.classList.remove('visible');
 }
 
-// Charge et parse le CSV
+// Chargement et parsing du CSV
 Papa.parse('data.csv', {
   download: true,
   header: true,
@@ -35,16 +35,18 @@ Papa.parse('data.csv', {
     cards = results.data.map(row => ({
       fr: row.Français,
       kab: row.Kabyle,
-      // on lit la colonne "Catégorie Fréquence"
       frequency: row["Catégorie Fréquence"]
     }));
     showRandomCard();
+  },
+  error: (err) => {
+    console.error('Erreur de chargement CSV:', err);
   }
 });
 
-// Boutons
+// Gestion des boutons
 document.getElementById('reveal').addEventListener('click', () => {
-  document.getElementById('back').classList.toggle('hidden');
+  document.getElementById('back').classList.toggle('visible');
 });
 document.getElementById('next').addEventListener('click', showRandomCard);
 document.getElementById('prev').addEventListener('click', showRandomCard);

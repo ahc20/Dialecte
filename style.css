@@ -10,12 +10,7 @@
   --card-bg: #FFFFFF;
   --text: #111827;
 }
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; margin:0; padding:0; }
 body {
   font-family: 'Inter', sans-serif;
   background: var(--bg);
@@ -39,29 +34,32 @@ h1 {
    CARTE
 --------------------------------------------------- */
 .card {
+  display: flex;
+  flex-direction: column;      /* empile front et back verticalement */
+  align-items: center;
   width: 320px;
-  height: 220px;
   background: var(--card-bg);
   border-radius: 16px;
   box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1.5rem;
-  padding: 1rem;
+  padding: 2rem 1rem;
   text-align: center;
+  margin-bottom: 1.5rem;
 }
+
 .face {
   font-size: 1.6rem;
   font-weight: 600;
 }
-.hidden {
+
+/* BACK caché par défaut, avec marge pour séparation */
+#back {
   display: none;
+  margin-top: 1.5rem;
 }
 
-/* Quand la face arrière est visible, on lui donne un peu de marge */
-#back {
-  margin-top: 1rem;
+/* Quand la classe visible est présente, on affiche le back */
+#back.visible {
+  display: block;
 }
 
 /* ---------------------------------------------------
@@ -96,7 +94,6 @@ h1 {
 @media (max-width: 400px) {
   .card {
     width: 100%;
-    height: auto;
     padding: 1.5rem;
   }
   .controls button {
