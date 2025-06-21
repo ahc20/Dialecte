@@ -51,15 +51,14 @@ h1 {
   font-weight: 600;
 }
 
-/* BACK caché par défaut, avec marge pour séparation */
-#back {
-  display: none;
-  margin-top: 1.5rem;
-}
-
-/* Quand la classe visible est présente, on affiche le back */
-#back.visible {
-  display: block;
+/* ---------------------------------------------------
+   INJECTION DU KABYLE
+--------------------------------------------------- */
+.kab {
+  display: block;           /* passe à la ligne */
+  margin-top: 1rem;         /* espace au-dessus */
+  font-weight: 600;
+  color: var(--primary);
 }
 
 /* ---------------------------------------------------

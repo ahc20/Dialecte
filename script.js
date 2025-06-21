@@ -6,7 +6,7 @@ const weights = {
   "Peu courant":  1
 };
 
-// Fonction de tirage aléatoire pondéré
+// Tirage aléatoire pondéré
 function weightedRandomIndex() {
   const total = cards.reduce((sum, c) => sum + (weights[c.frequency] || 1), 0);
   let r = Math.random() * total;
@@ -17,14 +17,12 @@ function weightedRandomIndex() {
   return 0;
 }
 
-// Affiche une nouvelle carte
+// Affiche une nouvelle carte (seul le français)
 function showRandomCard() {
   const i = weightedRandomIndex();
-  const { fr, kab } = cards[i];
-  document.getElementById('front').textContent = fr;
-  const back = document.getElementById('back');
-  back.textContent = kab;
-  back.classList.remove('visible');
+  const card = cards[i];
+  const frontEl = document.getElementById('front');
+  frontEl.textContent = card.fr;
 }
 
 // Chargement et parsing du CSV
@@ -44,9 +42,19 @@ Papa.parse('data.csv', {
   }
 });
 
-// Gestion des boutons
+// Au clic sur Révéler : injecte le Kabyle sous le Français
 document.getElementById('reveal').addEventListener('click', () => {
-  document.getElementById('back').classList.toggle('visible');
+  const frontEl = document.getElementById('front');
+  const textFr = frontEl.textContent;
+  // Retire toute injection <span class="kab"> précédente
+  frontEl.innerHTML = textFr;
+  // Récupère la carte correspondante
+  const card = cards.find(c => c.fr === textFr);
+  if (card) {
+    frontEl.insertAdjacentHTML('beforeend', `<span class="kab">${card.kab}</span>`);
+  }
 });
+
+// Boutons Suivant / Précédent
 document.getElementById('next').addEventListener('click', showRandomCard);
 document.getElementById('prev').addEventListener('click', showRandomCard);
