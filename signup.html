@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Dialecte – S’inscrire</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- On charge firebase.js avant tout -->
-  <script type="module" src="firebase.js"></script>
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <header class="header">
@@ -17,21 +15,58 @@
   <main class="main signup-main">
     <form id="signup-form" class="signup-form">
       <label>Prénom
-        <input type="text" name="firstName" required />
+        <input type="text" name="firstName" required/>
       </label>
       <label>Email
-        <input type="email" name="email" required />
+        <input type="email" name="email" required/>
       </label>
       <label>Mot de passe
-        <input type="password" name="password" required minlength="6" />
+        <input type="password" name="password" required minlength="6"/>
       </label>
       <button type="submit" class="btn submit auth">S’inscrire</button>
     </form>
   </main>
 
+  <!-- Un seul script module -->
   <script type="module">
-    import { signup } from "./firebase.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      updateProfile
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import {
+      getFirestore,
+      doc,
+      setDoc
+    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
+    // Config identique
+    const firebaseConfig = {
+      apiKey: "AIzaSyCI5yQhUVJKKktWCG2svsxx4RaiCTHBahc",
+      authDomain: "dialecte-e23ae.firebaseapp.com",
+      projectId: "dialecte-e23ae",
+      storageBucket: "dialecte-e23ae.appspot.com",
+      messagingSenderId: "455539698432",
+      appId: "G-2RCV5ZR5WN"
+    };
+
+    // Initialisation
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    // Fonction signup
+    async function signup(firstName, email, password) {
+      const { user } = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(user, { displayName: firstName });
+      await setDoc(doc(db, "users", user.uid), {
+        firstName, email, progress: []
+      });
+      return user;
+    }
+
+    // Écoute du formulaire
     document.getElementById('signup-form').addEventListener('submit', async e => {
       e.preventDefault();
       const f = e.target;
