@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dialecte – Flashcards Kabyle</title>
+  <title>Dialecte – Flashcards & QCM Kabyle</title>
 
   <!-- Google Font Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,16 +12,18 @@
 
   <!-- PapaParse pour lire le CSV -->
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-
-  <!-- CSS -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Dialecte – Flashcards Kabyle</h1>
+  <h1>Dialecte – Flashcards & QCM Kabyle</h1>
 
   <div class="card">
     <div id="front" class="face">Chargement…</div>
-    <div id="back"  class="face"></div>
+    <div id="back" class="face"></div>
+  </div>
+
+  <div id="choices" class="choices">
+    <!-- Les boutons QCM y seront injectés -->
   </div>
 
   <div class="controls">
