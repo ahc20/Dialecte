@@ -63,32 +63,40 @@ function showPrevCard() {
 function renderChoices(correctKab) {
   const container = document.getElementById('choices');
   container.innerHTML = '';
-  // récupérer 3 distracteurs
+  // récupérer 3 distracteurs uniques
   const distractors = new Set();
   while (distractors.size < 3) {
     const rand = cards[Math.floor(Math.random() * cards.length)].kab;
     if (rand !== correctKab) distractors.add(rand);
   }
   const options = [correctKab, ...distractors];
-  // shuffle
+  // mélange des options
   options.sort(() => Math.random() - 0.5);
-  // créer les boutons
+  // création des boutons
   options.forEach(opt => {
     const btn = document.createElement('button');
     btn.textContent = opt;
-    btn.addEventListener('click', () => handleChoice(btn, opt === correctKab));
+    btn.addEventListener('click', () => handleChoice(btn, opt === correctKab, correctKab));
     container.appendChild(btn);
   });
 }
 
 // 7) Gestion du clic QCM
-function handleChoice(btn, isCorrect) {
+function handleChoice(btn, isCorrect, correctKab) {
+  // colorer le bouton cliqué
   btn.classList.add(isCorrect ? 'correct' : 'wrong');
   // désactiver tous les boutons
   document.querySelectorAll('#choices button').forEach(b => b.disabled = true);
-  if (isCorrect) {
+  // si incorrect, montrer aussi la bonne réponse
+  if (!isCorrect) {
+    const correctBtn = Array.from(document.querySelectorAll('#choices button'))
+      .find(b => b.textContent === correctKab);
+    if (correctBtn) correctBtn.classList.add('correct');
+  } else {
+    // si correct, on révèle le mot
     document.getElementById('back').classList.add('visible');
   }
+  // passer à la question suivante après 1,5s
   setTimeout(showNextCard, 1500);
 }
 
