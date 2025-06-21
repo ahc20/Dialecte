@@ -16,8 +16,8 @@
 
   <nav class="mobile-nav">
     <a href="index.html">Lexique</a>
-    <a href="index.html">S’entraîner</a>
-    <a href="index.html">Mes progrès</a>
+    <a href="signup.html">S’inscrire</a>
+    <a href="login.html">Se connecter</a>
     <a href="quiz.html" class="active">Quiz</a>
   </nav>
 
@@ -25,8 +25,8 @@
     <nav class="sidebar">
       <ul>
         <li><a href="index.html">Lexique</a></li>
-        <li><a href="index.html">S’entraîner</a></li>
-        <li><a href="index.html">Mes progrès</a></li>
+        <li><a href="signup.html">S’inscrire</a></li>
+        <li><a href="login.html">Se connecter</a></li>
         <li><a href="quiz.html" class="active">Quiz</a></li>
       </ul>
     </nav>
@@ -50,8 +50,9 @@
   <script type="module">
     import { initAuthListener } from "./firebase.js";
     initAuthListener(user => {
-      if (!user) return window.location.href = 'login.html';
-      document.getElementById('user-greeting').textContent = `Bonjour ${user.displayName}`;
+      // si non connecté : on affiche "Bonjour Invité"
+      document.getElementById('user-greeting').textContent =
+        user ? `Bonjour ${user.displayName}` : 'Bonjour Invité';
     });
   </script>
   <script src="script.js"></script>

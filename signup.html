@@ -29,7 +29,7 @@
       const f = e.target;
       try {
         await signup(f.firstName.value, f.email.value, f.password.value);
-        alert('Inscription réussie ! Vous êtes connecté.');
+        alert('Inscription réussie ! Vous êtes maintenant connecté.');
         window.location.href = 'quiz.html';
       } catch (err) {
         alert('Erreur inscription : ' + err.message);
