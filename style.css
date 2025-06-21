@@ -1,5 +1,5 @@
 /* ---------------------------------------------------
-   FOND & TYPO
+   VARIABLES, FOND & TYPO
 --------------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
@@ -48,7 +48,6 @@ h1 {
   align-items: center;
   justify-content: center;
   margin-bottom: 1.5rem;
-  position: relative;
   padding: 1rem;
   text-align: center;
 }
