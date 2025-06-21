@@ -20,6 +20,8 @@ body, html {
   background: var(--bg);
   color: var(--text);
 }
+
+/* ========== HEADER ========== */
 .header {
   display: flex;
   align-items: center;
@@ -38,6 +40,7 @@ body, html {
   font-size: 1.25rem;
 }
 
+/* ========== LAYOUT ========== */
 .layout {
   display: flex;
   height: calc(100% - 56px); /* header height */
@@ -69,12 +72,14 @@ body, html {
   color: #1F4827;
 }
 
+/* ========== PAGE ACCUEIL ========== */
 .main {
   flex: 1;
-  padding: 2rem;
+  /* on remonte un peu le contenu principal */
+  padding: 1rem 2rem 2rem; 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start; /* start au lieu de center */
   align-items: center;
 }
 .auth-buttons {
@@ -83,6 +88,8 @@ body, html {
   justify-content: center;
   align-items: center;
   width: 100%;
+  /* margin-top réduit pour remonter les boutons */
+  margin-top: 2rem;
 }
 .auth-buttons button {
   background: var(--primary);
@@ -99,6 +106,7 @@ body, html {
   background: var(--primary-hover);
 }
 
+/* ========== FLASHCARD & QCM ========== */
 .card {
   display: flex;
   flex-direction: column;
@@ -155,6 +163,7 @@ body, html {
   border-color: var(--wrong);
 }
 
+/* ========== CONTROLS ========== */
 .controls {
   display: flex;
   gap: 1rem;
@@ -180,6 +189,7 @@ body, html {
   transform: translateY(2px);
 }
 
+/* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
   .layout {
     flex-direction: column;
