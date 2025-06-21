@@ -49,10 +49,11 @@
       list.innerHTML = '';
 
       if (user && user.displayName) {
+        // Affiche le message et le prénom
         w.textContent = 'Bienvenue !';
         u.textContent = user.displayName;
 
-        // Charge les progrès depuis Firestore
+        // Charge et affiche les progrès
         const prog = await getProgress(user.uid);
         if (prog.length === 0) {
           list.textContent = "Vous n'avez pas encore de progrès.";
@@ -67,6 +68,7 @@
           list.appendChild(ul);
         }
       } else {
+        // Mode invité
         w.textContent = 'Bienvenue invité !';
         u.textContent = '';
         list.textContent = "Connectez-vous pour voir vos progrès.";
