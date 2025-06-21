@@ -1,33 +1,102 @@
+/* ---------------------------------------------------
+   FOND & TYPO
+--------------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+:root {
+  --primary: #4F46E5;
+  --primary-hover: #4338CA;
+  --bg: #F9FAFB;
+  --card-bg: #FFFFFF;
+  --text: #111827;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 body {
-    font-family: sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-  }
-  h1 {
-    margin-bottom: 1rem;
-  }
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* ---------------------------------------------------
+   TITRE
+--------------------------------------------------- */
+h1 {
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+
+/* ---------------------------------------------------
+   CARTE
+--------------------------------------------------- */
+.card {
+  width: 320px;
+  height: 220px;
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+  padding: 1rem;
+  text-align: center;
+}
+.face {
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+.hidden {
+  visibility: hidden;
+}
+
+/* ---------------------------------------------------
+   BOUTONS
+--------------------------------------------------- */
+.controls {
+  display: flex;
+  gap: 1rem;
+}
+.controls button {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.controls button:hover {
+  background: var(--primary-hover);
+}
+.controls button:active {
+  transform: translateY(2px);
+}
+
+/* ---------------------------------------------------
+   MOBILE RESPONSIVE
+--------------------------------------------------- */
+@media (max-width: 400px) {
   .card {
-    width: 300px;
-    height: 200px;
-    border: 2px solid #333;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-    position: relative;
-  }
-  .face {
-    font-size: 1.5rem;
-    text-align: center;
-    padding: 1rem;
-  }
-  .hidden {
-    display: none;
+    width: 100%;
+    height: auto;
+    padding: 1.5rem;
   }
   .controls button {
-    margin: 0 0.5rem;
-    padding: 0.5rem 1rem;
+    flex: 1;
+    padding: 0.8rem;
   }
+}
