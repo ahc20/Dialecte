@@ -1,6 +1,6 @@
 let cards = [];
 
-// Poids pondérés selon Catégorie Fréquence (ajuste si besoin)
+// Poids pondérés selon Catégorie Fréquence
 const weights = {
   "Très courant": 5,
   "Courant": 3,
@@ -36,12 +36,18 @@ async function speakAI() {
   if (!text) return;
   try {
     const res = await fetch(`/api/tts?text=${encodeURIComponent(text)}`);
-    if (!res.ok) throw new Error(await res.text());
+    if (!res.ok) {
+      const err = await res.text();
+      console.error('TTS AI error body:', err);
+      alert('Erreur TTS : ' + err);
+      return;
+    }
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
     new Audio(url).play();
   } catch (err) {
-    console.error('Erreur TTS AI :', err);
+    console.error('Erreur fetch TTS :', err);
+    alert('Erreur réseau TTS : ' + err.message);
   }
 }
 
@@ -67,23 +73,3 @@ document.getElementById('reveal').addEventListener('click', () => {
 document.getElementById('speakAI').addEventListener('click', speakAI);
 document.getElementById('next').addEventListener('click', showRandomCard);
 document.getElementById('prev').addEventListener('click', showRandomCard);
-
-async function speakAI() {
-  const text = document.getElementById('back').textContent.trim();
-  if (!text) return alert('Rien à prononcer !');
-  try {
-    const res = await fetch(`/api/tts?text=${encodeURIComponent(text)}`);
-    console.log('Réponse TTS status:', res.status);
-    if (!res.ok) {
-      const err = await res.text();
-      console.error('TTS AI error body:', err);
-      return alert('Erreur TTS : ' + err);
-    }
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    new Audio(url).play();
-  } catch (err) {
-    console.error('Erreur fetch TTS:', err);
-    alert('Erreur réseau TTS : ' + err.message);
-  }
-}

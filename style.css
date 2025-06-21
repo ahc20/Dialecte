@@ -7,7 +7,11 @@
   --card-bg: #FFFFFF;
   --text: #111827;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 body {
   font-family: 'Inter', sans-serif;
   background: var(--bg);
@@ -40,13 +44,13 @@ h1 {
   font-weight: 600;
 }
 /* back caché par défaut */
-#back { 
+#back {
   display: none;
   margin-top: 1rem;
   color: var(--primary);
 }
 /* affiché au toggle */
-#back.visible { 
+#back.visible {
   display: block;
 }
 
@@ -71,12 +75,6 @@ h1 {
 }
 .controls button:active {
   transform: translateY(2px);
-}
-
-/* Ajustement du bouton 🔊 */
-.controls button#speak {
-  font-size: 1.2rem;
-  padding: 0.5rem 0.8rem;
 }
 
 @media (max-width: 400px) {
