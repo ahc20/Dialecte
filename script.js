@@ -1,9 +1,12 @@
 let cards = [];
+
+// Poids pondérés selon Catégorie Fréquence
 const weights = {
   "Très courant": 5,
   "Courant":      3,
   "Moyennement courant": 2,
-  "Peu courant":  1
+  "Peu courant":  1,
+  "Très rare":    1
 };
 
 // Tirage aléatoire pondéré
@@ -17,44 +20,47 @@ function weightedRandomIndex() {
   return 0;
 }
 
-// Affiche une nouvelle carte (seul le français)
+// Affiche la carte
 function showRandomCard() {
   const i = weightedRandomIndex();
-  const card = cards[i];
-  const frontEl = document.getElementById('front');
-  frontEl.textContent = card.fr;
+  const { fr, kab } = cards[i];
+  document.getElementById('front').textContent = fr;
+  const back = document.getElementById('back');
+  back.textContent = kab;
+  back.classList.remove('visible');
+}
+
+// Prononciation par Web Speech API
+function speakKabyle() {
+  const text = document.getElementById('back').textContent.trim();
+  if (!text) return;
+  const utter = new SpeechSynthesisUtterance(text);
+  const voices = window.speechSynthesis.getVoices();
+  // Essayer de choisir une voix berbère ou francophone
+  utter.voice = voices.find(v => /berb|fr/i.test(v.lang)) || voices[0];
+  utter.lang = utter.voice.lang;
+  speechSynthesis.speak(utter);
 }
 
 // Chargement et parsing du CSV
 Papa.parse('data.csv', {
   download: true,
   header: true,
-  complete: (results) => {
-    cards = results.data.map(row => ({
-      fr: row.Français,
-      kab: row.Kabyle,
-      frequency: row["Catégorie Fréquence"]
+  complete: res => {
+    cards = res.data.map(r => ({
+      fr: r.Français,
+      kab: r.Kabyle,
+      frequency: r["Catégorie Fréquence"]
     }));
     showRandomCard();
   },
-  error: (err) => {
-    console.error('Erreur de chargement CSV:', err);
-  }
+  error: err => console.error('Erreur CSV :', err)
 });
 
-// Au clic sur Révéler : injecte le Kabyle sous le Français
+// Listeners des boutons
 document.getElementById('reveal').addEventListener('click', () => {
-  const frontEl = document.getElementById('front');
-  const textFr = frontEl.textContent;
-  // Retire toute injection <span class="kab"> précédente
-  frontEl.innerHTML = textFr;
-  // Récupère la carte correspondante
-  const card = cards.find(c => c.fr === textFr);
-  if (card) {
-    frontEl.insertAdjacentHTML('beforeend', `<span class="kab">${card.kab}</span>`);
-  }
+  document.getElementById('back').classList.toggle('visible');
 });
-
-// Boutons Suivant / Précédent
+document.getElementById('speak').addEventListener('click', speakKabyle);
 document.getElementById('next').addEventListener('click', showRandomCard);
 document.getElementById('prev').addEventListener('click', showRandomCard);
