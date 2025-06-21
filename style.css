@@ -171,6 +171,45 @@ body, html {
   background: var(--primary-hover);
 }
 
+/* === SE CONNECTER – format identique à signup === */
+.signup-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 360px;
+}
+.signup-form label {
+  font-weight: 600;
+  color: #374151;
+}
+.signup-form input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+.signup-form .btn.auth {
+  background: var(--primary);
+  color: #fff;
+  padding: 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  border-radius: 8px;
+  text-align: center;
+  transition: background 0.2s;
+}
+.signup-form .btn.auth:hover {
+  background: var(--primary-hover);
+}
+
 /* RESPONSIVE */
 @media(max-width:768px){
   .layout{flex-direction:column;}

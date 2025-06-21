@@ -13,16 +13,21 @@
     <h1 class="logo">Se connecter</h1>
   </header>
 
-  <main class="form-container">
-    <form id="login-form">
-      <label>Email<input type="email" name="email" required /></label>
-      <label>Mot de passe<input type="password" name="password" required /></label>
-      <button type="submit" class="btn submit">Se connecter</button>
+  <main class="main signup-main">
+    <form id="login-form" class="signup-form">
+      <label>Email
+        <input type="email" name="email" required />
+      </label>
+      <label>Mot de passe
+        <input type="password" name="password" required />
+      </label>
+      <button type="submit" class="btn submit auth">Se connecter</button>
     </form>
   </main>
 
   <script type="module">
     import { login } from "./firebase.js";
+
     document.getElementById('login-form').addEventListener('submit', async e => {
       e.preventDefault();
       const f = e.target;
