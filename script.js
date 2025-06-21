@@ -2,7 +2,6 @@ let cards = [];
 let history = [];
 let pointer = -1;
 
-// Charger et parser le CSV
 Papa.parse('data.csv', {
   download: true,
   header: true,
@@ -12,7 +11,6 @@ Papa.parse('data.csv', {
   }
 });
 
-// Afficher carte
 function displayCardAt(idx) {
   const { fr, kab } = cards[idx];
   document.getElementById('front').textContent = fr;
@@ -22,7 +20,6 @@ function displayCardAt(idx) {
   renderChoices(kab);
 }
 
-// Tirage aléatoire
 function getRandomIndex() {
   if (cards.length < 2) return 0;
   let i;
@@ -31,7 +28,6 @@ function getRandomIndex() {
   return i;
 }
 
-// Suivant
 function showNextCard() {
   if (pointer < history.length - 1) {
     pointer++;
@@ -44,7 +40,6 @@ function showNextCard() {
   }
 }
 
-// Précédent
 function showPrevCard() {
   if (pointer > 0) {
     pointer--;
@@ -52,7 +47,6 @@ function showPrevCard() {
   }
 }
 
-// QCM
 function renderChoices(correctKab) {
   const c = document.getElementById('choices');
   c.innerHTML = '';
@@ -70,7 +64,6 @@ function renderChoices(correctKab) {
   });
 }
 
-// Clic QCM
 function handleChoice(btn, ok, correct) {
   btn.classList.add(ok?'correct':'wrong');
   document.querySelectorAll('#choices button').forEach(b=>b.disabled=true);
@@ -84,28 +77,23 @@ function handleChoice(btn, ok, correct) {
   setTimeout(showNextCard,1500);
 }
 
-// Révéler
 document.getElementById('reveal').onclick = () =>
   document.getElementById('back').classList.toggle('visible');
 
-// Prononcer
 document.getElementById('speak').onclick = () => {
-  const text = document.getElementById('back').textContent.trim();
-  if (!text) return;
+  const t = document.getElementById('back').textContent.trim();
+  if (!t) return;
   const synth = speechSynthesis;
-  let voices = synth.getVoices();
-  const speakIt = vList => {
-    const v = vList.find(v=>/fr(-|_)/i.test(v.lang))||vList[0];
-    const u = new SpeechSynthesisUtterance(text);
-    u.voice=v; u.lang=v.lang; u.rate=0.9; u.pitch=1.1;
+  let v = synth.getVoices();
+  const s = voices => {
+    const vc = voices.find(x=>/fr(-|_)/i.test(x.lang))||voices[0];
+    const u = new SpeechSynthesisUtterance(t);
+    u.voice=vc; u.lang=vc.lang; u.rate=0.9; u.pitch=1.1;
     synth.speak(u);
   };
-  if (!voices.length) synth.onvoiceschanged = () => {
-    voices = synth.getVoices(); speakIt(voices);
-  };
-  else speakIt(voices);
+  if (!v.length) synth.onvoiceschanged = () => { v=synth.getVoices(); s(v); };
+  else s(v);
 };
 
-// Prev/Next
 document.getElementById('prev').onclick = showPrevCard;
 document.getElementById('next').onclick = showNextCard;
