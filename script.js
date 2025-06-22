@@ -1,7 +1,4 @@
 // script.js
-import { saveProgress } from "./firebase.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
 let cards = [];
 let history = [];
 let pointer = -1;
@@ -12,7 +9,7 @@ Papa.parse('data.csv', {
   header: true,
   complete: ({ data }) => {
     cards = data.map(r => ({ fr: r.Français, kab: r.Kabyle }));
-    showNextCard();
+    showNextCard();  // <-- Assure-toi que ça s'appelle bien
   },
   error: err => console.error('Erreur CSV :', err)
 });
@@ -36,7 +33,7 @@ function getRandomIndex() {
   return i;
 }
 
-// 4) Suivant avec historique
+// 4) Suivant / historique
 function showNextCard() {
   if (pointer < history.length - 1) {
     pointer++;
@@ -61,13 +58,14 @@ function showPrevCard() {
 function renderChoices(correctKab) {
   const container = document.getElementById('choices');
   container.innerHTML = '';
-  const distractors = new Set();
-  while (distractors.size < 3) {
+  // 3 distracteurs
+  const dist = new Set();
+  while (dist.size < 3) {
     const r = cards[Math.floor(Math.random() * cards.length)].kab;
-    if (r !== correctKab) distractors.add(r);
+    if (r !== correctKab) dist.add(r);
   }
-  const options = [correctKab, ...distractors].sort(() => Math.random() - 0.5);
-  options.forEach(opt => {
+  const opts = [correctKab, ...dist].sort(() => Math.random() - 0.5);
+  opts.forEach(opt => {
     const btn = document.createElement('button');
     btn.textContent = opt;
     btn.addEventListener('click', () => handleChoice(btn, opt === correctKab, correctKab));
@@ -75,11 +73,10 @@ function renderChoices(correctKab) {
   });
 }
 
-// 7) Gestion du clic QCM + sauvegarde
-async function handleChoice(btn, isCorrect, correctKab) {
+// 7) Gestion du clic QCM
+function handleChoice(btn, isCorrect, correctKab) {
   btn.classList.add(isCorrect ? 'correct' : 'wrong');
   document.querySelectorAll('#choices button').forEach(b => b.disabled = true);
-
   if (!isCorrect) {
     const good = Array.from(document.querySelectorAll('#choices button'))
       .find(b => b.textContent === correctKab);
@@ -87,36 +84,27 @@ async function handleChoice(btn, isCorrect, correctKab) {
   } else {
     document.getElementById('back').classList.add('visible');
   }
-
-  // Sauvegarde dans Firestore si connecté
-  try {
-    const user = getAuth().currentUser;
-    if (user) {
-      const frWord = document.getElementById('front').textContent;
-      await saveProgress(user.uid, frWord, isCorrect);
-    }
-  } catch (e) {
-    console.error('Impossible de sauvegarder le progrès :', e);
-  }
-
   setTimeout(showNextCard, 1500);
 }
 
-// 8) Révéler
-document.getElementById('reveal').addEventListener('click', () =>
-  document.getElementById('back').classList.toggle('visible')
-);
+// 8) Révéler la face arrière
+document.getElementById('reveal').addEventListener('click', () => {
+  document.getElementById('back').classList.toggle('visible');
+});
 
-// 9) Prononcer
+// 9) Prononcer avec Web Speech
 document.getElementById('speak').addEventListener('click', () => {
   const text = document.getElementById('back').textContent.trim();
   if (!text) return;
   const synth = window.speechSynthesis;
   let voices = synth.getVoices();
   const speakIt = vList => {
-    const vc = vList.find(v => /fr(-|_)/i.test(v.lang)) || vList[0];
+    const v = vList.find(v => /fr(-|_)/i.test(v.lang)) || vList[0];
     const ut = new SpeechSynthesisUtterance(text);
-    ut.voice = vc; ut.lang = vc.lang; ut.rate = 0.9; ut.pitch = 1.1;
+    ut.voice = v;
+    ut.lang = v.lang;
+    ut.rate = 0.9;
+    ut.pitch = 1.1;
     synth.speak(ut);
   };
   if (!voices.length) {
