@@ -18,8 +18,8 @@
     <nav class="sidebar">
       <ul>
         <li><a href="index.html">Lexique</a></li>
-        <li id="nav-signup"><a href="signup.html">S’inscrire</a></li>
-        <li id="nav-login"><a href="login.html">Se connecter</a></li>
+        <li><a href="signup.html">S’inscrire</a></li>
+        <li><a href="login.html">Se connecter</a></li>
         <li><a href="quiz.html" class="active">Quiz</a></li>
         <li><a href="progres.html">Mes progrès</a></li>
       </ul>
@@ -27,7 +27,7 @@
 
     <main class="main">
       <div class="card">
-        <div id="front" class="face">Chargement…</div>
+        <div id="front" class="face"></div>
         <div id="back"  class="face"></div>
       </div>
       <div id="choices" class="choices"></div>
@@ -40,7 +40,9 @@
     </main>
   </div>
 
+  <!-- Auth + déconnexion (inchangé) -->
   <script type="module" src="quiz-auth.js"></script>
+  <!-- Script principal QCM -->
   <script src="script.js"></script>
 </body>
 </html>
