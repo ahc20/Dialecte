@@ -14,10 +14,9 @@ import {
   setDoc,
   getDoc,
   updateDoc,
-  arrayUnion
+  increment
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-// ← Remplace par tes propres clés si besoin
 const firebaseConfig = {
   apiKey: "AIzaSyCI5yQhUVJKKktWCG2svsxx4RaiCTHBahc",
   authDomain: "dialecte-e23ae.firebaseapp.com",
@@ -31,41 +30,50 @@ initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const db   = getFirestore();
 
-// Écoute l'état de connexion
+// 1) Écoute la session
 export function initAuthListener(cb) {
   onAuthStateChanged(auth, user => cb(user));
 }
 
-// Inscription
+// 2) Inscription (initialise les compteurs)
 export async function signup(firstName, email, password) {
   const { user } = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(user, { displayName: firstName });
   await setDoc(doc(db, "users", user.uid), {
-    firstName, email, progress: []
+    firstName,
+    email,
+    totalAnswers: 0,
+    correctAnswers: 0
   });
   return user;
 }
 
-// Connexion
+// 3) Connexion
 export async function login(email, password) {
   const { user } = await signInWithEmailAndPassword(auth, email, password);
   return user;
 }
 
-// Déconnexion
+// 4) Déconnexion
 export function logout() {
   return signOut(auth);
 }
 
-// Sauvegarde d’une réponse
-export async function saveProgress(uid, word, correct) {
-  await updateDoc(doc(db, "users", uid), {
-    progress: arrayUnion({ word, correct, timestamp: Date.now() })
-  });
+// 5) Sauvegarde d’une réponse : incrémente total et, si correct, correctAnswers
+export async function saveAnswer(uid, isCorrect) {
+  const userRef = doc(db, "users", uid);
+  const updates = { totalAnswers: increment(1) };
+  if (isCorrect) updates.correctAnswers = increment(1);
+  await updateDoc(userRef, updates);
 }
 
-// Récupère le tableau progress
-export async function getProgress(uid) {
+// 6) Récupération des compteurs
+export async function getScore(uid) {
   const snap = await getDoc(doc(db, "users", uid));
-  return snap.exists() ? snap.data().progress : [];
+  if (!snap.exists()) return { totalAnswers: 0, correctAnswers: 0 };
+  const d = snap.data();
+  return {
+    totalAnswers: d.totalAnswers || 0,
+    correctAnswers: d.correctAnswers || 0
+  };
 }
