@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Dialecte – Mes progrès</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
@@ -11,14 +11,36 @@
     <a href="index.html" class="home-icon">🏠</a>
     <h1 class="logo">Mes progrès</h1>
   </header>
+
+  <nav class="mobile-nav">
+    <a href="index.html">Lexique</a>
+    <a href="signup.html">S’inscrire</a>
+    <a href="login.html">Se connecter</a>
+    <a href="quiz.html">Quiz</a>
+    <a href="progres.html" class="active">Mes progrès</a>
+  </nav>
+
   <div class="layout">
-    <nav class="sidebar"><ul>…</ul></nav>
+    <nav class="sidebar">
+      <ul>
+        <li><a href="index.html">Lexique</a></li>
+        <li><a href="signup.html">S’inscrire</a></li>
+        <li><a href="login.html">Se connecter</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="progres.html" class="active">Mes progrès</a></li>
+      </ul>
+    </nav>
+
     <main class="main">
       <div id="welcome" class="welcome-text">Bienvenue !</div>
       <div id="username" class="username-text"></div>
+
+      <!-- Barre de progression -->
       <div class="score-summary">
         <div class="score-label">Taux de réussite :</div>
-        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
         <div id="progress-percent" class="progress-percent">0 %</div>
       </div>
     </main>
@@ -26,20 +48,24 @@
 
   <script type="module">
     import { initAuthListener, getScore } from "./firebase.js";
+
     initAuthListener(async user => {
-      const w = document.getElementById('welcome');
-      const u = document.getElementById('username');
+      const w    = document.getElementById('welcome');
+      const u    = document.getElementById('username');
       const fill = document.getElementById('progress-fill');
       const pct  = document.getElementById('progress-percent');
+
       if (user && user.displayName) {
         w.textContent = 'Bienvenue !';
         u.textContent = user.displayName;
+
         const { totalAnswers, correctAnswers } = await getScore(user.uid);
         const percent = totalAnswers
-          ? Math.round((correctAnswers/totalAnswers)*100)
+          ? Math.round((correctAnswers / totalAnswers) * 100)
           : 0;
-        fill.style.width = percent+'%';
-        pct.textContent  = percent+' %';
+
+        fill.style.width = percent + '%';
+        pct.textContent  = percent + ' %';
       } else {
         w.textContent = 'Bienvenue invité !';
         u.textContent = '';

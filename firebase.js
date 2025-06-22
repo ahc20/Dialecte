@@ -35,7 +35,7 @@ export function initAuthListener(cb) {
   onAuthStateChanged(auth, user => cb(user));
 }
 
-// 2) Inscription (initialise les compteurs)
+// 2) Inscription (initialise compteurs)
 export async function signup(firstName, email, password) {
   const { user } = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(user, { displayName: firstName });
@@ -59,7 +59,7 @@ export function logout() {
   return signOut(auth);
 }
 
-// 5) Sauvegarde d’une réponse : incrémente total et, si correct, correctAnswers
+// 5) Sauvegarde d’une réponse
 export async function saveAnswer(uid, isCorrect) {
   const userRef = doc(db, "users", uid);
   const updates = { totalAnswers: increment(1) };
@@ -67,7 +67,7 @@ export async function saveAnswer(uid, isCorrect) {
   await updateDoc(userRef, updates);
 }
 
-// 6) Récupération des compteurs
+// 6) Récupère le score
 export async function getScore(uid) {
   const snap = await getDoc(doc(db, "users", uid));
   if (!snap.exists()) return { totalAnswers: 0, correctAnswers: 0 };
