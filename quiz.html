@@ -11,23 +11,14 @@
   <header class="header">
     <a href="index.html" class="home-icon">🏠</a>
     <h1 class="logo">Dialecte – Quiz</h1>
-    <div class="header-auth" id="header-auth"></div>
   </header>
-
-  <nav class="mobile-nav">
-    <a href="index.html">Lexique</a>
-    <a href="signup.html">S’inscrire</a>
-    <a href="login.html">Se connecter</a>
-    <a href="quiz.html" class="active">Quiz</a>
-    <a href="progres.html">Mes progrès</a>
-  </nav>
 
   <div class="layout">
     <nav class="sidebar">
       <ul>
         <li><a href="index.html">Lexique</a></li>
-        <li id="nav-signup"><a href="signup.html">S’inscrire</a></li>
-        <li id="nav-login"><a href="login.html">Se connecter</a></li>
+        <li><a href="signup.html">S’inscrire</a></li>
+        <li><a href="login.html">Se connecter</a></li>
         <li><a href="quiz.html" class="active">Quiz</a></li>
         <li><a href="progres.html">Mes progrès</a></li>
       </ul>
@@ -38,7 +29,9 @@
         <div id="front" class="face">Chargement…</div>
         <div id="back"  class="face"></div>
       </div>
+
       <div id="choices" class="choices"></div>
+
       <div class="controls">
         <button id="prev">Précédent</button>
         <button id="reveal">Révéler</button>
@@ -47,50 +40,6 @@
       </div>
     </main>
   </div>
-
-  <script type="module">
-    import { auth, logout, initAuthListener } from "./firebase.js";
-
-    const headerAuth = document.getElementById('header-auth');
-    const navSignup  = document.getElementById('nav-signup');
-    const navLogin   = document.getElementById('nav-login');
-
-    // Gère l’affichage des boutons en-tête et des liens sidebar
-    function renderUI(user) {
-      headerAuth.innerHTML = '';
-      if (user) {
-        // Masquer les liens S’inscrire / Se connecter
-        navSignup.style.display = 'none';
-        navLogin.style.display  = 'none';
-
-        // Bouton Se déconnecter
-        const btn = document.createElement('button');
-        btn.textContent = 'Se déconnecter';
-        btn.className   = 'btn auth';
-        btn.onclick     = async () => { await logout(); location.reload(); };
-        headerAuth.appendChild(btn);
-      } else {
-        // Afficher les liens
-        navSignup.style.display = '';
-        navLogin.style.display  = '';
-
-        // Boutons Se connecter / S’inscrire
-        const login = document.createElement('a');
-        login.href      = 'login.html';
-        login.textContent = 'Se connecter';
-        login.className = 'btn auth';
-        const signup = document.createElement('a');
-        signup.href       = 'signup.html';
-        signup.textContent  = 'S’inscrire';
-        signup.className  = 'btn auth';
-        headerAuth.append(login, signup);
-      }
-    }
-
-    initAuthListener(user => {
-      renderUI(user);
-    });
-  </script>
 
   <script src="script.js"></script>
 </body>

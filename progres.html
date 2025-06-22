@@ -11,15 +11,6 @@
     <a href="index.html" class="home-icon">🏠</a>
     <h1 class="logo">Mes progrès</h1>
   </header>
-
-  <nav class="mobile-nav">
-    <a href="index.html">Lexique</a>
-    <a href="signup.html">S’inscrire</a>
-    <a href="login.html">Se connecter</a>
-    <a href="quiz.html">Quiz</a>
-    <a href="progres.html" class="active">Mes progrès</a>
-  </nav>
-
   <div class="layout">
     <nav class="sidebar">
       <ul>
@@ -30,18 +21,13 @@
         <li><a href="progres.html" class="active">Mes progrès</a></li>
       </ul>
     </nav>
-
     <main class="main">
       <div id="welcome" class="welcome-text">Bienvenue !</div>
       <div id="username" class="username-text"></div>
       <div id="progress-list" class="progress-list"></div>
-
-      <!-- NOUVEAU : barre de progression -->
       <div class="score-summary">
         <div class="score-label">Taux de réussite :</div>
-        <div class="progress-bar">
-          <div id="progress-fill" class="progress-fill"></div>
-        </div>
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
         <div id="progress-percent" class="progress-percent">0 %</div>
       </div>
     </main>
@@ -56,9 +42,7 @@
       const list = document.getElementById('progress-list');
       const fill = document.getElementById('progress-fill');
       const pct  = document.getElementById('progress-percent');
-      list.innerHTML = '';
-      fill.style.width = '0%';
-      pct.textContent = '0 %';
+      list.innerHTML = ''; fill.style.width = '0%'; pct.textContent = '0 %';
 
       if (user && user.displayName) {
         w.textContent = 'Bienvenue !';
@@ -68,21 +52,21 @@
         if (!prog.length) {
           list.textContent = "Vous n'avez pas encore de progrès.";
         } else {
-          // affiche la liste
+          // liste
           const ul = document.createElement('ul');
           prog.forEach(item => {
-            const li = document.createElement('li');
+            const li   = document.createElement('li');
             const date = new Date(item.timestamp).toLocaleString();
-            li.textContent = `${item.word} — ${item.correct ? '✓' : '✗'} (${date})`;
+            li.textContent = `${item.word} – ${item.correct ? '✓' : '✗'} (${date})`;
             ul.appendChild(li);
           });
           list.appendChild(ul);
 
-          // calcule le pourcentage
+          // pourcentage
           const correctCount = prog.filter(x => x.correct).length;
           const percent = Math.round((correctCount / prog.length) * 100);
-          fill.style.width = `${percent}%`;
-          pct.textContent = `${percent} %`;
+          fill.style.width = percent + '%';
+          pct.textContent  = percent + ' %';
         }
       } else {
         w.textContent = 'Bienvenue invité !';
