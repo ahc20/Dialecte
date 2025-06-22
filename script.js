@@ -1,10 +1,7 @@
 // script.js
-import { saveAnswer } from "./firebase.js";
-import { getAuth }    from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
 let cards = [], history = [], pointer = -1;
 
-// 1) Charge et parse data.csv
+// 1) Charge et parse data.csv (séparateur ;)
 Papa.parse('data.csv', {
   download: true,
   header: true,
@@ -18,11 +15,11 @@ Papa.parse('data.csv', {
   },
   error: err => {
     console.error('Erreur CSV :', err);
-    document.getElementById('front').textContent = 'Erreur de chargement.';
+    document.getElementById('front').textContent = 'Échec du chargement.';
   }
 });
 
-// 2) Affiche la carte n°i
+// 2) Affiche la carte i
 function displayCardAt(i) {
   const { fr, kab } = cards[i];
   document.getElementById('front').textContent = fr;
@@ -32,12 +29,13 @@ function displayCardAt(i) {
   renderChoices(kab);
 }
 
-// 3) Index aléatoire
+// 3) Index aléatoire différent
 function getRandomIndex() {
   if (cards.length < 2) return 0;
   let i;
-  do { i = Math.floor(Math.random() * cards.length); }
-  while (history[pointer] === i);
+  do {
+    i = Math.floor(Math.random() * cards.length);
+  } while (history[pointer] === i);
   return i;
 }
 
@@ -61,7 +59,7 @@ function showPrevCard() {
   }
 }
 
-// 6) Génère le QCM
+// 6) Génère les boutons de choix
 function renderChoices(correctKab) {
   const container = document.getElementById('choices');
   container.innerHTML = '';
@@ -79,8 +77,8 @@ function renderChoices(correctKab) {
   });
 }
 
-// 7) Gère le choix + sauvegarde
-async function handleChoice(btn, isCorrect, correctKab) {
+// 7) Gère la sélection + feedback
+function handleChoice(btn, isCorrect, correctKab) {
   btn.classList.add(isCorrect ? 'correct' : 'wrong');
   document.querySelectorAll('#choices button').forEach(b => b.disabled = true);
   if (!isCorrect) {
@@ -89,38 +87,33 @@ async function handleChoice(btn, isCorrect, correctKab) {
   } else {
     document.getElementById('back').classList.add('visible');
   }
-
-  // Sauvegarde la réponse
-  try {
-    const user = getAuth().currentUser;
-    if (user) await saveAnswer(user.uid, isCorrect);
-  } catch (e) {
-    console.error('Erreur saveAnswer :', e);
-  }
-
   setTimeout(showNextCard, 1500);
 }
 
-// 8) Révéler
-document.getElementById('reveal').onclick = () =>
+// 8) Bouton Révéler
+document.getElementById('reveal').addEventListener('click', () => {
   document.getElementById('back').classList.toggle('visible');
+});
 
-// 9) Prononcer
-document.getElementById('speak').onclick = () => {
+// 9) Bouton Prononcer
+document.getElementById('speak').addEventListener('click', () => {
   const text = document.getElementById('back').textContent.trim();
   if (!text) return;
   const synth = window.speechSynthesis;
   let voices = synth.getVoices();
-  const speakIt = vs => {
-    const v = vs.find(v => /fr(-|_)/.test(v.lang)) || vs[0];
-    const u = new SpeechSynthesisUtterance(text);
-    u.voice = v; u.lang = v.lang; u.rate = 0.9; u.pitch = 1.1;
-    synth.speak(u);
+  const speakIt = vList => {
+    const voice = vList.find(v => /fr(-|_)/.test(v.lang)) || vList[0];
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.voice = voice;
+    utter.lang = voice.lang;
+    utter.rate = 0.9;
+    utter.pitch = 1.1;
+    synth.speak(utter);
   };
   if (!voices.length) synth.onvoiceschanged = () => speakIt(synth.getVoices());
   else speakIt(voices);
-};
+});
 
 // 10) Précédent / Suivant
-document.getElementById('prev').onclick = showPrevCard;
-document.getElementById('next').onclick = showNextCard;
+document.getElementById('prev').addEventListener('click', showPrevCard);
+document.getElementById('next').addEventListener('click', showNextCard);
