@@ -1,27 +1,24 @@
 // script.js
-import { saveProgress } from "./firebase.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
-// Données et état
 let cards = [], history = [], pointer = -1;
 
-// 1) Charge et parse le CSV, puis déclenche l’affichage immédiat de la première carte
+// 1) Charge et parse data.csv
 Papa.parse('data.csv', {
   download: true,
   header: true,
   complete: ({ data }) => {
+    console.log('CSV chargé:', data.length, 'lignes');
     cards = data.filter(r => r.Français && r.Kabyle)
                 .map(r => ({ fr: r.Français, kab: r.Kabyle }));
-    if (cards.length > 0) showNextCard();
-    else document.getElementById('front').textContent = 'Aucune carte disponible.';
+    if (cards.length) showNextCard();
+    else document.getElementById('front').textContent = 'Aucune carte.';
   },
   error: err => {
-    console.error('Erreur CSV :', err);
-    document.getElementById('front').textContent = 'Impossible de charger les cartes.';
+    console.error('Erreur CSV:', err);
+    document.getElementById('front').textContent = 'Échec chargement.';
   }
 });
 
-// 2) Affiche la carte à l’index donné
+// 2) Affiche la carte
 function displayCardAt(i) {
   const { fr, kab } = cards[i];
   document.getElementById('front').textContent = fr;
@@ -31,16 +28,16 @@ function displayCardAt(i) {
   renderChoices(kab);
 }
 
-// 3) Retourne un index aléatoire différent du précédent
+// 3) Index aléatoire non-répétitif
 function getRandomIndex() {
   if (cards.length < 2) return 0;
   let i;
-  do { i = Math.floor(Math.random() * cards.length); }
-  while (i === history[pointer]);
+  do { i = Math.floor(Math.random()*cards.length); }
+  while (history[pointer] === i);
   return i;
 }
 
-// 4) Passer à la carte suivante (ou historique)
+// 4) Suivant
 function showNextCard() {
   if (pointer < history.length - 1) {
     pointer++;
@@ -52,7 +49,7 @@ function showNextCard() {
   displayCardAt(history[pointer]);
 }
 
-// 5) Carte précédente
+// 5) Précédent
 function showPrevCard() {
   if (pointer > 0) {
     pointer--;
@@ -60,72 +57,60 @@ function showPrevCard() {
   }
 }
 
-// 6) Génère les 4 boutons de choix
+// 6) Génère le QCM
 function renderChoices(correctKab) {
-  const container = document.getElementById('choices');
-  container.innerHTML = '';
-  const distractors = new Set();
-  while (distractors.size < 3) {
-    const r = cards[Math.floor(Math.random() * cards.length)].kab;
-    if (r !== correctKab) distractors.add(r);
+  const c = document.getElementById('choices');
+  c.innerHTML = '';
+  const set = new Set();
+  while (set.size < 3) {
+    const r = cards[Math.floor(Math.random()*cards.length)].kab;
+    if (r !== correctKab) set.add(r);
   }
-  const options = [correctKab, ...distractors].sort(() => Math.random() - 0.5);
-  options.forEach(opt => {
-    const btn = document.createElement('button');
-    btn.textContent = opt;
-    btn.onclick = () => handleChoice(btn, opt === correctKab, correctKab);
-    container.appendChild(btn);
+  const opts = [correctKab, ...set].sort(() => Math.random()-0.5);
+  opts.forEach(opt => {
+    const b = document.createElement('button');
+    b.textContent = opt;
+    b.onclick = () => handleChoice(b, opt===correctKab, correctKab);
+    c.appendChild(b);
   });
 }
 
-// 7) Gestion du clic sur un choix + sauvegarde Firestore
-async function handleChoice(btn, isCorrect, correctKab) {
-  btn.classList.add(isCorrect ? 'correct' : 'wrong');
-  document.querySelectorAll('#choices button').forEach(b => b.disabled = true);
-  if (!isCorrect) {
+// 7) Gestion du choix
+function handleChoice(btn, ok, correctKab) {
+  btn.classList.add(ok?'correct':'wrong');
+  document.querySelectorAll('#choices button')
+          .forEach(b=>b.disabled=true);
+  if (!ok) {
     document.querySelectorAll('#choices button')
-      .forEach(b => b.textContent === correctKab && b.classList.add('correct'));
+      .forEach(b=> b.textContent===correctKab && b.classList.add('correct'));
   } else {
     document.getElementById('back').classList.add('visible');
   }
-
-  // Enregistre la réponse si connecté
-  try {
-    const user = getAuth().currentUser;
-    if (user) {
-      await saveProgress(
-        user.uid,
-        document.getElementById('front').textContent,
-        isCorrect
-      );
-    }
-  } catch (e) {
-    console.error('saveProgress failed', e);
-  }
-
-  setTimeout(showNextCard, 1500);
+  setTimeout(showNextCard,1500);
 }
 
-// 8) Bouton Révéler
-document.getElementById('reveal').onclick = () =>
-  document.getElementById('back').classList.toggle('visible');
+// 8) Révéler
+document.getElementById('reveal')
+  .onclick = () => document.getElementById('back')
+                      .classList.toggle('visible');
 
-// 9) Bouton Prononcer
-document.getElementById('speak').onclick = () => {
-  const text = document.getElementById('back').textContent.trim();
-  if (!text) return;
-  const synth = window.speechSynthesis;
-  let voices = synth.getVoices();
-  const speakIt = vList => {
-    const v = vList.find(v => /fr(-|_)/.test(v.lang)) || vList[0];
-    const u = new SpeechSynthesisUtterance(text);
-    u.voice = v; u.lang = v.lang; u.rate = 0.9; u.pitch = 1.1;
-    synth.speak(u);
+// 9) Prononcer
+document.getElementById('speak')
+  .onclick = () => {
+    const txt = document.getElementById('back').textContent.trim();
+    if (!txt) return;
+    const synth = speechSynthesis;
+    let v = synth.getVoices();
+    const speak = vs => {
+      const vc = vs.find(x=>/fr(-|_)/.test(x.lang))||vs[0];
+      const u = new SpeechSynthesisUtterance(txt);
+      u.voice=vc; u.lang=vc.lang; u.rate=0.9; u.pitch=1.1;
+      synth.speak(u);
+    };
+    if (!v.length) synth.onvoiceschanged = ()=>speak(synth.getVoices());
+    else speak(v);
   };
-  if (!voices.length) synth.onvoiceschanged = () => speakIt(synth.getVoices());
-  else speakIt(voices);
-};
 
-// 10) Navigation Précédent / Suivant
+// 10) Prev/Next
 document.getElementById('prev').onclick = showPrevCard;
 document.getElementById('next').onclick = showNextCard;
