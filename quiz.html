@@ -1,49 +1,76 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Dialecte – Quiz Kabyle</title>
-  <link rel="stylesheet" href="style.css"/>
-  <!-- PapaParse pour charger le CSV -->
-  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-</head>
-<body>
-  <header class="header">
-    <a href="index.html" class="home-icon">🏠</a>
-    <h1 class="logo">Dialecte – Quiz</h1>
-    <div class="header-auth" id="header-auth"></div>
-  </header>
+import Papa from 'papaparse';
 
-  <div class="layout">
-    <nav class="sidebar">
-      <ul>
-        <li><a href="index.html">Lexique</a></li>
-        <li><a href="signup.html">S’inscrire</a></li>
-        <li><a href="login.html">Se connecter</a></li>
-        <li><a href="quiz.html" class="active">Quiz</a></li>
-        <li><a href="progres.html">Mes progrès</a></li>
-      </ul>
-    </nav>
+const csvFilePath = 'kabyle_glide_import_sample20.csv';
 
-    <main class="main">
-      <div class="card">
-        <div id="front" class="face"></div>
-        <div id="back"  class="face"></div>
-      </div>
-      <div id="choices" class="choices"></div>
-      <div class="controls">
-        <button id="prev">Précédent</button>
-        <button id="reveal">Révéler</button>
-        <button id="speak">🔊 Prononcer</button>
-        <button id="next">Suivant</button>
-      </div>
-    </main>
-  </div>
+let questions = [];
+let currentIndex = 0;
+let revealed = false;
 
-  <!-- Gestion de l’auth (inchangé) -->
-  <script type="module" src="quiz-auth.js"></script>
-  <!-- Script principal du QCM -->
-  <script type="module" src="script.js"></script>
-</body>
-</html>
+const front = document.getElementById('front');
+const back = document.getElementById('back');
+const choicesDiv = document.getElementById('choices');
+const prevBtn = document.getElementById('prev');
+const nextBtn = document.getElementById('next');
+const revealBtn = document.getElementById('reveal');
+const speakBtn = document.getElementById('speak');
+
+function loadCSV() {
+  Papa.parse(csvFilePath, {
+    download: true,
+    header: true,
+    complete: function(results) {
+      questions = results.data.filter(q => q.Front && q.Back);
+      currentIndex = 0;
+      showQuestion(currentIndex);
+    },
+    error: function(err) {
+      console.error('Error loading CSV:', err);
+    }
+  });
+}
+
+function showQuestion(index) {
+  if (index < 0 || index >= questions.length) return;
+  revealed = false;
+  const q = questions[index];
+  front.textContent = q.Front;
+  back.textContent = '';
+  choicesDiv.innerHTML = '';
+  revealBtn.textContent = 'Révéler';
+}
+
+function revealAnswer() {
+  if (revealed) {
+    back.textContent = '';
+    revealBtn.textContent = 'Révéler';
+    revealed = false;
+  } else {
+    back.textContent = questions[currentIndex].Back;
+    revealBtn.textContent = 'Cacher';
+    revealed = true;
+  }
+}
+
+prevBtn.addEventListener('click', () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    showQuestion(currentIndex);
+  }
+});
+
+nextBtn.addEventListener('click', () => {
+  if (currentIndex < questions.length -1) {
+    currentIndex++;
+    showQuestion(currentIndex);
+  }
+});
+
+revealBtn.addEventListener('click', revealAnswer);
+
+speakBtn.addEventListener('click', () => {
+  const utterance = new SpeechSynthesisUtterance(front.textContent);
+  utterance.lang = 'fr-FR';
+  window.speechSynthesis.speak(utterance);
+});
+
+loadCSV();
