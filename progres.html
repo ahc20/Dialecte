@@ -33,43 +33,58 @@
 
     <main class="main">
       <div id="welcome" class="welcome-text">Bienvenue !</div>
-      <div id="username" class="username-text">–</div>
+      <div id="username" class="username-text"></div>
       <div id="progress-list" class="progress-list"></div>
+
+      <!-- NOUVEAU : barre de progression -->
+      <div class="score-summary">
+        <div class="score-label">Taux de réussite :</div>
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <div id="progress-percent" class="progress-percent">0 %</div>
+      </div>
     </main>
   </div>
 
   <script type="module">
-    // 1) importe ton initAuthListener & getProgress
     import { initAuthListener, getProgress } from "./firebase.js";
 
-    // au démarrage, on écoute l'état de connexion
     initAuthListener(async user => {
-      const w = document.getElementById('welcome');
-      const u = document.getElementById('username');
+      const w    = document.getElementById('welcome');
+      const u    = document.getElementById('username');
       const list = document.getElementById('progress-list');
+      const fill = document.getElementById('progress-fill');
+      const pct  = document.getElementById('progress-percent');
       list.innerHTML = '';
+      fill.style.width = '0%';
+      pct.textContent = '0 %';
 
       if (user && user.displayName) {
-        // Utilisateur connecté
         w.textContent = 'Bienvenue !';
-        u.textContent = user.displayName; // <--- ton prénom
+        u.textContent = user.displayName;
 
-        // Récupère et affiche les progrès
         const prog = await getProgress(user.uid);
         if (!prog.length) {
           list.textContent = "Vous n'avez pas encore de progrès.";
         } else {
+          // affiche la liste
           const ul = document.createElement('ul');
           prog.forEach(item => {
             const li = document.createElement('li');
             const date = new Date(item.timestamp).toLocaleString();
-            li.textContent = `${item.word} – ${item.correct ? '✓ Correct' : '✗ Incorrect'} (${date})`;
+            li.textContent = `${item.word} — ${item.correct ? '✓' : '✗'} (${date})`;
             ul.appendChild(li);
           });
           list.appendChild(ul);
+
+          // calcule le pourcentage
+          const correctCount = prog.filter(x => x.correct).length;
+          const percent = Math.round((correctCount / prog.length) * 100);
+          fill.style.width = `${percent}%`;
+          pct.textContent = `${percent} %`;
         }
       } else {
-        // Mode invité ou pas de prénom
         w.textContent = 'Bienvenue invité !';
         u.textContent = '';
         list.textContent = "Connectez-vous pour voir vos progrès.";
