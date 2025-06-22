@@ -5,18 +5,18 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
-  onAuthStateChanged
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import {
   getFirestore,
   doc,
   setDoc,
+  getDoc,
   updateDoc,
-  arrayUnion,
-  getDoc
+  arrayUnion
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-// Ta config Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyCI5yQhUVJKKktWCG2svsxx4RaiCTHBahc",
   authDomain: "dialecte-e23ae.firebaseapp.com",
@@ -26,10 +26,9 @@ const firebaseConfig = {
   appId: "G-2RCV5ZR5WN"
 };
 
-// Initialisation
-const app  = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db   = getFirestore(app);
+initializeApp(firebaseConfig);
+export const auth = getAuth();
+export const db   = getFirestore();
 
 // Inscription
 export async function signup(firstName, email, password) {
@@ -48,18 +47,19 @@ export async function login(email, password) {
 }
 
 // Écoute session
-export function initAuthListener(onChange) {
-  onAuthStateChanged(auth, user => onChange(user));
+export function initAuthListener(cb) {
+  onAuthStateChanged(auth, user => cb(user));
 }
 
 // Sauvegarde progrès
 export async function saveProgress(uid, word, correct) {
+  console.log("Saving progress for", uid, word, correct);
   await updateDoc(doc(db, "users", uid), {
     progress: arrayUnion({ word, correct, timestamp: Date.now() })
   });
 }
 
-// Récupère progrès
+// Récupérer progrès
 export async function getProgress(uid) {
   const snap = await getDoc(doc(db, "users", uid));
   return snap.exists() ? snap.data().progress : [];
@@ -67,5 +67,5 @@ export async function getProgress(uid) {
 
 // Déconnexion
 export function logout() {
-  return auth.signOut();
+  return signOut(auth);
 }
