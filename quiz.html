@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Dialecte – Quiz Kabyle</title>
   <link rel="stylesheet" href="style.css"/>
-  <!-- Charge PapaParse depuis CDN -->
+  <!-- PapaParse pour charger le CSV -->
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
@@ -28,7 +28,7 @@
 
     <main class="main">
       <div class="card">
-        <div id="front" class="face"></div>
+        <div id="front" class="face">Chargement…</div>
         <div id="back"  class="face"></div>
       </div>
       <div id="choices" class="choices"></div>
@@ -41,9 +41,9 @@
     </main>
   </div>
 
-  <!-- Auth / déconnexion (inchangé) -->
+  <!-- Gestion de l’auth (inchangé) -->
   <script type="module" src="quiz-auth.js"></script>
-  <!-- Script QCM -->
+  <!-- Script principal du QCM -->
   <script src="script.js"></script>
 </body>
 </html>
