@@ -17,6 +17,7 @@ import {
   arrayUnion
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
+// ← Remplace par tes propres clés si besoin
 const firebaseConfig = {
   apiKey: "AIzaSyCI5yQhUVJKKktWCG2svsxx4RaiCTHBahc",
   authDomain: "dialecte-e23ae.firebaseapp.com",
@@ -29,6 +30,11 @@ const firebaseConfig = {
 initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const db   = getFirestore();
+
+// Écoute l'état de connexion
+export function initAuthListener(cb) {
+  onAuthStateChanged(auth, user => cb(user));
+}
 
 // Inscription
 export async function signup(firstName, email, password) {
@@ -46,26 +52,20 @@ export async function login(email, password) {
   return user;
 }
 
-// Écoute session
-export function initAuthListener(cb) {
-  onAuthStateChanged(auth, user => cb(user));
+// Déconnexion
+export function logout() {
+  return signOut(auth);
 }
 
-// Sauvegarde progrès
+// Sauvegarde d’une réponse
 export async function saveProgress(uid, word, correct) {
-  console.log("Saving progress for", uid, word, correct);
   await updateDoc(doc(db, "users", uid), {
     progress: arrayUnion({ word, correct, timestamp: Date.now() })
   });
 }
 
-// Récupérer progrès
+// Récupère le tableau progress
 export async function getProgress(uid) {
   const snap = await getDoc(doc(db, "users", uid));
   return snap.exists() ? snap.data().progress : [];
-}
-
-// Déconnexion
-export function logout() {
-  return signOut(auth);
 }

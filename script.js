@@ -4,12 +4,10 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth
 
 let cards = [], history = [], pointer = -1;
 
-// 1) Charger le CSV et afficher la première carte
+// 1) Chargement du CSV
 Papa.parse('data.csv', {
-  download: true,
-  header: true,
+  download: true, header: true,
   complete: ({ data }) => {
-    // filtrer les lignes vides
     cards = data.filter(r => r.Français && r.Kabyle)
                 .map(r => ({ fr: r.Français, kab: r.Kabyle }));
     if (!cards.length) {
@@ -24,7 +22,7 @@ Papa.parse('data.csv', {
   }
 });
 
-// 2) Afficher carte
+// 2) Affiche la carte
 function displayCardAt(idx) {
   const { fr, kab } = cards[idx];
   document.getElementById('front').textContent = fr;
@@ -34,7 +32,7 @@ function displayCardAt(idx) {
   renderChoices(kab);
 }
 
-// 3) Tirage aléatoire sans répétition immédiate
+// 3) Sélection aléatoire non-répétitif
 function getRandomIndex() {
   if (cards.length < 2) return 0;
   let i;
@@ -64,21 +62,21 @@ function showPrevCard() {
   }
 }
 
-// 6) Construire le QCM
+// 6) Génère le QCM
 function renderChoices(correctKab) {
-  const container = document.getElementById('choices');
-  container.innerHTML = '';
-  const distractors = new Set();
-  while (distractors.size < 3) {
+  const c = document.getElementById('choices');
+  c.innerHTML = '';
+  const dist = new Set();
+  while (dist.size < 3) {
     const r = cards[Math.floor(Math.random() * cards.length)].kab;
-    if (r !== correctKab) distractors.add(r);
+    if (r !== correctKab) dist.add(r);
   }
-  const options = [correctKab, ...distractors].sort(() => Math.random() - 0.5);
-  options.forEach(opt => {
+  const opts = [correctKab, ...dist].sort(() => Math.random() - 0.5);
+  opts.forEach(opt => {
     const btn = document.createElement('button');
     btn.textContent = opt;
-    btn.addEventListener('click', () => handleChoice(btn, opt === correctKab, correctKab));
-    container.appendChild(btn);
+    btn.onclick = () => handleChoice(btn, opt === correctKab, correctKab);
+    c.appendChild(btn);
   });
 }
 
@@ -93,44 +91,43 @@ async function handleChoice(btn, isCorrect, correctKab) {
     document.getElementById('back').classList.add('visible');
   }
 
-  // Sauvegarde si utilisateur connecté
   try {
     const user = getAuth().currentUser;
     if (user) {
-      await saveProgress(user.uid,
+      await saveProgress(
+        user.uid,
         document.getElementById('front').textContent,
         isCorrect
       );
     }
   } catch (e) {
-    console.error('Erreur saveProgress:', e);
+    console.error('saveProgress failed', e);
   }
 
   setTimeout(showNextCard, 1500);
 }
 
-// 8) Révéler la face arrière
-document.getElementById('reveal').addEventListener('click', () =>
-  document.getElementById('back').classList.toggle('visible')
-);
+// 8) Révéler la carte
+document.getElementById('reveal').onclick = () =>
+  document.getElementById('back').classList.toggle('visible');
 
-// 9) Prononciation
-document.getElementById('speak').addEventListener('click', () => {
+// 9) Prononciation Kabyle
+document.getElementById('speak').onclick = () => {
   const txt = document.getElementById('back').textContent.trim();
   if (!txt) return;
   const synth = window.speechSynthesis;
   let voices = synth.getVoices();
-  const speakNow = vList => {
+  const speakFn = vList => {
     const v = vList.find(v => /fr(-|_)/.test(v.lang)) || vList[0];
     const u = new SpeechSynthesisUtterance(txt);
     u.voice = v; u.lang = v.lang; u.rate = 0.9; u.pitch = 1.1;
     synth.speak(u);
   };
   if (!voices.length) {
-    synth.onvoiceschanged = () => speakNow(synth.getVoices());
-  } else speakNow(voices);
-});
+    synth.onvoiceschanged = () => speakFn(synth.getVoices());
+  } else speakFn(voices);
+};
 
-// 10) Liens Précédent / Suivant
-document.getElementById('prev').addEventListener('click', showPrevCard);
-document.getElementById('next').addEventListener('click', showNextCard);
+// 10) Navigation
+document.getElementById('prev').onclick = showPrevCard;
+document.getElementById('next').onclick = showNextCard;

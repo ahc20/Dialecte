@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Dialecte – Quiz Kabyle</title>
-  <link rel="stylesheet" href="style.css" />
-  <!-- PapaParse doit être chargé AVANT script.js -->
+  <link rel="stylesheet" href="style.css"/>
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
@@ -19,8 +18,8 @@
     <nav class="sidebar">
       <ul>
         <li><a href="index.html">Lexique</a></li>
-        <li><a href="signup.html">S’inscrire</a></li>
-        <li><a href="login.html">Se connecter</a></li>
+        <li id="nav-signup"><a href="signup.html">S’inscrire</a></li>
+        <li id="nav-login"><a href="login.html">Se connecter</a></li>
         <li><a href="quiz.html" class="active">Quiz</a></li>
         <li><a href="progres.html">Mes progrès</a></li>
       </ul>
@@ -31,9 +30,7 @@
         <div id="front" class="face">Chargement…</div>
         <div id="back"  class="face"></div>
       </div>
-
       <div id="choices" class="choices"></div>
-
       <div class="controls">
         <button id="prev">Précédent</button>
         <button id="reveal">Révéler</button>
