@@ -3,44 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dialecte – Flashcards & Agent IA Kabyle</title>
-
-  <!-- Google Font Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-    rel="stylesheet"
-  />
-
-  <!-- PapaParse pour lire le CSV -->
-  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+  <title>Dialecte – Accueil</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Dialecte – Flashcards & Agent IA Kabyle</h1>
-
-  <!-- Flashcard -->
-  <div class="card">
-    <div id="front" class="face">Chargement…</div>
-    <div id="back" class="face"></div>
-  </div>
-  <div class="controls">
-    <button id="prev">Précédent</button>
-    <button id="reveal">Révéler</button>
-    <button id="speak">🔊 Prononcer</button>
-    <button id="next">Suivant</button>
-  </div>
-
-  <!-- Chatbot -->
-  <div class="chat-container">
-    <div id="chatLog" class="chat-log"></div>
-    <div class="chat-input">
-      <input type="text" id="chatMessage" placeholder="Pose ta question…" />
-      <button id="sendChat">Envoyer</button>
+  <header class="header">
+    <a href="index.html" class="home-icon">🏠</a>
+    <h1 class="logo">Dialecte</h1>
+    <div class="header-auth" id="header-auth">
+      <!-- Les boutons seront injectés ici par le script -->
     </div>
+  </header>
+
+  <nav class="mobile-nav">
+    <a href="#">Lexique</a>
+    <a href="#">S’entraîner</a>
+    <a href="#">Mes progrès</a>
+    <a href="quiz.html">Quiz</a>
+  </nav>
+
+  <div class="layout">
+    <nav class="sidebar">
+      <ul>
+        <li><a href="#">Lexique</a></li>
+        <li><a href="#">S’entraîner</a></li>
+        <li><a href="progres.html">Mes progrès</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <h2>Bienvenue sur Dialecte !</h2>
+    </main>
   </div>
 
-  <script src="script.js"></script>
+  <script type="module">
+    import { auth, logout, initAuthListener } from "./firebase.js";
+
+    const headerAuth = document.getElementById('header-auth');
+
+    function renderAuthButtons(user) {
+      headerAuth.innerHTML = '';
+      if (user) {
+        // Si connecté, afficher Se déconnecter
+        const btn = document.createElement('button');
+        btn.textContent = 'Se déconnecter';
+        btn.className = 'btn auth';
+        btn.onclick = async () => {
+          await logout();
+          location.reload();
+        };
+        headerAuth.appendChild(btn);
+      } else {
+        // si non connecté, afficher Se connecter / S’inscrire
+        const login = document.createElement('a');
+        login.href = 'login.html';
+        login.textContent = 'Se connecter';
+        login.className = 'btn auth';
+        const signup = document.createElement('a');
+        signup.href = 'signup.html';
+        signup.textContent = 'S’inscrire';
+        signup.className = 'btn auth';
+        headerAuth.append(login, signup);
+      }
+    }
+
+    initAuthListener(user => {
+      renderAuthButtons(user);
+    });
+  </script>
 </body>
 </html>
