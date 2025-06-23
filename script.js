@@ -8,14 +8,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let cards = [], history = [], pointer = -1;
 
-  // Charge data.csv depuis la racine
+  // 1) Charge data.csv depuis la racine
   Papa.parse('/data.csv', {
     download: true,
     header: true,
+    skipEmptyLines: true,         // ignore les lignes vides
+    // si ton CSV utilise un point-virgule, décommente la ligne suivante :
+    // delimiter: ';',
     complete: ({ data: raw }) => {
-      cards = raw
-        .filter(r => r.Français && r.Kabyle)
-        .map(r => ({ fr: r.Français, kab: r.Kabyle }));
+      console.log('Lignes brutes du CSV:', raw);
+      // filtrage sur colonnes exactes "Français" et "Kabyle"
+      const filtered = raw.filter(r => r.Français && r.Kabyle);
+      console.log('Lignes après filtrage Français+Kabyle:', filtered);
+      cards = filtered.map(r => ({ fr: r.Français, kab: r.Kabyle }));
+      console.log('Cartes finales:', cards);
       if (cards.length) showNextCard();
       else front.textContent = 'Aucune carte.';
     },
@@ -25,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // 2) Affiche la carte i
   function displayCardAt(i) {
     const { fr, kab } = cards[i];
     front.textContent = fr;
@@ -33,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderChoices(kab);
   }
 
+  // 3) Index aléatoire différent du précédent
   function getRandomIndex() {
     if (cards.length < 2) return 0;
     let i;
@@ -41,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return i;
   }
 
+  // 4) Carte suivante
   function showNextCard() {
     if (pointer < history.length - 1) {
       pointer++;
@@ -52,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     displayCardAt(history[pointer]);
   }
 
+  // 5) Carte précédente
   function showPrevCard() {
     if (pointer > 0) {
       pointer--;
@@ -59,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // 6) Génère un QCM 4 boutons
   function renderChoices(correctKab) {
     choicesContainer.innerHTML = '';
     const set = new Set();
@@ -75,9 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // 7) Gère le clic sur un choix
   function handleChoice(btn, isCorrect, correctKab) {
     btn.classList.add(isCorrect ? 'correct' : 'wrong');
-    choicesContainer.querySelectorAll('button').forEach(b => b.disabled = true);
+    choicesContainer.querySelectorAll('button')
+      .forEach(b => b.disabled = true);
     if (!isCorrect) {
       choicesContainer.querySelectorAll('button')
         .forEach(b => {
@@ -89,7 +102,12 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(showNextCard, 1500);
   }
 
-  revealBtn.addEventListener('click', () => back.classList.toggle('visible'));
+  // 8) Bouton Révéler
+  revealBtn.addEventListener('click', () => {
+    back.classList.toggle('visible');
+  });
+
+  // 9) Précédent / Suivant
   prevBtn.addEventListener('click', showPrevCard);
   nextBtn.addEventListener('click', showNextCard);
 });
