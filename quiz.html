@@ -2,16 +2,24 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>Dialecte – Quiz Kabyle</title>
-  <link rel="stylesheet" href="style.css"/>
+
+  <!-- CSS depuis la racine -->
+  <link rel="stylesheet" href="/style.css"/>
+
+  <!-- PapaParse pour charger le CSV -->
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+
+  <!-- Ton script quiz, chargé avec defer -->
+  <script src="/script.js" defer></script>
 </head>
 <body>
   <header class="header">
     <a href="index.html" class="home-icon">🏠</a>
     <h1 class="logo">Dialecte – Quiz</h1>
   </header>
+
   <div class="layout">
     <nav class="sidebar">
       <ul>
@@ -22,20 +30,21 @@
         <li><a href="progres.html">Mes progrès</a></li>
       </ul>
     </nav>
+
     <main class="main">
       <div class="card">
         <div id="front" class="face">Chargement…</div>
         <div id="back" class="face"></div>
       </div>
-      <div id="choices" class="choices"></div>
+
+      <div id="choices"></div>
+
       <div class="controls">
         <button id="prev">Précédent</button>
         <button id="reveal">Révéler</button>
-        <button id="speak">🔊 Prononcer</button>
         <button id="next">Suivant</button>
       </div>
     </main>
   </div>
-  <script src="script.js"></script>
 </body>
 </html>
