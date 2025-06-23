@@ -1,24 +1,33 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Dialecte – Quiz Kabyle</title>
+
+  <!-- CSS placé à la racine -->
+  <link rel="stylesheet" href="/style.css"/>
+
+  <!-- PapaParse depuis un CDN -->
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-  <script src="script.js" defer></script>
+
+  <!-- Ton script JS placé à la racine, chargé après le DOM -->
+  <script src="/script.js" defer></script>
 </head>
 <body>
   <header class="header">
-    <a href="index.html" class="home-icon">🏠</a>
+    <a href="/index.html" class="home-icon">🏠</a>
     <h1 class="logo">Dialecte – Quiz</h1>
   </header>
 
   <div class="layout">
     <nav class="sidebar">
       <ul>
-        <li><a href="index.html">Lexique</a></li>
-        <li><a href="signup.html">S’inscrire</a></li>
-        <li><a href="login.html">Se connecter</a></li>
-        <li><a href="quiz.html" class="active">Quiz</a></li>
-        <li><a href="progres.html">Mes progrès</a></li>
+        <li><a href="/index.html">Lexique</a></li>
+        <li><a href="/signup.html">S’inscrire</a></li>
+        <li><a href="/login.html">Se connecter</a></li>
+        <li><a href="/quiz.html" class="active">Quiz</a></li>
+        <li><a href="/progres.html">Mes progrès</a></li>
       </ul>
     </nav>
 
