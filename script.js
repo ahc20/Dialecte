@@ -1,32 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const front = document.getElementById('front');
-  const back = document.getElementById('back');
+  const front  = document.getElementById('front');
+  const back   = document.getElementById('back');
   const choicesContainer = document.getElementById('choices');
   const prevBtn = document.getElementById('prev');
   const revealBtn = document.getElementById('reveal');
   const nextBtn = document.getElementById('next');
 
-  let cards = [], history = [], pointer = -1;
+  let cards   = [],
+      history = [],
+      pointer = -1;
 
-  // 1) Charge data.csv depuis la racine
+  // 1) Charge et parse data.csv (séparateur ;)
   Papa.parse('/data.csv', {
     download: true,
     header: true,
-    skipEmptyLines: true,         // ignore les lignes vides
-    // si ton CSV utilise un point-virgule, décommente la ligne suivante :
-    // delimiter: ';',
+    skipEmptyLines: true,
+    delimiter: ';',
     complete: ({ data: raw }) => {
-      console.log('Lignes brutes du CSV:', raw);
-      // filtrage sur colonnes exactes "Français" et "Kabyle"
+      // filtre lignes valides
       const filtered = raw.filter(r => r.Français && r.Kabyle);
-      console.log('Lignes après filtrage Français+Kabyle:', filtered);
-      cards = filtered.map(r => ({ fr: r.Français, kab: r.Kabyle }));
-      console.log('Cartes finales:', cards);
+      cards = filtered.map(r => ({
+        fr:  r.Français.trim(),
+        kab: r.Kabyle.trim()
+      }));
       if (cards.length) showNextCard();
       else front.textContent = 'Aucune carte.';
     },
     error: err => {
-      console.error('Erreur CSV:', err);
+      console.error('Erreur de chargement CSV :', err);
       front.textContent = 'Erreur de chargement.';
     }
   });
@@ -35,12 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function displayCardAt(i) {
     const { fr, kab } = cards[i];
     front.textContent = fr;
-    back.textContent = kab;
+    back.textContent  = kab;
     back.classList.remove('visible');
     renderChoices(kab);
   }
 
-  // 3) Index aléatoire différent du précédent
+  // 3) Choisit un index aléatoire différent du précédent
   function getRandomIndex() {
     if (cards.length < 2) return 0;
     let i;
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return i;
   }
 
-  // 4) Carte suivante
+  // 4) Passe à la carte suivante
   function showNextCard() {
     if (pointer < history.length - 1) {
       pointer++;
@@ -69,13 +70,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 6) Génère un QCM 4 boutons
+  // 6) Génère les boutons du QCM
   function renderChoices(correctKab) {
     choicesContainer.innerHTML = '';
     const set = new Set();
     while (set.size < 3) {
-      const r = cards[Math.floor(Math.random() * cards.length)].kab;
-      if (r !== correctKab) set.add(r);
+      const rnd = cards[Math.floor(Math.random() * cards.length)].kab;
+      if (rnd !== correctKab) set.add(rnd);
     }
     const opts = [correctKab, ...set].sort(() => Math.random() - 0.5);
     opts.forEach(opt => {
@@ -86,12 +87,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 7) Gère le clic sur un choix
+  // 7) Gère la réponse
   function handleChoice(btn, isCorrect, correctKab) {
     btn.classList.add(isCorrect ? 'correct' : 'wrong');
-    choicesContainer.querySelectorAll('button')
-      .forEach(b => b.disabled = true);
+    choicesContainer.querySelectorAll('button').forEach(b => b.disabled = true);
     if (!isCorrect) {
+      // met en évidence la bonne réponse
       choicesContainer.querySelectorAll('button')
         .forEach(b => {
           if (b.textContent === correctKab) b.classList.add('correct');
@@ -102,10 +103,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(showNextCard, 1500);
   }
 
-  // 8) Bouton Révéler
-  revealBtn.addEventListener('click', () => {
-    back.classList.toggle('visible');
-  });
+  // 8) Bouton “Révéler”
+  revealBtn.addEventListener('click', () => back.classList.toggle('visible'));
 
   // 9) Précédent / Suivant
   prevBtn.addEventListener('click', showPrevCard);
