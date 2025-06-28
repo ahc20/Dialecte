@@ -66,9 +66,9 @@ class CardManager {
                         const localCard = this.cards.find(c => c.fr === cloudCard.fr && c.kab === cloudCard.kab);
                         if (localCard) {
                             localCard.history = cloudCard.history;
+                            localCard.repetition = (cloudCard.history && cloudCard.history.length) ? cloudCard.history.length : 0;
                             if (cloudCard.history.length > 0) {
                                 const last = cloudCard.history[cloudCard.history.length - 1];
-                                localCard.repetition = last.repetition || 0;
                                 localCard.interval = last.interval || 0;
                                 localCard.easeFactor = last.easeFactor || 2.5;
                                 localCard.dueDate = last.dueDate ? new Date(last.dueDate) : new Date();
