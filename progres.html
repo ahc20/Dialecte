@@ -74,6 +74,7 @@
         <div id="history-container">
           <p>Chargement de l'historique...</p>
         </div>
+        <div id="debug-history" style="margin-top:2rem; background:#f9faf9; color:#333; font-size:0.95em; padding:1em; border-radius:8px;"></div>
       </section>
     </main>
   </div>
@@ -119,44 +120,54 @@
     // Afficher l'historique des révisions
     function displayRevisionHistory() {
       const historyContainer = document.getElementById('history-container');
+      const debugDiv = document.getElementById('debug-history');
       try {
         const cardsWithHistory = cardManager.cards.filter(card => card.history && card.history.length > 0);
         console.log('cartManager.cards:', cardManager.cards);
         if (cardsWithHistory.length === 0) {
           historyContainer.innerHTML = '<p>Aucune révision effectuée pour le moment.</p>';
-          return;
+        } else {
+          // Trier par date de dernière révision
+          cardsWithHistory.sort((a, b) => {
+            const lastA = a.history[a.history.length - 1];
+            const lastB = b.history[b.history.length - 1];
+            return new Date(lastB.date) - new Date(lastA.date);
+          });
+          // Prendre les 10 dernières révisions
+          const recentCards = cardsWithHistory.slice(0, 10);
+          let html = '<div class="history-list">';
+          recentCards.forEach(card => {
+            const lastRevision = card.history[card.history.length - 1];
+            const date = new Date(lastRevision.date).toLocaleDateString('fr-FR');
+            const quality = lastRevision.quality;
+            const qualityText = quality >= 4 ? 'Excellent' : quality >= 3 ? 'Correct' : 'Difficile';
+            const qualityColor = quality >= 4 ? '#4CAF50' : quality >= 3 ? '#FF9800' : '#E53935';
+            html += `
+              <div class="history-item">
+                <div class="history-word">
+                  <strong>${card.fr}</strong> → ${card.kab}
+                </div>
+                <div class="history-details">
+                  <span class="history-date">${date}</span>
+                  <span class="history-quality" style="color: ${qualityColor}">${qualityText}</span>
+                </div>
+              </div>
+            `;
+          });
+          html += '</div>';
+          historyContainer.innerHTML = html;
         }
-        // Trier par date de dernière révision
-        cardsWithHistory.sort((a, b) => {
-          const lastA = a.history[a.history.length - 1];
-          const lastB = b.history[b.history.length - 1];
-          return new Date(lastB.date) - new Date(lastA.date);
-        });
-        // Prendre les 10 dernières révisions
-        const recentCards = cardsWithHistory.slice(0, 10);
-        let html = '<div class="history-list">';
-        recentCards.forEach(card => {
-          const lastRevision = card.history[card.history.length - 1];
-          const date = new Date(lastRevision.date).toLocaleDateString('fr-FR');
-          const quality = lastRevision.quality;
-          const qualityText = quality >= 4 ? 'Excellent' : quality >= 3 ? 'Correct' : 'Difficile';
-          const qualityColor = quality >= 4 ? '#4CAF50' : quality >= 3 ? '#FF9800' : '#E53935';
-          html += `
-            <div class="history-item">
-              <div class="history-word">
-                <strong>${card.fr}</strong> → ${card.kab}
-              </div>
-              <div class="history-details">
-                <span class="history-date">${date}</span>
-                <span class="history-quality" style="color: ${qualityColor}">${qualityText}</span>
-              </div>
-            </div>
-          `;
-        });
-        html += '</div>';
-        historyContainer.innerHTML = html;
+        // Affichage debug de l'historique de la première carte
+        if (cardManager.cards && cardManager.cards.length > 0) {
+          let html = '<b>[DEBUG] Historique de la première carte :</b><br>';
+          html += JSON.stringify(cardManager.cards[0], null, 2).replace(/\n/g,'<br>').replace(/ /g,'&nbsp;');
+          debugDiv.innerHTML = html;
+        } else {
+          debugDiv.innerHTML = '<i>[DEBUG] Aucune carte chargée.</i>';
+        }
       } catch (e) {
         historyContainer.innerHTML = '<p>Erreur lors du chargement de l\'historique.</p>';
+        debugDiv.innerHTML = '<b>[DEBUG] Erreur :</b> ' + e;
         console.error('Erreur historique:', e);
       }
     }
