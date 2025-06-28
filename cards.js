@@ -109,8 +109,10 @@ class CardManager {
             if (window.auth && window.auth.currentUser) {
                 const uid = window.auth.currentUser.uid;
                 await saveUserCardsHistory(uid, this.cards);
-                console.log('[DEBUG] Historique sauvegardé sur Firebase (saveCard)');
+                console.log('[DEBUG] Historique sauvegardé sur Firebase (saveCard)', this.cards[index]);
             }
+        } else {
+            console.error('[DEBUG] saveCard: carte non trouvée dans this.cards', card);
         }
     }
 
@@ -160,37 +162,35 @@ class CardManager {
     // Algorithme SM-2 pour la révision
     async processReview(card, quality) {
         const today = new Date();
-        
+        // Trouver la vraie carte dans this.cards (pour garantir la référence)
+        const realCard = this.cards.find(c => c.id === card.id);
+        if (!realCard) {
+            console.error('[DEBUG] Carte non trouvée dans cardManager.cards pour la révision !', card);
+            return;
+        }
         // Ajouter à l'historique
-        card.history.push({
+        realCard.history.push({
             date: today.toISOString(),
             quality: quality
         });
-
         if (quality < 3) {
-            // Réponse incorrecte - recommencer
-            card.repetition = 1;
-            card.interval = 1;
+            realCard.repetition = 1;
+            realCard.interval = 1;
         } else {
-            // Réponse correcte - calculer le nouvel intervalle
-            card.easeFactor = Math.max(1.3, card.easeFactor + 0.1 - (5 - quality) * 0.08);
-            
-            if (card.repetition === 0) {
-                card.interval = 1;
-            } else if (card.repetition === 1) {
-                card.interval = 6;
+            realCard.easeFactor = Math.max(1.3, realCard.easeFactor + 0.1 - (5 - quality) * 0.08);
+            if (realCard.repetition === 0) {
+                realCard.interval = 1;
+            } else if (realCard.repetition === 1) {
+                realCard.interval = 6;
             } else {
-                card.interval = Math.round(card.interval * card.easeFactor);
+                realCard.interval = Math.round(realCard.interval * realCard.easeFactor);
             }
-            
-            card.repetition++;
+            realCard.repetition++;
         }
-
-        // Calculer la prochaine date de révision
-        card.dueDate = this.addDays(today, card.interval);
-        
-        await this.saveCard(card);
-        return card;
+        realCard.dueDate = this.addDays(today, realCard.interval);
+        console.log('[DEBUG] processReview: carte après modif', realCard);
+        await this.saveCard(realCard);
+        return realCard;
     }
 
     // Initialiser une carte pour le mode découverte
