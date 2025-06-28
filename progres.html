@@ -16,31 +16,61 @@
   </header>
   <nav class="mobile-nav">
     <a href="index.html">Lexique</a>
-    <a href="#">S'entraîner</a>
+    <a href="discovery.html">Découvrir</a>
+    <a href="review.html">Réviser</a>
     <a href="progres.html">Mes progrès</a>
-    <a href="quiz.html">Quiz</a>
   </nav>
   <div class="layout">
     <nav class="sidebar">
       <ul>
         <li><a href="index.html">Lexique</a></li>
-        <li><a href="#">S'entraîner</a></li>
+        <li><a href="discovery.html">Découvrir</a></li>
+        <li><a href="review.html">Réviser</a></li>
         <li><a href="progres.html" class="active">Mes progrès</a></li>
-        <li><a href="quiz.html">Quiz</a></li>
         <li><a href="login.html" id="sidebar-login-link">Se connecter</a></li>
       </ul>
     </nav>
     <main class="main">
       <div id="welcome" class="welcome-text">Bienvenue !</div>
       <div id="username" class="username-text"></div>
+      
+      <!-- Nouvelles statistiques SM-2 -->
+      <div class="stats-overview">
+        <div class="stat-card">
+          <h3>📚 Cartes apprises</h3>
+          <div class="stat-number" id="learned-cards">0</div>
+          <div class="stat-label">sur <span id="total-cards">0</span> disponibles</div>
+        </div>
+        <div class="stat-card">
+          <h3>🔄 À réviser</h3>
+          <div class="stat-number" id="due-cards">0</div>
+          <div class="stat-label">cartes dues aujourd'hui</div>
+        </div>
+        <div class="stat-card">
+          <h3>📈 Progression</h3>
+          <div class="stat-number" id="progress-percent">0%</div>
+          <div class="stat-label">du lexique maîtrisé</div>
+        </div>
+      </div>
+
+      <!-- Ancien système de score -->
       <div class="score-summary">
-        <div class="score-label">Taux de réussite :</div>
+        <div class="score-label">Taux de réussite (ancien système) :</div>
         <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
-        <div id="progress-percent" class="progress-percent">0 %</div>
+        <div id="progress-percent-old" class="progress-percent">0 %</div>
+      </div>
+
+      <!-- Historique des révisions -->
+      <div class="revision-history">
+        <h3>📅 Historique des révisions</h3>
+        <div id="history-container">
+          <p>Chargement de l'historique...</p>
+        </div>
       </div>
     </main>
   </div>
 
+  <script src="cards.js"></script>
   <script type="module">
     import { auth, logout, initAuthListener, getScore } from "./firebase.js";
 
@@ -78,12 +108,72 @@
       }
     });
 
-    // Progression utilisateur
+    // Mettre à jour les statistiques SM-2
+    async function updateStats() {
+      await cardManager.loadCards();
+      const stats = cardManager.getStats();
+      
+      document.getElementById('learned-cards').textContent = stats.learned;
+      document.getElementById('total-cards').textContent = stats.total;
+      document.getElementById('due-cards').textContent = stats.due;
+      document.getElementById('progress-percent').textContent = stats.progress + '%';
+      
+      // Afficher l'historique des révisions
+      displayRevisionHistory();
+    }
+
+    // Afficher l'historique des révisions
+    function displayRevisionHistory() {
+      const historyContainer = document.getElementById('history-container');
+      const cardsWithHistory = cardManager.cards.filter(card => card.history && card.history.length > 0);
+      
+      if (cardsWithHistory.length === 0) {
+        historyContainer.innerHTML = '<p>Aucune révision effectuée pour le moment.</p>';
+        return;
+      }
+
+      // Trier par date de dernière révision
+      cardsWithHistory.sort((a, b) => {
+        const lastA = a.history[a.history.length - 1];
+        const lastB = b.history[b.history.length - 1];
+        return new Date(lastB.date) - new Date(lastA.date);
+      });
+
+      // Prendre les 10 dernières révisions
+      const recentCards = cardsWithHistory.slice(0, 10);
+      
+      let html = '<div class="history-list">';
+      recentCards.forEach(card => {
+        const lastRevision = card.history[card.history.length - 1];
+        const date = new Date(lastRevision.date).toLocaleDateString('fr-FR');
+        const quality = lastRevision.quality;
+        const qualityText = quality >= 4 ? 'Excellent' : quality >= 3 ? 'Correct' : 'Difficile';
+        const qualityColor = quality >= 4 ? '#4CAF50' : quality >= 3 ? '#FF9800' : '#E53935';
+        
+        html += `
+          <div class="history-item">
+            <div class="history-word">
+              <strong>${card.fr}</strong> → ${card.kab}
+            </div>
+            <div class="history-details">
+              <span class="history-date">${date}</span>
+              <span class="history-quality" style="color: ${qualityColor}">${qualityText}</span>
+            </div>
+          </div>
+        `;
+      });
+      html += '</div>';
+      
+      historyContainer.innerHTML = html;
+    }
+
+    // Progression utilisateur (ancien système)
     initAuthListener(async user => {
       const w = document.getElementById('welcome');
       const u = document.getElementById('username');
       const fill = document.getElementById('progress-fill');
-      const pct  = document.getElementById('progress-percent');
+      const pct  = document.getElementById('progress-percent-old');
+      
       if (user && user.displayName) {
         w.textContent = 'Bienvenue !';
         u.textContent = user.displayName;
@@ -99,6 +189,9 @@
         fill.style.width = '0%';
         pct.textContent  = '0 %';
       }
+      
+      // Mettre à jour les nouvelles statistiques
+      updateStats();
     });
   </script>
 </body>

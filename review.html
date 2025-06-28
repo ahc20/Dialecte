@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dialecte – Mode Révision</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="header">
+    <a href="index.html" class="home-icon">🏠</a>
+    <h1 class="logo">Dialecte – Révision</h1>
+    <div class="header-auth" id="header-auth">
+      <!-- Les boutons seront injectés ici par le script -->
+    </div>
+  </header>
+
+  <nav class="mobile-nav">
+    <a href="index.html">Lexique</a>
+    <a href="discovery.html">Découvrir</a>
+    <a href="review.html">Réviser</a>
+    <a href="progres.html">Mes progrès</a>
+  </nav>
+
+  <div class="layout">
+    <nav class="sidebar">
+      <ul>
+        <li><a href="index.html">Lexique</a></li>
+        <li><a href="discovery.html">Découvrir</a></li>
+        <li><a href="review.html">Réviser</a></li>
+        <li><a href="progres.html">Mes progrès</a></li>
+      </ul>
+    </nav>
+
+    <main class="main">
+      <div class="review-header">
+        <h2>🔄 Mode Révision</h2>
+        <p>Révisez les mots appris avec la répétition espacée</p>
+      </div>
+
+      <!-- Barre de progression -->
+      <div class="progress-container">
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="progress-text" id="progress-text">0/0</div>
+      </div>
+
+      <!-- Conteneur de révision -->
+      <div id="review-container">
+        <div class="review-loading">
+          <h3>Chargement des cartes à réviser...</h3>
+          <div class="loading-spinner"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="cards.js"></script>
+  <script src="review.js"></script>
+  <script type="module">
+    import { auth, logout, initAuthListener } from "./firebase.js";
+
+    const headerAuth = document.getElementById('header-auth');
+
+    function renderAuthButtons(user) {
+      headerAuth.innerHTML = '';
+      if (user) {
+        const btn = document.createElement('button');
+        btn.textContent = 'Se déconnecter';
+        btn.className = 'btn auth';
+        btn.onclick = async () => {
+          await logout();
+          location.reload();
+        };
+        headerAuth.appendChild(btn);
+      } else {
+        const login = document.createElement('a');
+        login.href = 'login.html';
+        login.textContent = 'Se connecter';
+        login.className = 'btn auth';
+        const signup = document.createElement('a');
+        signup.href = 'signup.html';
+        signup.textContent = "S'inscrire";
+        signup.className = 'btn auth';
+        headerAuth.append(login, signup);
+      }
+    }
+
+    initAuthListener(user => {
+      renderAuthButtons(user);
+    });
+
+    // Démarrer la révision au chargement de la page
+    document.addEventListener('DOMContentLoaded', () => {
+      reviewMode.startReview();
+    });
+  </script>
+</body>
+</html> 
