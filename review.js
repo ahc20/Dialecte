@@ -11,9 +11,15 @@ class ReviewMode {
         if (!cardManager.isInitialized) {
             await cardManager.loadCards();
         }
-        this.dueCards = cardManager.getDueCards();
-        // Mélange aléatoire des cartes à réviser
-        this.dueCards = cardManager.shuffle(this.dueCards);
+        // Générer la file pondérée par la fréquence
+        const due = cardManager.getDueCards();
+        let weighted = [];
+        due.forEach(card => {
+            for (let i = 0; i < Math.max(1, card.frequency); i++) {
+                weighted.push(card);
+            }
+        });
+        this.dueCards = cardManager.shuffle(weighted);
         // Charger l'index de progression sauvegardé
         const savedIndex = parseInt(localStorage.getItem('review_current_index') || '0', 10);
         this.currentCardIndex = (!isNaN(savedIndex) && savedIndex < this.dueCards.length) ? savedIndex : 0;
