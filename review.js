@@ -80,7 +80,7 @@ class ReviewMode {
     async handleQuality(event) {
         const quality = parseInt(event.target.dataset.quality);
         const card = this.dueCards[this.currentCardIndex];
-
+        console.log('[DEBUG] handleQuality: appel processReview avec', card, 'qualité', quality);
         // Traiter avec l'algorithme SM-2
         await cardManager.processReview(card, quality);
 

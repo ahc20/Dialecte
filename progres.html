@@ -121,6 +121,7 @@
     function displayRevisionHistory() {
       const historyContainer = document.getElementById('history-container');
       const debugDiv = document.getElementById('debug-history');
+      console.log('[DEBUG] displayRevisionHistory: cardManager.cards =', cardManager.cards);
       try {
         const cardsWithHistory = cardManager.cards.filter(card => card.history && card.history.length > 0);
         console.log('cartManager.cards:', cardManager.cards);
