@@ -18,6 +18,7 @@
     <a href="index.html">Lexique</a>
     <a href="discovery.html">Découvrir</a>
     <a href="review.html">Réviser</a>
+    <a href="quiz.html">Quiz Classique</a>
     <a href="progres.html">Mes progrès</a>
   </nav>
   <div class="layout">
@@ -26,6 +27,7 @@
         <li><a href="index.html">Lexique</a></li>
         <li><a href="discovery.html">Découvrir</a></li>
         <li><a href="review.html">Réviser</a></li>
+        <li><a href="quiz.html">Quiz Classique</a></li>
         <li><a href="progres.html" class="active">Mes progrès</a></li>
         <li><a href="login.html" id="sidebar-login-link">Se connecter</a></li>
       </ul>
@@ -34,39 +36,45 @@
       <div id="welcome" class="welcome-text">Bienvenue !</div>
       <div id="username" class="username-text"></div>
       
-      <!-- Nouvelles statistiques SM-2 -->
-      <div class="stats-overview">
-        <div class="stat-card">
-          <h3>📚 Cartes apprises</h3>
-          <div class="stat-number" id="learned-cards">0</div>
-          <div class="stat-label">sur <span id="total-cards">0</span> disponibles</div>
+      <!-- Statistiques du système SM-2 -->
+      <section class="stats-section">
+        <h3>📚 Système de répétition espacée (SM-2)</h3>
+        <div class="stats-overview">
+          <div class="stat-card">
+            <h4>📚 Cartes apprises</h4>
+            <div class="stat-number" id="learned-cards">0</div>
+            <div class="stat-label">sur <span id="total-cards">0</span> disponibles</div>
+          </div>
+          <div class="stat-card">
+            <h4>🔄 À réviser</h4>
+            <div class="stat-number" id="due-cards">0</div>
+            <div class="stat-label">cartes dues aujourd'hui</div>
+          </div>
+          <div class="stat-card">
+            <h4>📈 Progression</h4>
+            <div class="stat-number" id="progress-percent">0%</div>
+            <div class="stat-label">du lexique maîtrisé</div>
+          </div>
         </div>
-        <div class="stat-card">
-          <h3>🔄 À réviser</h3>
-          <div class="stat-number" id="due-cards">0</div>
-          <div class="stat-label">cartes dues aujourd'hui</div>
-        </div>
-        <div class="stat-card">
-          <h3>📈 Progression</h3>
-          <div class="stat-number" id="progress-percent">0%</div>
-          <div class="stat-label">du lexique maîtrisé</div>
-        </div>
-      </div>
+      </section>
 
-      <!-- Ancien système de score -->
-      <div class="score-summary">
-        <div class="score-label">Taux de réussite (ancien système) :</div>
-        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
-        <div id="progress-percent-old" class="progress-percent">0 %</div>
-      </div>
+      <!-- Statistiques du quiz classique -->
+      <section class="stats-section">
+        <h3>🎯 Quiz Classique</h3>
+        <div class="score-summary">
+          <div class="score-label">Taux de réussite :</div>
+          <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+          <div id="progress-percent-old" class="progress-percent">0 %</div>
+        </div>
+      </section>
 
-      <!-- Historique des révisions -->
-      <div class="revision-history">
-        <h3>📅 Historique des révisions</h3>
+      <!-- Historique des révisions SM-2 -->
+      <section class="stats-section">
+        <h3>📅 Historique des révisions (SM-2)</h3>
         <div id="history-container">
           <p>Chargement de l'historique...</p>
         </div>
-      </div>
+      </section>
     </main>
   </div>
 
@@ -167,7 +175,7 @@
       historyContainer.innerHTML = html;
     }
 
-    // Progression utilisateur (ancien système)
+    // Progression utilisateur (quiz classique)
     initAuthListener(async user => {
       const w = document.getElementById('welcome');
       const u = document.getElementById('username');

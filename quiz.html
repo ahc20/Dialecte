@@ -1,50 +1,309 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Dialecte – Quiz Kabyle</title>
-
-  <!-- CSS placé à la racine -->
-  <link rel="stylesheet" href="/style.css"/>
-
-  <!-- PapaParse depuis un CDN -->
-  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
-
-  <!-- Ton script JS placé à la racine, chargé après le DOM -->
-  <script type="module" src="script.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dialecte – Quiz Classique</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="header">
-    <a href="/index.html" class="home-icon">🏠</a>
-    <h1 class="logo">Dialecte – Quiz</h1>
+    <a href="index.html" class="home-icon">🏠</a>
+    <h1 class="logo">Dialecte – Quiz Classique</h1>
+    <div class="header-auth" id="header-auth">
+      <!-- Les boutons seront injectés ici par le script -->
+    </div>
   </header>
+
+  <nav class="mobile-nav">
+    <a href="index.html">Lexique</a>
+    <a href="discovery.html">Découvrir</a>
+    <a href="review.html">Réviser</a>
+    <a href="quiz.html">Quiz Classique</a>
+    <a href="progres.html">Mes progrès</a>
+  </nav>
 
   <div class="layout">
     <nav class="sidebar">
       <ul>
-        <li><a href="/index.html">Lexique</a></li>
-        <li><a href="/signup.html">S'inscrire</a></li>
-        <li><a href="/login.html">Se connecter</a></li>
-        <li><a href="/quiz.html" class="active">Quiz</a></li>
-        <li><a href="/progres.html">Mes progrès</a></li>
+        <li><a href="index.html">Lexique</a></li>
+        <li><a href="discovery.html">Découvrir</a></li>
+        <li><a href="review.html">Réviser</a></li>
+        <li><a href="quiz.html">Quiz Classique</a></li>
+        <li><a href="progres.html">Mes progrès</a></li>
       </ul>
     </nav>
 
     <main class="main">
-      <div class="card">
-        <div id="front" class="face">Chargement…</div>
-        <div id="back" class="face"></div>
+      <div class="quiz-header">
+        <h2>🎯 Quiz Classique</h2>
+        <p>Testez vos connaissances avec le quiz traditionnel</p>
       </div>
 
-      <div id="choices"></div>
+      <!-- Barre de progression -->
+      <div class="progress-container">
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <div class="progress-text" id="progress-text">0/0</div>
+      </div>
 
-      <div class="controls">
-        <button id="prev">Précédent</button>
-        <button id="reveal">Révéler</button>
-        <button id="next">Suivant</button>
+      <!-- Conteneur du quiz -->
+      <div id="quiz-container">
+        <div class="quiz-start">
+          <h3>Prêt pour le quiz ?</h3>
+          <p>Choisissez le nombre de questions :</p>
+          <div class="question-count-selector">
+            <button class="btn btn-secondary" data-count="5">5 questions</button>
+            <button class="btn btn-primary" data-count="10">10 questions</button>
+            <button class="btn btn-secondary" data-count="15">15 questions</button>
+            <button class="btn btn-secondary" data-count="20">20 questions</button>
+          </div>
+        </div>
       </div>
     </main>
   </div>
+
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+  <script type="module">
+    import { auth, logout, initAuthListener, saveScore } from "./firebase.js";
+
+    const headerAuth = document.getElementById('header-auth');
+
+    function renderAuthButtons(user) {
+      headerAuth.innerHTML = '';
+      if (user) {
+        const btn = document.createElement('button');
+        btn.textContent = 'Se déconnecter';
+        btn.className = 'btn auth';
+        btn.onclick = async () => {
+          await logout();
+          location.reload();
+        };
+        headerAuth.appendChild(btn);
+      } else {
+        const login = document.createElement('a');
+        login.href = 'login.html';
+        login.textContent = 'Se connecter';
+        login.className = 'btn auth';
+        const signup = document.createElement('a');
+        signup.href = 'signup.html';
+        signup.textContent = "S'inscrire";
+        signup.className = 'btn auth';
+        headerAuth.append(login, signup);
+      }
+    }
+
+    initAuthListener(user => {
+      renderAuthButtons(user);
+    });
+
+    // Variables globales pour le quiz
+    let quizData = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let totalQuestions = 0;
+    let currentQuiz = [];
+
+    // Charger les données CSV
+    async function loadQuizData() {
+      try {
+        const response = await fetch('data3.csv');
+        const csvText = await response.text();
+        
+        Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+          delimiter: ';',
+          complete: (results) => {
+            quizData = results.data.filter(row => row['Français'] && row['Kabyle']);
+            console.log(`Chargé ${quizData.length} mots pour le quiz`);
+          }
+        });
+      } catch (error) {
+        console.error('Erreur lors du chargement des données:', error);
+      }
+    }
+
+    // Générer un quiz
+    function generateQuiz(questionCount) {
+      const shuffled = [...quizData].sort(() => Math.random() - 0.5);
+      const selectedData = shuffled.slice(0, questionCount);
+      
+      return selectedData.map(item => {
+        const correctAnswer = item['Kabyle'];
+        const distractors = getDistractors(correctAnswer, 3);
+        const options = [correctAnswer, ...distractors].sort(() => Math.random() - 0.5);
+        
+        return {
+          question: item['Français'],
+          options: options,
+          correctAnswer: correctAnswer
+        };
+      });
+    }
+
+    // Obtenir des distracteurs
+    function getDistractors(correctAnswer, count) {
+      const otherAnswers = quizData
+        .filter(item => item['Kabyle'] !== correctAnswer)
+        .map(item => item['Kabyle']);
+      
+      const shuffled = otherAnswers.sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, count);
+    }
+
+    // Afficher une question
+    function displayQuestion() {
+      if (currentQuestionIndex >= currentQuiz.length) {
+        finishQuiz();
+        return;
+      }
+
+      const question = currentQuiz[currentQuestionIndex];
+      const quizContainer = document.getElementById('quiz-container');
+      
+      quizContainer.innerHTML = `
+        <div class="question-card">
+          <h2 class="question-text">${question.question}</h2>
+          <div class="options-container">
+            ${question.options.map((option, index) => `
+              <button class="option-btn" data-index="${index}" data-correct="${option === question.correctAnswer}">
+                ${option}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      // Ajouter les événements aux boutons
+      const optionButtons = quizContainer.querySelectorAll('.option-btn');
+      optionButtons.forEach(button => {
+        button.addEventListener('click', handleAnswer);
+      });
+    }
+
+    // Gérer la réponse
+    async function handleAnswer(event) {
+      const button = event.target;
+      const isCorrect = button.dataset.correct === 'true';
+
+      // Désactiver tous les boutons
+      const allButtons = document.querySelectorAll('.option-btn');
+      allButtons.forEach(btn => btn.disabled = true);
+
+      // Afficher le résultat
+      if (isCorrect) {
+        button.classList.add('correct');
+        score++;
+      } else {
+        button.classList.add('incorrect');
+        // Montrer la bonne réponse
+        allButtons.forEach(btn => {
+          if (btn.dataset.correct === 'true') {
+            btn.classList.add('correct');
+          }
+        });
+      }
+
+      // Sauvegarder le score si connecté
+      const user = auth.currentUser;
+      if (user) {
+        await saveScore(user.uid, isCorrect);
+      }
+
+      // Passer à la question suivante
+      setTimeout(() => {
+        currentQuestionIndex++;
+        updateProgress();
+        displayQuestion();
+      }, 2000);
+    }
+
+    // Mettre à jour la progression
+    function updateProgress() {
+      const progressBar = document.getElementById('progress-bar');
+      const progressText = document.getElementById('progress-text');
+      
+      if (progressBar && progressText) {
+        const progress = totalQuestions > 0 ? (currentQuestionIndex / totalQuestions) * 100 : 0;
+        progressBar.style.width = `${progress}%`;
+        progressText.textContent = `${currentQuestionIndex}/${totalQuestions}`;
+      }
+    }
+
+    // Terminer le quiz
+    function finishQuiz() {
+      const quizContainer = document.getElementById('quiz-container');
+      const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+      
+      quizContainer.innerHTML = `
+        <div class="quiz-results">
+          <h2>Quiz terminé !</h2>
+          <div class="score-display">
+            <p>Score : ${score}/${totalQuestions}</p>
+            <p>Pourcentage : ${percentage}%</p>
+          </div>
+          <div class="result-message">
+            ${getResultMessage(percentage)}
+          </div>
+          <div class="action-buttons">
+            <button id="restart-quiz" class="btn btn-primary">Recommencer</button>
+            <button id="back-to-home" class="btn btn-secondary">Retour à l'accueil</button>
+          </div>
+        </div>
+      `;
+
+      // Ajouter les événements
+      document.getElementById('restart-quiz').addEventListener('click', () => {
+        startQuiz(totalQuestions);
+      });
+
+      document.getElementById('back-to-home').addEventListener('click', () => {
+        window.location.href = 'index.html';
+      });
+    }
+
+    // Message de résultat
+    function getResultMessage(percentage) {
+      if (percentage >= 90) return "Excellent ! Vous maîtrisez bien ces mots.";
+      if (percentage >= 70) return "Très bien ! Continuez comme ça.";
+      if (percentage >= 50) return "Pas mal ! Avec de la pratique, vous y arriverez.";
+      return "Ne vous découragez pas ! La pratique fait le maître.";
+    }
+
+    // Démarrer le quiz
+    function startQuiz(questionCount) {
+      currentQuiz = generateQuiz(questionCount);
+      currentQuestionIndex = 0;
+      score = 0;
+      totalQuestions = currentQuiz.length;
+
+      displayQuestion();
+      updateProgress();
+    }
+
+    // Initialisation
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadQuizData();
+      
+      const questionButtons = document.querySelectorAll('.question-count-selector button');
+      
+      questionButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const count = parseInt(button.dataset.count);
+          
+          // Mettre à jour l'apparence des boutons
+          questionButtons.forEach(btn => btn.classList.remove('btn-primary'));
+          questionButtons.forEach(btn => btn.classList.add('btn-secondary'));
+          button.classList.remove('btn-secondary');
+          button.classList.add('btn-primary');
+          
+          // Démarrer le quiz
+          startQuiz(count);
+        });
+      });
+    });
+  </script>
 </body>
 </html>
