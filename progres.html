@@ -116,63 +116,61 @@
       }
     });
 
+    // Afficher l'historique des révisions
+    function displayRevisionHistory() {
+      const historyContainer = document.getElementById('history-container');
+      try {
+        const cardsWithHistory = cardManager.cards.filter(card => card.history && card.history.length > 0);
+        console.log('cartManager.cards:', cardManager.cards);
+        if (cardsWithHistory.length === 0) {
+          historyContainer.innerHTML = '<p>Aucune révision effectuée pour le moment.</p>';
+          return;
+        }
+        // Trier par date de dernière révision
+        cardsWithHistory.sort((a, b) => {
+          const lastA = a.history[a.history.length - 1];
+          const lastB = b.history[b.history.length - 1];
+          return new Date(lastB.date) - new Date(lastA.date);
+        });
+        // Prendre les 10 dernières révisions
+        const recentCards = cardsWithHistory.slice(0, 10);
+        let html = '<div class="history-list">';
+        recentCards.forEach(card => {
+          const lastRevision = card.history[card.history.length - 1];
+          const date = new Date(lastRevision.date).toLocaleDateString('fr-FR');
+          const quality = lastRevision.quality;
+          const qualityText = quality >= 4 ? 'Excellent' : quality >= 3 ? 'Correct' : 'Difficile';
+          const qualityColor = quality >= 4 ? '#4CAF50' : quality >= 3 ? '#FF9800' : '#E53935';
+          html += `
+            <div class="history-item">
+              <div class="history-word">
+                <strong>${card.fr}</strong> → ${card.kab}
+              </div>
+              <div class="history-details">
+                <span class="history-date">${date}</span>
+                <span class="history-quality" style="color: ${qualityColor}">${qualityText}</span>
+              </div>
+            </div>
+          `;
+        });
+        html += '</div>';
+        historyContainer.innerHTML = html;
+      } catch (e) {
+        historyContainer.innerHTML = '<p>Erreur lors du chargement de l\'historique.</p>';
+        console.error('Erreur historique:', e);
+      }
+    }
+
     // Mettre à jour les statistiques SM-2
     async function updateStats() {
       await cardManager.loadCards();
       const stats = cardManager.getStats();
-      
       document.getElementById('learned-cards').textContent = stats.learned;
       document.getElementById('total-cards').textContent = stats.total;
       document.getElementById('due-cards').textContent = stats.due;
       document.getElementById('progress-percent').textContent = stats.progress + '%';
-      
       // Afficher l'historique des révisions
       displayRevisionHistory();
-    }
-
-    // Afficher l'historique des révisions
-    function displayRevisionHistory() {
-      const historyContainer = document.getElementById('history-container');
-      const cardsWithHistory = cardManager.cards.filter(card => card.history && card.history.length > 0);
-      
-      if (cardsWithHistory.length === 0) {
-        historyContainer.innerHTML = '<p>Aucune révision effectuée pour le moment.</p>';
-        return;
-      }
-
-      // Trier par date de dernière révision
-      cardsWithHistory.sort((a, b) => {
-        const lastA = a.history[a.history.length - 1];
-        const lastB = b.history[b.history.length - 1];
-        return new Date(lastB.date) - new Date(lastA.date);
-      });
-
-      // Prendre les 10 dernières révisions
-      const recentCards = cardsWithHistory.slice(0, 10);
-      
-      let html = '<div class="history-list">';
-      recentCards.forEach(card => {
-        const lastRevision = card.history[card.history.length - 1];
-        const date = new Date(lastRevision.date).toLocaleDateString('fr-FR');
-        const quality = lastRevision.quality;
-        const qualityText = quality >= 4 ? 'Excellent' : quality >= 3 ? 'Correct' : 'Difficile';
-        const qualityColor = quality >= 4 ? '#4CAF50' : quality >= 3 ? '#FF9800' : '#E53935';
-        
-        html += `
-          <div class="history-item">
-            <div class="history-word">
-              <strong>${card.fr}</strong> → ${card.kab}
-            </div>
-            <div class="history-details">
-              <span class="history-date">${date}</span>
-              <span class="history-quality" style="color: ${qualityColor}">${qualityText}</span>
-            </div>
-          </div>
-        `;
-      });
-      html += '</div>';
-      
-      historyContainer.innerHTML = html;
     }
 
     // Progression utilisateur (quiz classique)
@@ -181,7 +179,6 @@
       const u = document.getElementById('username');
       const fill = document.getElementById('progress-fill');
       const pct  = document.getElementById('progress-percent-old');
-      
       if (user && user.displayName) {
         w.textContent = 'Bienvenue !';
         u.textContent = user.displayName;
@@ -197,9 +194,8 @@
         fill.style.width = '0%';
         pct.textContent  = '0 %';
       }
-      
       // Mettre à jour les nouvelles statistiques
-      updateStats();
+      await updateStats();
     });
   </script>
 </body>
