@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dialecte – Accueil</title>
+  <title>Dialect – Accueil</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="header">
     <a href="index.html" class="home-icon">🏠</a>
-    <h1 class="logo">Dialecte</h1>
+    <h1 class="logo">Dialect</h1>
     <div class="header-auth" id="header-auth">
       <!-- Les boutons seront injectés ici par le script -->
     </div>
   </header>
 
   <nav class="mobile-nav">
-    <a href="#">Lexique</a>
-    <a href="#">S’entraîner</a>
-    <a href="#">Mes progrès</a>
+    <a href="index.html">Lexique</a>
+    <a href="#">S'entraîner</a>
+    <a href="progres.html">Mes progrès</a>
     <a href="quiz.html">Quiz</a>
   </nav>
 
@@ -26,17 +26,28 @@
     <nav class="sidebar">
       <ul>
         <li><a href="#">Lexique</a></li>
-        <li><a href="#">S’entraîner</a></li>
+        <li><a href="#">S'entraîner</a></li>
         <li><a href="progres.html">Mes progrès</a></li>
         <li><a href="quiz.html">Quiz</a></li>
       </ul>
     </nav>
 
     <main class="main">
-      <h2>Bienvenue sur Dialecte !</h2>
+      <h2>Bienvenue sur Dialect !</h2>
+      <section id="lexique">
+        <h2>Lexique thématique</h2>
+        <div class="lexique-controls">
+          <label for="theme-select">Filtrer par thème :</label>
+          <select id="theme-select">
+            <option value="all">Tous les thèmes</option>
+          </select>
+        </div>
+        <div id="lexique-content">Chargement du lexique…</div>
+      </section>
     </main>
   </div>
 
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
   <script type="module">
     import { auth, logout, initAuthListener } from "./firebase.js";
 
@@ -55,14 +66,14 @@
         };
         headerAuth.appendChild(btn);
       } else {
-        // si non connecté, afficher Se connecter / S’inscrire
+        // si non connecté, afficher Se connecter / S'inscrire
         const login = document.createElement('a');
         login.href = 'login.html';
         login.textContent = 'Se connecter';
         login.className = 'btn auth';
         const signup = document.createElement('a');
         signup.href = 'signup.html';
-        signup.textContent = 'S’inscrire';
+        signup.textContent = "S'inscrire";
         signup.className = 'btn auth';
         headerAuth.append(login, signup);
       }
@@ -70,6 +81,75 @@
 
     initAuthListener(user => {
       renderAuthButtons(user);
+    });
+
+    // Génération dynamique du lexique à partir de data3.csv
+    const THEMES = [
+      { nom: 'Verbes', mots: ['être','venir','dire','voir','faire','manger','boire','prendre','aller','accompagner','jurer','tisser','réaliser','armer'] },
+      { nom: 'Nature', mots: ['eau','arbre','ciel','soleil','lune','terre','vent','montagne','herbe','mer','foin','boue','baie','oasis'] },
+      { nom: 'Corps humain', mots: ['main','tête','jambe','nez','bouche','œil','oreille','pied','dent','dos','cou','peau','sein','sang'] },
+      { nom: 'Animaux', mots: ['chat','bouc','hyène','âne','chien','oiseau','poisson','vache','mouton','cheval'] },
+      { nom: 'Nourriture', mots: ['pain','lait','fromage','viande','fruit','légume','miel','bière','melon','noix'] },
+      { nom: 'Maison', mots: ['maison','porte','fenêtre','chambre','lit','cuisine','table','chaise','clé'] },
+      { nom: 'Vêtements', mots: ['chemise','pantalon','robe','manteau','chapeau','chaussure','tablier'] },
+      { nom: 'Couleurs', mots: ['bleu','blanc','noir','rouge','vert','jaune','gris'] },
+      { nom: 'Famille', mots: ['père','mère','frère','soeur','fils','fille','oncle','tante','grand-mère','grand-père'] },
+      { nom: 'Objets du quotidien', mots: ['table','chaise','porte','fenêtre','lit','bol','cuir','bouteille','clé'] }
+    ];
+    function detectTheme(fr) {
+      for (const t of THEMES) {
+        for (const mot of t.mots) {
+          if (fr.toLowerCase().includes(mot)) return t.nom;
+        }
+      }
+      return 'Autres';
+    }
+    function renderLexique(data) {
+      const themes = {};
+      data.forEach(row => {
+        const fr = row['Français']?.trim();
+        const kab = row['Kabyle']?.trim();
+        if (!fr || !kab) return;
+        const theme = detectTheme(fr);
+        if (!themes[theme]) themes[theme] = [];
+        // Séparer les traductions multiples
+        const traductions = kab.split('/').map(t => t.trim()).filter(t => t);
+        themes[theme].push({ fr, kab });
+      });
+      // Remplir dynamiquement le menu déroulant avec les thèmes détectés
+      const themeSelect = document.getElementById('theme-select');
+      themeSelect.innerHTML = '<option value="all">Tous les thèmes</option>';
+      Object.keys(themes).forEach(theme => {
+        const option = document.createElement('option');
+        option.value = theme;
+        option.textContent = theme;
+        themeSelect.appendChild(option);
+      });
+      // Affichage filtré
+      function displayLexique(selectedTheme = 'all') {
+        let html = '';
+        Object.keys(themes).forEach(theme => {
+          if (selectedTheme === 'all' || theme === selectedTheme) {
+            html += `<div class='lexique-theme'><h3>${theme}</h3><ul class='lexique-list'>`;
+            themes[theme].forEach(({fr, kab}) => {
+              html += `<li><span class='fr'>${fr}</span> <span class='kab'>${kab}</span></li>`;
+            });
+            html += '</ul></div>';
+          }
+        });
+        document.getElementById('lexique-content').innerHTML = html;
+      }
+      displayLexique();
+      themeSelect.addEventListener('change', (e) => {
+        displayLexique(e.target.value);
+      });
+    }
+    Papa.parse('/data3.csv', {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      delimiter: ';',
+      complete: ({ data }) => renderLexique(data)
     });
   </script>
 </body>

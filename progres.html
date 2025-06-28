@@ -3,16 +3,33 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Dialecte – Mes progrès</title>
+  <title>Dialect – Mes progrès</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <header class="header">
     <a href="index.html" class="home-icon">🏠</a>
     <h1 class="logo">Mes progrès</h1>
+    <div class="header-auth" id="header-auth">
+      <!-- Les boutons seront injectés ici par le script -->
+    </div>
   </header>
+  <nav class="mobile-nav">
+    <a href="index.html">Lexique</a>
+    <a href="#">S'entraîner</a>
+    <a href="progres.html">Mes progrès</a>
+    <a href="quiz.html">Quiz</a>
+  </nav>
   <div class="layout">
-    <nav class="sidebar"><ul>…</ul></nav>
+    <nav class="sidebar">
+      <ul>
+        <li><a href="index.html">Lexique</a></li>
+        <li><a href="#">S'entraîner</a></li>
+        <li><a href="progres.html" class="active">Mes progrès</a></li>
+        <li><a href="quiz.html">Quiz</a></li>
+        <li><a href="login.html" id="sidebar-login-link">Se connecter</a></li>
+      </ul>
+    </nav>
     <main class="main">
       <div id="welcome" class="welcome-text">Bienvenue !</div>
       <div id="username" class="username-text"></div>
@@ -25,7 +42,43 @@
   </div>
 
   <script type="module">
-    import { initAuthListener, getScore } from "./firebase.js";
+    import { auth, logout, initAuthListener, getScore } from "./firebase.js";
+
+    // Boutons d'authentification
+    const headerAuth = document.getElementById('header-auth');
+    function renderAuthButtons(user) {
+      headerAuth.innerHTML = '';
+      if (user) {
+        const btn = document.createElement('button');
+        btn.textContent = 'Se déconnecter';
+        btn.className = 'btn auth';
+        btn.onclick = async () => {
+          await logout();
+          location.reload();
+        };
+        headerAuth.appendChild(btn);
+      } else {
+        const login = document.createElement('a');
+        login.href = 'login.html';
+        login.textContent = 'Se connecter';
+        login.className = 'btn auth';
+        const signup = document.createElement('a');
+        signup.href = 'signup.html';
+        signup.textContent = 'S\'inscrire';
+        signup.className = 'btn auth';
+        headerAuth.append(login, signup);
+      }
+    }
+    initAuthListener(user => {
+      renderAuthButtons(user);
+      // Masquer l'onglet 'Se connecter' si connecté
+      const loginLink = document.getElementById('sidebar-login-link');
+      if (loginLink) {
+        loginLink.style.display = user ? 'none' : '';
+      }
+    });
+
+    // Progression utilisateur
     initAuthListener(async user => {
       const w = document.getElementById('welcome');
       const u = document.getElementById('username');

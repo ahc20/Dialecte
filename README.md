@@ -1,4 +1,4 @@
-# Dialecte
+# Dialect
 
 Web app de flashcards Français ↔ Kabyle.
 
@@ -11,5 +11,4 @@ Web app de flashcards Français ↔ Kabyle.
 ## Déploiement
 
 - Pousse sur GitHub.
-- Active GitHub Pages (branche `main`, chemin `/index.html`).# Dialecte
-# Dialecte
+- Active GitHub Pages (branche `main`, chemin `/index.html`).

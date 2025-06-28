@@ -19,9 +19,9 @@ import {
 
 const firebaseConfig = {
   apiKey: "AIzaSyCI5yQhUVJKKktWCG2svsxx4RaiCTHBahc",
-  authDomain: "dialecte-e23ae.firebaseapp.com",
-  projectId: "dialecte-e23ae",
-  storageBucket: "dialecte-e23ae.appspot.com",
+  authDomain: "dialect-e23ae.firebaseapp.com",
+  projectId: "dialect-e23ae",
+  storageBucket: "dialect-e23ae.appspot.com",
   messagingSenderId: "455539698432",
   appId: "G-2RCV5ZR5WN"
 };
@@ -59,12 +59,27 @@ export function logout() {
   return signOut(auth);
 }
 
-// 5) Sauvegarde d’une réponse : incrémente total et, si correct, correctAnswers
+// 5) Sauvegarde d'une réponse : incrémente total et, si correct, correctAnswers
 export async function saveAnswer(uid, isCorrect) {
   const userRef = doc(db, "users", uid);
+  try {
+    const snap = await getDoc(userRef);
+    if (!snap.exists()) {
+      // Création du document si inexistant
+      await setDoc(userRef, {
+        totalAnswers: 1,
+        correctAnswers: isCorrect ? 1 : 0
+      });
+      console.log('Document utilisateur créé pour', uid);
+    } else {
   const updates = { totalAnswers: increment(1) };
   if (isCorrect) updates.correctAnswers = increment(1);
   await updateDoc(userRef, updates);
+      console.log('Réponse enregistrée pour', uid, 'isCorrect:', isCorrect);
+    }
+  } catch (e) {
+    console.error('Erreur Firestore saveAnswer:', e);
+  }
 }
 
 // 6) Récupération des compteurs
