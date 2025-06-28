@@ -53,33 +53,27 @@ class CardManager {
             if (!this.cards || this.cards.length === 0) {
                 alert("Aucune carte n'a été chargée depuis le CSV. Vérifiez le fichier data3.csv !");
             }
-            // Charger les données sauvegardées
-            await this.loadSavedData();
-
-            // Synchronisation cloud si connecté
+            // Chargement cloud prioritaire si connecté
             if (window.auth && window.auth.currentUser) {
                 const uid = window.auth.currentUser.uid;
                 const cloudHistory = await loadUserCardsHistory(uid);
                 console.log('[DEBUG] Historique cloud chargé:', cloudHistory);
                 if (cloudHistory && cloudHistory.length > 0) {
-                    // Fusion intelligente : on remplace l'historique local par le cloud si plus récent
+                    // Fusion : cloud prioritaire
                     for (const cloudCard of cloudHistory) {
                         const localCard = this.cards.find(c => c.fr === cloudCard.fr && c.kab === cloudCard.kab);
                         if (localCard) {
-                            // Si cloud plus long ou plus récent, on remplace
-                            if (!localCard.history || cloudCard.history.length > localCard.history.length) {
-                                localCard.history = cloudCard.history;
-                                // Met à jour les champs SRS si possible
-                                if (cloudCard.history.length > 0) {
-                                    const last = cloudCard.history[cloudCard.history.length - 1];
-                                    localCard.repetition = last.repetition || 0;
-                                    localCard.interval = last.interval || 0;
-                                    localCard.easeFactor = last.easeFactor || 2.5;
-                                    localCard.dueDate = last.dueDate ? new Date(last.dueDate) : new Date();
-                                }
+                            localCard.history = cloudCard.history;
+                            if (cloudCard.history.length > 0) {
+                                const last = cloudCard.history[cloudCard.history.length - 1];
+                                localCard.repetition = last.repetition || 0;
+                                localCard.interval = last.interval || 0;
+                                localCard.easeFactor = last.easeFactor || 2.5;
+                                localCard.dueDate = last.dueDate ? new Date(last.dueDate) : new Date();
                             }
                         }
                     }
+                    console.log('[DEBUG] Fusion cloud > local OK');
                 } else {
                     console.log('[DEBUG] Pas d\'historique cloud, on garde le local.');
                 }
@@ -111,10 +105,11 @@ class CardManager {
         if (index !== -1) {
             this.cards[index] = { ...card };
             await this.saveToStorage();
-            // Sauvegarde cloud si connecté
+            // Sauvegarde cloud systématique
             if (window.auth && window.auth.currentUser) {
                 const uid = window.auth.currentUser.uid;
                 await saveUserCardsHistory(uid, this.cards);
+                console.log('[DEBUG] Historique sauvegardé sur Firebase (saveCard)');
             }
         }
     }
