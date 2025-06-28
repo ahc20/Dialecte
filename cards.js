@@ -69,21 +69,27 @@ class CardManager {
                     for (const cloudCard of cloudHistory) {
                         const localCard = this.cards.find(c => c.fr === cloudCard.fr && c.kab === cloudCard.kab);
                         if (localCard) {
-                            // Si local plus riche, on garde le local, sinon on prend le cloud
-                            if ((localCard.history && localCard.history.length) > (cloudCard.history && cloudCard.history.length)) {
-                                // Rien à faire, local déjà plus complet
-                                console.log('[DEBUG] Fusion : local plus riche, on garde le local pour', localCard.fr);
-                            } else {
-                                localCard.history = cloudCard.history;
-                                localCard.repetition = (cloudCard.history && cloudCard.history.length) ? cloudCard.history.length : 0;
-                                if (cloudCard.history.length > 0) {
-                                    const last = cloudCard.history[cloudCard.history.length - 1];
-                                    localCard.interval = last.interval || 0;
-                                    localCard.easeFactor = last.easeFactor || 2.5;
-                                    localCard.dueDate = last.dueDate ? new Date(last.dueDate) : new Date();
+                            // Fusion intelligente des historiques (union des dates)
+                            const localHist = localCard.history || [];
+                            const cloudHist = cloudCard.history || [];
+                            // On fusionne les historiques sans doublons (par date)
+                            const allHist = [...localHist];
+                            cloudHist.forEach(hc => {
+                                if (!allHist.some(hl => hl.date === hc.date && hl.quality === hc.quality)) {
+                                    allHist.push(hc);
                                 }
-                                console.log('[DEBUG] Fusion : cloud prioritaire pour', localCard.fr);
+                            });
+                            // Tri par date croissante
+                            allHist.sort((a, b) => new Date(a.date) - new Date(b.date));
+                            localCard.history = allHist;
+                            localCard.repetition = allHist.length;
+                            if (allHist.length > 0) {
+                                const last = allHist[allHist.length - 1];
+                                localCard.interval = last.interval || 0;
+                                localCard.easeFactor = last.easeFactor || 2.5;
+                                localCard.dueDate = last.dueDate ? new Date(last.dueDate) : new Date();
                             }
+                            console.log('[DEBUG] Fusion historique local/cloud pour', localCard.fr, allHist);
                         }
                     }
                     // Après fusion, on sauvegarde la version la plus complète sur Firebase
