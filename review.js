@@ -11,11 +11,12 @@ class ReviewMode {
         if (!cardManager.isInitialized) {
             await cardManager.loadCards();
         }
-        // Générer la file pondérée par la fréquence
+        // Générer la file pondérée par la fréquence (références aux objets originaux)
         const due = cardManager.getDueCards();
         let weighted = [];
         due.forEach(card => {
             for (let i = 0; i < Math.max(1, card.frequency); i++) {
+                // Toujours pousser la référence à l'objet original
                 weighted.push(card);
             }
         });
@@ -88,8 +89,9 @@ class ReviewMode {
         const quality = parseInt(event.target.dataset.quality);
         const card = this.dueCards[this.currentCardIndex];
         await cardManager.processReview(card, quality);
+        // Log pour vérifier l'historique de la carte après révision
+        console.log('[DEBUG] Historique après révision pour', card.fr, card.history);
         this.showFeedback(quality);
-        // Sauvegarder l'index de progression
         localStorage.setItem('review_current_index', (this.currentCardIndex + 1).toString());
         setTimeout(() => {
             this.currentCardIndex++;
