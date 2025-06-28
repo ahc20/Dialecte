@@ -120,30 +120,35 @@
     function displayRevisionHistory() {
       const historyContainer = document.getElementById('history-container');
       try {
-        const cardsWithHistory = cardManager.cards.filter(card => card.history && card.history.length > 0);
-        console.log('cartManager.cards:', cardManager.cards);
-        if (cardsWithHistory.length === 0) {
+        // Récupérer toutes les révisions de toutes les cartes
+        let allRevisions = [];
+        cardManager.cards.forEach(card => {
+          if (card.history && card.history.length > 0) {
+            card.history.forEach(rev => {
+              allRevisions.push({
+                fr: card.fr,
+                kab: card.kab,
+                date: rev.date,
+                quality: rev.quality
+              });
+            });
+          }
+        });
+        // Trier par date décroissante
+        allRevisions.sort((a, b) => new Date(b.date) - new Date(a.date));
+        if (allRevisions.length === 0) {
           historyContainer.innerHTML = '<p>Aucune révision effectuée pour le moment.</p>';
         } else {
-          // Trier par date de dernière révision
-          cardsWithHistory.sort((a, b) => {
-            const lastA = a.history[a.history.length - 1];
-            const lastB = b.history[b.history.length - 1];
-            return new Date(lastB.date) - new Date(lastA.date);
-          });
-          // Prendre les 10 dernières révisions
-          const recentCards = cardsWithHistory.slice(0, 10);
           let html = '<div class="history-list">';
-          recentCards.forEach(card => {
-            const lastRevision = card.history[card.history.length - 1];
-            const date = new Date(lastRevision.date).toLocaleDateString('fr-FR');
-            const quality = lastRevision.quality;
+          allRevisions.forEach(rev => {
+            const date = new Date(rev.date).toLocaleDateString('fr-FR');
+            const quality = rev.quality;
             const qualityText = quality >= 4 ? 'Excellent' : quality >= 3 ? 'Correct' : 'Difficile';
             const qualityColor = quality >= 4 ? '#4CAF50' : quality >= 3 ? '#FF9800' : '#E53935';
             html += `
               <div class="history-item">
                 <div class="history-word">
-                  <strong>${card.fr}</strong> → ${card.kab}
+                  <strong>${rev.fr}</strong> → ${rev.kab}
                 </div>
                 <div class="history-details">
                   <span class="history-date">${date}</span>
