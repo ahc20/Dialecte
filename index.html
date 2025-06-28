@@ -49,6 +49,28 @@
         <span style="font-size:0.98em; color:#3b5c5c;">Tout ton historique de progression est sauvegardé : tu peux reprendre où tu t'es arrêté, sur n'importe quel appareil.</span>
       </section>
 
+      <!-- Encadrés des trois types de jeu -->
+      <section class="learning-modes" style="margin-bottom:2em;">
+        <h3 style="text-align:center; margin-bottom:1.5em;">Modes d'apprentissage</h3>
+        <div class="mode-cards" style="display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:2em; max-width:900px; margin:0 auto;">
+          <div class="mode-card" style="background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.07); padding:2em 1em; text-align:center;">
+            <h4 style="font-size:1.2em; margin-bottom:0.5em;">🔍 Mode Découverte</h4>
+            <p style="color:#4F8A8B; margin-bottom:1.2em;">Apprenez de nouveaux mots avec des quiz à choix multiples</p>
+            <a href="discovery.html" class="btn btn-primary">Commencer</a>
+          </div>
+          <div class="mode-card" style="background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.07); padding:2em 1em; text-align:center;">
+            <h4 style="font-size:1.2em; margin-bottom:0.5em;">🔄 Mode Révision</h4>
+            <p style="color:#4F8A8B; margin-bottom:1.2em;">Révisez les mots appris avec la répétition espacée</p>
+            <a href="review.html" class="btn btn-secondary" id="review-btn">Réviser (<span id="due-count">0</span>)</a>
+          </div>
+          <div class="mode-card" style="background:#fff; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.07); padding:2em 1em; text-align:center;">
+            <h4 style="font-size:1.2em; margin-bottom:0.5em;">🎯 Quiz Classique</h4>
+            <p style="color:#4F8A8B; margin-bottom:1.2em;">Testez vos connaissances avec le quiz traditionnel</p>
+            <a href="quiz.html" class="btn btn-primary">Commencer</a>
+          </div>
+        </div>
+      </section>
+
       <section id="lexique">
         <h2>Lexique thématique</h2>
         <div class="lexique-controls">
