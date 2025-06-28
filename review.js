@@ -11,15 +11,16 @@ class ReviewMode {
         if (!cardManager.isInitialized) {
             await cardManager.loadCards();
         }
-
         this.dueCards = cardManager.getDueCards();
-        
+        // Mélange aléatoire des cartes à réviser
+        this.dueCards = cardManager.shuffle(this.dueCards);
+        // Charger l'index de progression sauvegardé
+        const savedIndex = parseInt(localStorage.getItem('review_current_index') || '0', 10);
+        this.currentCardIndex = (!isNaN(savedIndex) && savedIndex < this.dueCards.length) ? savedIndex : 0;
         if (this.dueCards.length === 0) {
             this.showNoCardsMessage();
             return;
         }
-
-        this.currentCardIndex = 0;
         this.displayCard();
         this.updateProgress();
     }
@@ -80,14 +81,10 @@ class ReviewMode {
     async handleQuality(event) {
         const quality = parseInt(event.target.dataset.quality);
         const card = this.dueCards[this.currentCardIndex];
-        console.log('[DEBUG] handleQuality: appel processReview avec', card, 'qualité', quality);
-        // Traiter avec l'algorithme SM-2
         await cardManager.processReview(card, quality);
-
-        // Afficher le feedback
         this.showFeedback(quality);
-
-        // Passer à la carte suivante après un délai
+        // Sauvegarder l'index de progression
+        localStorage.setItem('review_current_index', (this.currentCardIndex + 1).toString());
         setTimeout(() => {
             this.currentCardIndex++;
             this.updateProgress();
@@ -138,6 +135,7 @@ class ReviewMode {
 
     // Terminer la session de révision
     finishReview() {
+        localStorage.removeItem('review_current_index');
         const reviewContainer = document.getElementById('review-container');
         
         reviewContainer.innerHTML = `
