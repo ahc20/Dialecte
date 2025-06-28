@@ -121,6 +121,8 @@
     function displayRevisionHistory() {
       const historyContainer = document.getElementById('history-container');
       try {
+        // Log pour vérifier le contenu de toutes les cartes et leurs historiques
+        console.log('[DEBUG] Affichage historique : cardManager.cards =', cardManager.cards);
         // Récupérer toutes les révisions de toutes les cartes
         let allRevisions = [];
         cardManager.cards.forEach(card => {
