@@ -122,8 +122,6 @@ class CardManager {
 
     // Sauvegarder une carte
     async saveCard(card) {
-        console.log('[DEBUG] saveCard: appelée avec', card);
-        console.log('[DEBUG] saveCard: window.auth =', window.auth, 'window.auth.currentUser =', window.auth && window.auth.currentUser);
         const index = this.cards.findIndex(c => c.id === card.id);
         if (index !== -1) {
             this.cards[index] = { ...card };
@@ -131,6 +129,7 @@ class CardManager {
             // Sauvegarde cloud systématique
             if (window.auth && window.auth.currentUser) {
                 const uid = window.auth.currentUser.uid;
+                console.log('[DEBUG] saveCard: sauvegarde cloud avec', this.cards.length, 'cartes');
                 await saveUserCardsHistory(uid, this.cards);
                 console.log('[DEBUG] Historique sauvegardé sur Firebase (saveCard)', this.cards[index]);
             }
