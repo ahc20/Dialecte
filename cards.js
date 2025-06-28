@@ -242,7 +242,7 @@ class CardManager {
         const totalCards = this.cards.length;
         const dueCards = this.getDueCards().length;
         const learnedCards = this.cards.filter(card => card.repetition > 0).length;
-        
+        console.log('[DEBUG] getStats: repetition de toutes les cartes', this.cards.map(c => ({fr: c.fr, repetition: c.repetition, history: c.history})));
         return {
             total: totalCards,
             due: dueCards,
