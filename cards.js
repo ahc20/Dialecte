@@ -10,8 +10,17 @@ class CardManager {
     // Initialiser les cartes depuis le CSV
     async loadCards() {
         try {
-            const response = await fetch('data3.csv');
+            const response = await fetch('/data3.csv');
+            if (!response.ok) {
+                alert("Erreur lors du chargement du CSV : " + response.status + ' ' + response.statusText);
+                throw new Error('CSV fetch failed');
+            }
             const csvText = await response.text();
+            console.log('[DEBUG] Contenu brut CSV:', csvText.slice(0, 500));
+            if (!csvText || csvText.length < 10) {
+                alert("Le fichier CSV est vide ou introuvable !");
+                throw new Error('CSV vide');
+            }
 
             // Essayer d'abord avec la virgule
             let lines = csvText.split('\n').filter(line => line.trim());
