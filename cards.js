@@ -1,4 +1,6 @@
 // Module de gestion des cartes avec algorithme SM-2
+import { saveUserCardsHistory, loadUserCardsHistory } from './firebase.js';
+
 class CardManager {
     constructor() {
         this.cards = [];
@@ -43,6 +45,33 @@ class CardManager {
             
             // Charger les données sauvegardées
             await this.loadSavedData();
+
+            // Synchronisation cloud si connecté
+            if (window.auth && window.auth.currentUser) {
+                const uid = window.auth.currentUser.uid;
+                const cloudHistory = await loadUserCardsHistory(uid);
+                if (cloudHistory && cloudHistory.length > 0) {
+                    // Fusion intelligente : on remplace l'historique local par le cloud si plus récent
+                    for (const cloudCard of cloudHistory) {
+                        const localCard = this.cards.find(c => c.fr === cloudCard.fr && c.kab === cloudCard.kab);
+                        if (localCard) {
+                            // Si cloud plus long ou plus récent, on remplace
+                            if (!localCard.history || cloudCard.history.length > localCard.history.length) {
+                                localCard.history = cloudCard.history;
+                                // Met à jour les champs SRS si possible
+                                if (cloudCard.history.length > 0) {
+                                    const last = cloudCard.history[cloudCard.history.length - 1];
+                                    localCard.repetition = last.repetition || 0;
+                                    localCard.interval = last.interval || 0;
+                                    localCard.easeFactor = last.easeFactor || 2.5;
+                                    localCard.dueDate = last.dueDate ? new Date(last.dueDate) : new Date();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
             this.isInitialized = true;
             
             console.log(`Chargé ${this.cards.length} cartes`);
@@ -68,6 +97,11 @@ class CardManager {
         if (index !== -1) {
             this.cards[index] = { ...card };
             await this.saveToStorage();
+            // Sauvegarde cloud si connecté
+            if (window.auth && window.auth.currentUser) {
+                const uid = window.auth.currentUser.uid;
+                await saveUserCardsHistory(uid, this.cards);
+            }
         }
     }
 

@@ -92,3 +92,37 @@ export async function getScore(uid) {
     correctAnswers: d.correctAnswers || 0
   };
 }
+
+// === Synchronisation de l'historique SM-2 dans Firestore ===
+
+/**
+ * Sauvegarde l'historique des cartes pour un utilisateur dans Firestore
+ * @param {string} uid - ID utilisateur
+ * @param {Array} cards - Tableau de cartes (avec historique)
+ */
+export async function saveUserCardsHistory(uid, cards) {
+  if (!uid || !cards) return;
+  const userDoc = doc(db, "users", uid);
+  // On ne stocke que l'historique, pas tout le contenu des cartes
+  const cardsHistory = cards.map(card => ({
+    fr: card.fr,
+    kab: card.kab,
+    history: card.history || []
+  }));
+  await setDoc(userDoc, { cardsHistory }, { merge: true });
+}
+
+/**
+ * Charge l'historique des cartes pour un utilisateur depuis Firestore
+ * @param {string} uid - ID utilisateur
+ * @returns {Promise<Array>} - Tableau de {fr, kab, history}
+ */
+export async function loadUserCardsHistory(uid) {
+  if (!uid) return [];
+  const userDoc = doc(db, "users", uid);
+  const snap = await getDoc(userDoc);
+  if (snap.exists() && snap.data().cardsHistory) {
+    return snap.data().cardsHistory;
+  }
+  return [];
+}
