@@ -1,4 +1,4 @@
-# Dialect
+# Dialecte
 
 Web app de flashcards Français ↔ Kabyle.
 

@@ -19,9 +19,9 @@ import {
 
 const firebaseConfig = {
   apiKey: "AIzaSyCI5yQhUVJKKktWCG2svsxx4RaiCTHBahc",
-  authDomain: "dialect-e23ae.firebaseapp.com",
-  projectId: "dialect-e23ae",
-  storageBucket: "dialect-e23ae.appspot.com",
+  authDomain: "dialecte-e23ae.firebaseapp.com",
+  projectId: "dialecte-e23ae",
+  storageBucket: "dialecte-e23ae.appspot.com",
   messagingSenderId: "455539698432",
   appId: "G-2RCV5ZR5WN"
 };
