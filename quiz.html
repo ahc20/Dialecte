@@ -66,7 +66,7 @@
 
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
   <script type="module">
-    import { auth, logout, initAuthListener, saveScore } from "./firebase.js";
+    import { auth, logout, initAuthListener } from "./firebase.js";
 
     const headerAuth = document.getElementById('header-auth');
 
@@ -234,11 +234,11 @@
         });
       }
 
-      // Sauvegarder le score si connecté
-      const user = auth.currentUser;
-      if (user) {
-        await saveScore(user.uid, isCorrect);
-      }
+      // Sauvegarder le score si connecté (désactivé)
+      // const user = auth.currentUser;
+      // if (user) {
+      //   await saveScore(user.uid, isCorrect);
+      // }
 
       // Passer à la question suivante
       setTimeout(() => {
