@@ -107,22 +107,26 @@
 
     // Charger les données CSV
     async function loadQuizData() {
-      try {
-        const response = await fetch('data3.csv');
-        const csvText = await response.text();
-        
-        Papa.parse(csvText, {
-          header: true,
-          skipEmptyLines: true,
-          delimiter: ';',
-          complete: (results) => {
-            quizData = results.data.filter(row => row['Français'] && row['Kabyle']);
-            console.log(`Chargé ${quizData.length} mots pour le quiz`);
-          }
-        });
-      } catch (error) {
-        console.error('Erreur lors du chargement des données:', error);
-      }
+      return new Promise(async (resolve, reject) => {
+        try {
+          const response = await fetch('data3.csv');
+          const csvText = await response.text();
+
+          Papa.parse(csvText, {
+            header: true,
+            skipEmptyLines: true,
+            delimiter: ';',
+            complete: (results) => {
+              quizData = results.data.filter(row => row['Français'] && row['Kabyle']);
+              console.log(`Chargé ${quizData.length} mots pour le quiz`);
+              resolve();
+            },
+            error: (err) => reject(err)
+          });
+        } catch (error) {
+          reject(error);
+        }
+      });
     }
 
     // Générer un quiz
@@ -285,20 +289,22 @@
 
     // Initialisation
     document.addEventListener('DOMContentLoaded', async () => {
-      await loadQuizData();
-      
       const questionButtons = document.querySelectorAll('.question-count-selector button');
+      // Désactiver les boutons au départ
+      questionButtons.forEach(btn => btn.disabled = true);
+
+      await loadQuizData();
+      // Activer les boutons une fois les données chargées
+      questionButtons.forEach(btn => btn.disabled = false);
       
       questionButtons.forEach(button => {
         button.addEventListener('click', () => {
           const count = parseInt(button.dataset.count);
-          
           // Mettre à jour l'apparence des boutons
           questionButtons.forEach(btn => btn.classList.remove('btn-primary'));
           questionButtons.forEach(btn => btn.classList.add('btn-secondary'));
           button.classList.remove('btn-secondary');
           button.classList.add('btn-primary');
-          
           // Démarrer le quiz
           startQuiz(count);
         });
