@@ -40,9 +40,10 @@ class CardManager {
                 };
                 if (card.fr && card.kab) this.cards.push(card);
             }
-            // Log pour debug
-            console.log('cartes QCM discovery:', this.cards.slice(0, 10));
-            
+            console.log('[DEBUG] Après parsing CSV, cartes:', this.cards.length, this.cards.slice(0, 3));
+            if (!this.cards || this.cards.length === 0) {
+                alert("Aucune carte n'a été chargée depuis le CSV. Vérifiez le fichier data3.csv !");
+            }
             // Charger les données sauvegardées
             await this.loadSavedData();
 
@@ -50,6 +51,7 @@ class CardManager {
             if (window.auth && window.auth.currentUser) {
                 const uid = window.auth.currentUser.uid;
                 const cloudHistory = await loadUserCardsHistory(uid);
+                console.log('[DEBUG] Historique cloud chargé:', cloudHistory);
                 if (cloudHistory && cloudHistory.length > 0) {
                     // Fusion intelligente : on remplace l'historique local par le cloud si plus récent
                     for (const cloudCard of cloudHistory) {
@@ -69,15 +71,18 @@ class CardManager {
                             }
                         }
                     }
+                } else {
+                    console.log('[DEBUG] Pas d\'historique cloud, on garde le local.');
                 }
             }
-
+            console.log('[DEBUG] Après fusion cloud, cartes:', this.cards.length, this.cards.slice(0, 3));
             this.isInitialized = true;
             
             console.log(`Chargé ${this.cards.length} cartes`);
             return this.cards;
         } catch (error) {
-            console.error('Erreur lors du chargement des cartes:', error);
+            alert('Erreur lors du chargement des cartes : ' + error);
+            console.error('[DEBUG] Erreur loadCards:', error);
             return [];
         }
     }
