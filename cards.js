@@ -1,5 +1,7 @@
 // Module de gestion des cartes avec algorithme SM-2
 import { saveUserCardsHistory, loadUserCardsHistory } from './firebase.js';
+import { auth } from './firebase.js';
+window.auth = auth;
 
 class CardManager {
     constructor() {
@@ -102,6 +104,7 @@ class CardManager {
     // Sauvegarder une carte
     async saveCard(card) {
         console.log('[DEBUG] saveCard: appelée avec', card);
+        console.log('[DEBUG] saveCard: window.auth =', window.auth, 'window.auth.currentUser =', window.auth && window.auth.currentUser);
         const index = this.cards.findIndex(c => c.id === card.id);
         if (index !== -1) {
             this.cards[index] = { ...card };
