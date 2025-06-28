@@ -71,6 +71,7 @@
       <!-- Historique des révisions SM-2 -->
       <section class="stats-section">
         <h3>📅 Historique des révisions (SM-2)</h3>
+        <button id="export-history-btn" class="btn btn-secondary" style="margin-bottom:1em;">Exporter mon historique</button>
         <div id="history-container">
           <p>Chargement de l'historique...</p>
         </div>
@@ -201,6 +202,20 @@
       }
       // Mettre à jour les nouvelles statistiques
       await updateStats();
+    });
+
+    // Exporter tout l'historique au format JSON
+    document.getElementById('export-history-btn').addEventListener('click', () => {
+      const data = JSON.stringify(cardManager.cards, null, 2);
+      const blob = new Blob([data], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'historique_dialecte.json';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     });
   </script>
 </body>
