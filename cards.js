@@ -60,22 +60,35 @@ class CardManager {
                 const uid = window.auth.currentUser.uid;
                 const cloudHistory = await loadUserCardsHistory(uid);
                 console.log('[DEBUG] Historique cloud chargé:', cloudHistory);
-                if (cloudHistory && cloudHistory.length > 0) {
-                    // Fusion : cloud prioritaire
+                // Si cloud vide mais local non vide, on pousse le local sur Firebase
+                if ((!cloudHistory || cloudHistory.length === 0) && this.cards.some(c => c.history && c.history.length > 0)) {
+                    await saveUserCardsHistory(uid, this.cards);
+                    console.log('[DEBUG] Cloud vide, local non vide : historique local sauvegardé sur Firebase');
+                } else if (cloudHistory && cloudHistory.length > 0) {
+                    // Fusion : on garde le plus complet pour chaque carte
                     for (const cloudCard of cloudHistory) {
                         const localCard = this.cards.find(c => c.fr === cloudCard.fr && c.kab === cloudCard.kab);
                         if (localCard) {
-                            localCard.history = cloudCard.history;
-                            localCard.repetition = (cloudCard.history && cloudCard.history.length) ? cloudCard.history.length : 0;
-                            if (cloudCard.history.length > 0) {
-                                const last = cloudCard.history[cloudCard.history.length - 1];
-                                localCard.interval = last.interval || 0;
-                                localCard.easeFactor = last.easeFactor || 2.5;
-                                localCard.dueDate = last.dueDate ? new Date(last.dueDate) : new Date();
+                            // Si local plus riche, on garde le local, sinon on prend le cloud
+                            if ((localCard.history && localCard.history.length) > (cloudCard.history && cloudCard.history.length)) {
+                                // Rien à faire, local déjà plus complet
+                                console.log('[DEBUG] Fusion : local plus riche, on garde le local pour', localCard.fr);
+                            } else {
+                                localCard.history = cloudCard.history;
+                                localCard.repetition = (cloudCard.history && cloudCard.history.length) ? cloudCard.history.length : 0;
+                                if (cloudCard.history.length > 0) {
+                                    const last = cloudCard.history[cloudCard.history.length - 1];
+                                    localCard.interval = last.interval || 0;
+                                    localCard.easeFactor = last.easeFactor || 2.5;
+                                    localCard.dueDate = last.dueDate ? new Date(last.dueDate) : new Date();
+                                }
+                                console.log('[DEBUG] Fusion : cloud prioritaire pour', localCard.fr);
                             }
                         }
                     }
-                    console.log('[DEBUG] Fusion cloud > local OK');
+                    // Après fusion, on sauvegarde la version la plus complète sur Firebase
+                    await saveUserCardsHistory(uid, this.cards);
+                    console.log('[DEBUG] Fusion cloud > local OK et sauvegarde fusionnée sur Firebase');
                 } else {
                     console.log('[DEBUG] Pas d\'historique cloud, on garde le local.');
                 }
