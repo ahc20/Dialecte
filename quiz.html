@@ -112,14 +112,35 @@
           const response = await fetch('data3.csv');
           const csvText = await response.text();
 
+          // Essayer d'abord avec la virgule
           Papa.parse(csvText, {
             header: true,
             skipEmptyLines: true,
-            delimiter: ';',
+            delimiter: ',',
             complete: (results) => {
-              quizData = results.data.filter(row => row['Français'] && row['Kabyle']);
-              console.log(`Chargé ${quizData.length} mots pour le quiz`);
-              resolve();
+              let data = results.data.filter(row => row['Français'] && row['Kabyle']);
+              if (data.length < 2) {
+                // Réessayer avec le point-virgule
+                Papa.parse(csvText, {
+                  header: true,
+                  skipEmptyLines: true,
+                  delimiter: ';',
+                  complete: (results2) => {
+                    data = results2.data.filter(row => row['Français'] && row['Kabyle']);
+                    quizData = data;
+                    console.log('quizData (delimiter ;) :', quizData);
+                    if (quizData.length === 0) {
+                      alert("Aucune donnée trouvée dans le CSV. Vérifiez le séparateur et les noms de colonnes !");
+                    }
+                    resolve();
+                  },
+                  error: (err) => reject(err)
+                });
+              } else {
+                quizData = data;
+                console.log('quizData (delimiter ,) :', quizData);
+                resolve();
+              }
             },
             error: (err) => reject(err)
           });

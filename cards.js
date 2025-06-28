@@ -10,15 +10,21 @@ class CardManager {
         try {
             const response = await fetch('data3.csv');
             const csvText = await response.text();
-            
-            // Parser le CSV
-            const lines = csvText.split('\n').filter(line => line.trim());
-            const headers = lines[0].split(',').map(h => h.trim());
-            
+
+            // Essayer d'abord avec la virgule
+            let lines = csvText.split('\n').filter(line => line.trim());
+            let headers = lines[0].split(',').map(h => h.trim());
+            let delimiter = ',';
+            if (headers.length < 2 || !headers.includes('Français')) {
+                // Réessayer avec ';'
+                headers = lines[0].split(';').map(h => h.trim());
+                delimiter = ';';
+            }
+
             this.cards = [];
-            
             for (let i = 1; i < lines.length; i++) {
-                const values = lines[i].split(',').map(v => v.trim());
+                let values = lines[i].split(delimiter).map(v => v.trim());
+                if (values.length < 2 || !values[0] || !values[1]) continue;
                 const card = {
                     id: this.generateUUID(),
                     fr: values[0] || '',
@@ -30,8 +36,10 @@ class CardManager {
                     dueDate: new Date(),
                     history: []
                 };
-                this.cards.push(card);
+                if (card.fr && card.kab) this.cards.push(card);
             }
+            // Log pour debug
+            console.log('cartes QCM discovery:', this.cards.slice(0, 10));
             
             // Charger les données sauvegardées
             await this.loadSavedData();
