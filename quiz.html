@@ -152,20 +152,23 @@
 
     // Générer un quiz
     function generateQuiz(questionCount) {
+      console.log('Appel generateQuiz, quizData:', quizData);
       const shuffled = [...quizData].sort(() => Math.random() - 0.5);
       const selectedData = shuffled.slice(0, questionCount);
+      console.log('selectedData:', selectedData);
       
-      return selectedData.map(item => {
+      const quiz = selectedData.map(item => {
         const correctAnswer = item['Kabyle'];
         const distractors = getDistractors(correctAnswer, 3);
         const options = [correctAnswer, ...distractors].sort(() => Math.random() - 0.5);
-        
         return {
           question: item['Français'],
           options: options,
           correctAnswer: correctAnswer
         };
       });
+      console.log('Quiz généré:', quiz);
+      return quiz;
     }
 
     // Obtenir des distracteurs
@@ -299,11 +302,16 @@
 
     // Démarrer le quiz
     function startQuiz(questionCount) {
+      console.log('Appel startQuiz, quizData:', quizData);
       currentQuiz = generateQuiz(questionCount);
       currentQuestionIndex = 0;
       score = 0;
       totalQuestions = currentQuiz.length;
-
+      console.log('currentQuiz:', currentQuiz);
+      if (!currentQuiz || currentQuiz.length === 0) {
+        alert("Impossible de générer le quiz : aucune question disponible. Vérifiez le CSV ou la console.");
+        return;
+      }
       displayQuestion();
       updateProgress();
     }
