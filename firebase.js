@@ -102,6 +102,7 @@ export async function getScore(uid) {
  */
 export async function saveUserCardsHistory(uid, cards) {
   if (!uid || !cards) return;
+  console.log('[DEBUG] saveUserCardsHistory: appelée avec uid', uid, 'cartes:', cards.length);
   const userDoc = doc(db, "users", uid);
   // On ne stocke que l'historique, pas tout le contenu des cartes
   const cardsHistory = cards.map(card => ({

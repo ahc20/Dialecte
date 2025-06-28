@@ -101,6 +101,7 @@ class CardManager {
 
     // Sauvegarder une carte
     async saveCard(card) {
+        console.log('[DEBUG] saveCard: appelée avec', card);
         const index = this.cards.findIndex(c => c.id === card.id);
         if (index !== -1) {
             this.cards[index] = { ...card };
