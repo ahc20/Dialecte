@@ -107,6 +107,7 @@ class ReviewMode {
             4: "Facile !",
             5: "Excellent !"
         };
+        console.log('[DEBUG] showFeedback: interval de la carte =', card && card.interval, card);
         reviewContainer.innerHTML = `
             <div class="feedback-card">
                 <h3>${feedbackMessages[quality]}</h3>
