@@ -122,10 +122,13 @@ class ReviewMode {
 
     // Texte pour le prochain intervalle
     getNextIntervalText(quality) {
-        if (quality < 3) {
-            return "Prochaine révision : demain";
+        const card = this.dueCards[this.currentCardIndex];
+        if (!card) return '';
+        const interval = card.interval || 1;
+        if (interval <= 1) {
+            return 'La carte revient demain';
         } else {
-            return "Prochaine révision : dans quelques jours";
+            return `La carte revient dans ${interval} jours`;
         }
     }
 
