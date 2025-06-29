@@ -88,7 +88,9 @@ class ReviewMode {
     async handleQuality(event) {
         const quality = parseInt(event.target.dataset.quality);
         const card = this.dueCards[this.currentCardIndex];
-        const updatedCard = await cardManager.processReview(card, quality);
+        await cardManager.processReview(card, quality);
+        // Relire la carte à jour depuis cardManager.cards
+        const updatedCard = cardManager.cards.find(c => c.id === card.id);
         this.showFeedback(quality, updatedCard);
         localStorage.setItem('review_current_index', (this.currentCardIndex + 1).toString());
         setTimeout(() => {
