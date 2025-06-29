@@ -12,7 +12,7 @@ class CardManager {
     // Initialiser les cartes depuis le CSV
     async loadCards() {
         try {
-            const response = await fetch('/data3.csv');
+            const response = await fetch('/data3_niveaux.csv');
             if (!response.ok) {
                 alert("Erreur lors du chargement du CSV : " + response.status + ' ' + response.statusText);
                 throw new Error('CSV fetch failed');
@@ -47,13 +47,14 @@ class CardManager {
                     interval: 0,
                     easeFactor: 2.5,
                     dueDate: new Date(),
-                    history: []
+                    history: [],
+                    niveau: parseInt(values[values.length - 1]) || 10 // Ajout du niveau
                 };
                 if (card.fr && card.kab) this.cards.push(card);
             }
             console.log('[DEBUG] Après parsing CSV, cartes:', this.cards.length, this.cards.slice(0, 3));
             if (!this.cards || this.cards.length === 0) {
-                alert("Aucune carte n'a été chargée depuis le CSV. Vérifiez le fichier data3.csv !");
+                alert("Aucune carte n'a été chargée depuis le CSV. Vérifiez le fichier data3_niveaux.csv !");
             }
             // Chargement cloud prioritaire si connecté
             if (window.auth && window.auth.currentUser) {
@@ -225,11 +226,12 @@ class CardManager {
         });
         // Log pour vérifier l'historique après ajout
         console.log('[DEBUG] processReview: historique après ajout pour', realCard.fr, realCard.history);
+
+        // SM-2 strict (comme Anki)
         if (quality < 3) {
-            realCard.repetition = 1;
+            realCard.repetition = 0;
             realCard.interval = 1;
         } else {
-            realCard.easeFactor = Math.max(1.3, realCard.easeFactor + 0.1 - (5 - quality) * 0.08);
             if (realCard.repetition === 0) {
                 realCard.interval = 1;
             } else if (realCard.repetition === 1) {
@@ -239,6 +241,11 @@ class CardManager {
             }
             realCard.repetition++;
         }
+        // Mise à jour du easeFactor
+        realCard.easeFactor = realCard.easeFactor || 2.5;
+        realCard.easeFactor = realCard.easeFactor + (0.1 - (5 - quality) * (0.08 + (quality === 3 ? 0.02 : 0)));
+        if (realCard.easeFactor < 1.3) realCard.easeFactor = 1.3;
+
         realCard.dueDate = this.addDays(today, realCard.interval);
         await this.saveCard(realCard);
         return realCard;

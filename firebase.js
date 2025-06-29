@@ -43,7 +43,8 @@ export async function signup(firstName, email, password) {
     firstName,
     email,
     totalAnswers: 0,
-    correctAnswers: 0
+    correctAnswers: 0,
+    niveauMax: 1
   });
   return user;
 }
@@ -91,6 +92,20 @@ export async function getScore(uid) {
     totalAnswers: d.totalAnswers || 0,
     correctAnswers: d.correctAnswers || 0
   };
+}
+
+// Récupérer le niveau courant de l'utilisateur
+export async function getUserLevel(uid) {
+  const snap = await getDoc(doc(db, "users", uid));
+  if (!snap.exists()) return 1;
+  const d = snap.data();
+  return d.niveauMax || 1;
+}
+
+// Mettre à jour le niveau courant de l'utilisateur
+export async function setUserLevel(uid, niveau) {
+  const userRef = doc(db, "users", uid);
+  await updateDoc(userRef, { niveauMax: niveau });
 }
 
 // === Synchronisation de l'historique SM-2 dans Firestore ===

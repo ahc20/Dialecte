@@ -1,3 +1,5 @@
+import { getUserLevel } from './firebase.js';
+
 // Module pour le mode révision (algorithme SM-2)
 class ReviewMode {
     constructor() {
@@ -11,12 +13,24 @@ class ReviewMode {
         if (!cardManager.isInitialized) {
             await cardManager.loadCards();
         }
-        // Générer la file pondérée par la fréquence (références aux objets originaux)
-        const due = cardManager.getDueCards();
+        // Récupérer le niveau courant de l'utilisateur connecté
+        let niveauMax = 1;
+        if (window.auth && window.auth.currentUser) {
+            niveauMax = await getUserLevel(window.auth.currentUser.uid);
+        }
+        this.niveauMax = niveauMax;
+        // Filtrer les cartes à réviser :
+        // - Toutes les cartes du niveau <= niveauMax
+        // - + cartes des niveaux précédents non maîtrisées (interval < 15 jours ou répétition < 3)
+        const due = cardManager.getDueCards().filter(card => {
+            if (card.niveau <= niveauMax) return true;
+            // Si carte d'un niveau précédent mais pas maîtrisée, on la garde
+            if (card.niveau < niveauMax && (card.repetition < 3 || card.interval < 15)) return true;
+            return false;
+        });
         let weighted = [];
         due.forEach(card => {
             for (let i = 0; i < Math.max(1, card.frequency); i++) {
-                // Toujours pousser la référence à l'objet original
                 weighted.push(card);
             }
         });
@@ -140,14 +154,32 @@ class ReviewMode {
             const progress = this.dueCards.length > 0 ? (this.currentCardIndex / this.dueCards.length) * 100 : 0;
             progressBar.style.width = `${progress}%`;
             progressText.textContent = `${this.currentCardIndex}/${this.dueCards.length}`;
+            console.log('[DEBUG] Progression:', progress, 'largeur appliquée:', progressBar.style.width);
         }
     }
 
     // Terminer la session de révision
-    finishReview() {
+    async finishReview() {
         localStorage.removeItem('review_current_index');
         const reviewContainer = document.getElementById('review-container');
-        
+        // Vérifier si le niveau courant est maîtrisé (80% de cartes du niveau courant avec répétition >= 3 ou interval >= 15)
+        let badgeUnlocked = false;
+        let nextLevel = this.niveauMax;
+        if (window.auth && window.auth.currentUser) {
+            const niveau = this.niveauMax;
+            // Récupérer toutes les cartes du niveau courant
+            const cardsNiveau = cardManager.cards.filter(c => c.niveau === niveau);
+            const total = cardsNiveau.length;
+            const mastered = cardsNiveau.filter(c => c.repetition >= 3 || c.interval >= 15).length;
+            const percent = total > 0 ? mastered / total : 0;
+            if (percent >= 0.8 && niveau < 10) {
+                // Débloquer le niveau suivant
+                nextLevel = niveau + 1;
+                await setUserLevel(window.auth.currentUser.uid, nextLevel);
+                badgeUnlocked = true;
+            }
+        }
+        // Affichage classique
         reviewContainer.innerHTML = `
             <div class="review-results">
                 <h2>Révision terminée !</h2>
@@ -160,13 +192,30 @@ class ReviewMode {
                     <button id="back-to-home" class="btn btn-secondary">Retour à l'accueil</button>
                 </div>
             </div>
+            ${badgeUnlocked ? `
+            <div class="badge-unlocked">
+                <div class="badge-anim">
+                    <span class="badge-icon">🏅</span>
+                    <span class="badge-text">Niveau ${nextLevel} débloqué !</span>
+                </div>
+                <div class="badge-felicitations">Félicitations, tu as débloqué un nouveau niveau !</div>
+            </div>
+            <style>
+            .badge-unlocked { text-align:center; margin-top:2em; animation: popin 0.7s; }
+            .badge-anim { display:inline-flex; align-items:center; background:#fffbe6; border-radius:2em; padding:1em 2em; box-shadow:0 4px 16px #ffe06688; font-size:1.5em; animation: badgepop 1s; }
+            .badge-icon { font-size:2.5em; margin-right:0.5em; animation: spinbadge 1.2s; }
+            .badge-text { font-weight:700; color:#bfa100; }
+            .badge-felicitations { margin-top:1em; font-size:1.1em; color:#4F8A8B; font-weight:600; }
+            @keyframes badgepop { 0%{transform:scale(0.5);} 80%{transform:scale(1.1);} 100%{transform:scale(1);} }
+            @keyframes spinbadge { 0%{transform:rotate(-360deg);} 100%{transform:rotate(0);} }
+            @keyframes popin { 0%{opacity:0;transform:scale(0.7);} 100%{opacity:1;transform:scale(1);} }
+            </style>
+            ` : ''}
         `;
-
         // Ajouter les événements
         document.getElementById('check-more').addEventListener('click', () => {
             this.startReview();
         });
-
         document.getElementById('back-to-home').addEventListener('click', () => {
             window.location.href = 'index.html';
         });

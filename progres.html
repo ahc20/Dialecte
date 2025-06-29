@@ -38,7 +38,7 @@
       
       <!-- Statistiques du système SM-2 -->
       <section class="stats-section">
-        <h3>📚 Système de répétition espacée (SM-2)</h3>
+        <h3>🧠 Grâce à la répétition intelligente, tu mémorises durablement les mots importants.</h3>
         <div class="stats-overview">
           <div class="stat-card">
             <h4>📚 Cartes apprises</h4>
@@ -80,7 +80,7 @@
 
   <script type="module" src="cards.js"></script>
   <script type="module">
-    import { auth, logout, initAuthListener, getScore } from "./firebase.js";
+    import { auth, logout, initAuthListener, getScore, getUserLevel } from "./firebase.js";
 
     // Boutons d'authentification
     const headerAuth = document.getElementById('header-auth');
@@ -116,16 +116,16 @@
       }
     });
 
-    // Afficher l'historique des révisions
-    function displayRevisionHistory() {
+    // Afficher l'historique des révisions (adapté au niveau courant)
+    function displayRevisionHistory(niveauCourant) {
       const historyContainer = document.getElementById('history-container');
       try {
         // Log pour vérifier le contenu de toutes les cartes et leurs historiques
         console.log('[DEBUG] Affichage historique : cardManager.cards =', cardManager.cards);
-        // Récupérer toutes les révisions de toutes les cartes
+        // Récupérer toutes les révisions de toutes les cartes du niveau courant
         let allRevisions = [];
         cardManager.cards.forEach(card => {
-          if (card.history && card.history.length > 0) {
+          if (card.niveau === niveauCourant && card.history && card.history.length > 0) {
             card.history.forEach(rev => {
               allRevisions.push({
                 fr: card.fr,
@@ -139,7 +139,7 @@
         // Trier par date décroissante
         allRevisions.sort((a, b) => new Date(b.date) - new Date(a.date));
         if (allRevisions.length === 0) {
-          historyContainer.innerHTML = '<p>Aucune révision effectuée pour le moment.</p>';
+          historyContainer.innerHTML = '<p>Aucune révision effectuée pour ce niveau pour le moment.</p>';
         } else {
           let html = '<div class="history-list">';
           allRevisions.forEach(rev => {
@@ -168,16 +168,35 @@
       }
     }
 
-    // Mettre à jour les statistiques SM-2
-    async function updateStats() {
+    // Mettre à jour les statistiques SM-2 (adaptées au niveau courant)
+    async function updateStats(niveauCourant) {
       await cardManager.loadCards();
-      const stats = cardManager.getStats();
-      document.getElementById('learned-cards').textContent = stats.learned;
-      document.getElementById('total-cards').textContent = stats.total;
-      document.getElementById('due-cards').textContent = stats.due;
-      document.getElementById('progress-percent').textContent = stats.progress + '%';
-      // Afficher l'historique des révisions
-      displayRevisionHistory();
+      // Filtrer les cartes du niveau courant
+      const cardsNiveau = cardManager.cards.filter(c => c.niveau === niveauCourant);
+      const learned = cardsNiveau.filter(c => c.repetition > 0).length;
+      const total = cardsNiveau.length;
+      const due = cardsNiveau.filter(c => new Date(c.dueDate) <= new Date()).length;
+      const progress = total > 0 ? Math.round((learned / total) * 100) : 0;
+      document.getElementById('learned-cards').textContent = learned;
+      document.getElementById('total-cards').textContent = total;
+      document.getElementById('due-cards').textContent = due;
+      document.getElementById('progress-percent').textContent = progress + '%';
+      // Afficher l'historique des révisions pour ce niveau
+      displayRevisionHistory(niveauCourant);
+    }
+
+    // Afficher le niveau courant dans la page
+    function displayNiveau(niveauCourant) {
+      let statsSection = document.querySelector('.stats-section');
+      if (statsSection && !document.getElementById('niveau-courant')) {
+        const niveauDiv = document.createElement('div');
+        niveauDiv.id = 'niveau-courant';
+        niveauDiv.style = 'font-size:1.2em; font-weight:600; color:#4F8A8B; margin-bottom:1em;';
+        niveauDiv.innerHTML = `Niveau actuel : <span style="color:#bfa100;">${niveauCourant}</span>`;
+        statsSection.insertBefore(niveauDiv, statsSection.firstChild);
+      } else if (statsSection) {
+        document.getElementById('niveau-courant').innerHTML = `Niveau actuel : <span style="color:#bfa100;">${niveauCourant}</span>`;
+      }
     }
 
     // Progression utilisateur (quiz classique)
@@ -186,6 +205,7 @@
       const u = document.getElementById('username');
       const fill = document.getElementById('progress-fill');
       const pct  = document.getElementById('progress-percent-old');
+      let niveauCourant = 1;
       if (user && user.displayName) {
         w.textContent = 'Bienvenue !';
         u.textContent = user.displayName;
@@ -195,14 +215,18 @@
           : 0;
         fill.style.width = percent+'%';
         pct.textContent  = percent+' %';
+        // Récupérer le niveau courant depuis Firebase
+        niveauCourant = await getUserLevel(user.uid);
       } else {
         w.textContent = 'Bienvenue invité !';
         u.textContent = '';
         fill.style.width = '0%';
         pct.textContent  = '0 %';
       }
-      // Mettre à jour les nouvelles statistiques
-      await updateStats();
+      // Afficher le niveau courant
+      displayNiveau(niveauCourant);
+      // Mettre à jour les nouvelles statistiques pour ce niveau
+      await updateStats(niveauCourant);
     });
   </script>
 </body>
