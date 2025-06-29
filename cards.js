@@ -129,6 +129,34 @@ class CardManager {
             // Sauvegarde cloud systématique
             if (window.auth && window.auth.currentUser) {
                 const uid = window.auth.currentUser.uid;
+                // Charger l'historique cloud avant sauvegarde
+                const cloudHistory = await loadUserCardsHistory(uid);
+                if (cloudHistory && cloudHistory.length > 0) {
+                    for (const cloudCard of cloudHistory) {
+                        const localCard = this.cards.find(c => c.fr === cloudCard.fr && c.kab === cloudCard.kab);
+                        if (localCard) {
+                            // Fusion intelligente des historiques (union des dates)
+                            const localHist = localCard.history || [];
+                            const cloudHist = cloudCard.history || [];
+                            const allHist = [...localHist];
+                            cloudHist.forEach(hc => {
+                                if (!allHist.some(hl => hl.date === hc.date && hl.quality === hc.quality)) {
+                                    allHist.push(hc);
+                                }
+                            });
+                            allHist.sort((a, b) => new Date(a.date) - new Date(b.date));
+                            localCard.history = allHist;
+                            localCard.repetition = allHist.length;
+                            if (allHist.length > 0) {
+                                const last = allHist[allHist.length - 1];
+                                localCard.interval = last.interval || 0;
+                                localCard.easeFactor = last.easeFactor || 2.5;
+                                localCard.dueDate = last.dueDate ? new Date(last.dueDate) : new Date();
+                            }
+                            console.log('[DEBUG] Fusion avant sauvegarde cloud pour', localCard.fr, allHist);
+                        }
+                    }
+                }
                 console.log('[DEBUG] saveCard: sauvegarde cloud avec', this.cards.length, 'cartes');
                 await saveUserCardsHistory(uid, this.cards);
                 console.log('[DEBUG] Historique sauvegardé sur Firebase (saveCard)', this.cards[index]);
