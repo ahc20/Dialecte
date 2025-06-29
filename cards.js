@@ -195,6 +195,8 @@ class CardManager {
             date: today.toISOString(),
             quality: quality
         });
+        // Log pour vérifier l'historique après ajout
+        console.log('[DEBUG] processReview: historique après ajout pour', realCard.fr, realCard.history);
         if (quality < 3) {
             realCard.repetition = 1;
             realCard.interval = 1;
@@ -210,7 +212,6 @@ class CardManager {
             realCard.repetition++;
         }
         realCard.dueDate = this.addDays(today, realCard.interval);
-        console.log('[DEBUG] processReview: carte après modif', realCard);
         await this.saveCard(realCard);
         return realCard;
     }
