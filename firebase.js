@@ -110,6 +110,8 @@ export async function saveUserCardsHistory(uid, cards) {
     kab: card.kab,
     history: card.history || []
   }));
+  const nonEmpty = cardsHistory.filter(c => c.history && c.history.length > 0);
+  console.log('[DEBUG] saveUserCardsHistory: cartes avec historique non vide =', nonEmpty.length, nonEmpty.slice(0,1));
   await setDoc(userDoc, { cardsHistory }, { merge: true });
 }
 
