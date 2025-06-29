@@ -88,10 +88,8 @@ class ReviewMode {
     async handleQuality(event) {
         const quality = parseInt(event.target.dataset.quality);
         const card = this.dueCards[this.currentCardIndex];
-        await cardManager.processReview(card, quality);
-        // Log pour vérifier l'historique de la carte après révision
-        console.log('[DEBUG] Historique après révision pour', card.fr, card.history);
-        this.showFeedback(quality);
+        const updatedCard = await cardManager.processReview(card, quality);
+        this.showFeedback(quality, updatedCard);
         localStorage.setItem('review_current_index', (this.currentCardIndex + 1).toString());
         setTimeout(() => {
             this.currentCardIndex++;
@@ -101,7 +99,7 @@ class ReviewMode {
     }
 
     // Afficher le feedback selon la qualité
-    showFeedback(quality) {
+    showFeedback(quality, card) {
         const reviewContainer = document.getElementById('review-container');
         const feedbackMessages = {
             0: "Pas de problème, on va revoir ça bientôt !",
@@ -109,20 +107,18 @@ class ReviewMode {
             4: "Facile !",
             5: "Excellent !"
         };
-
         reviewContainer.innerHTML = `
             <div class="feedback-card">
                 <h3>${feedbackMessages[quality]}</h3>
                 <div class="next-interval">
-                    ${this.getNextIntervalText(quality)}
+                    ${this.getNextIntervalText(card)}
                 </div>
             </div>
         `;
     }
 
     // Texte pour le prochain intervalle
-    getNextIntervalText(quality) {
-        const card = this.dueCards[this.currentCardIndex];
+    getNextIntervalText(card) {
         if (!card) return '';
         const interval = card.interval || 1;
         if (interval <= 1) {
