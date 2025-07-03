@@ -135,7 +135,7 @@
   <!-- Script pour le menu mobile -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('Script menu mobile chargé');
+      console.log('=== DÉBOGAGE MENU MOBILE ===');
       
       const menuBtn = document.querySelector('.mobile-menu-btn');
       const mobileMenu = document.querySelector('.mobile-menu');
@@ -147,31 +147,62 @@
         mobileMenuBg: mobileMenuBg
       });
       
+      if (!menuBtn) {
+        console.error('❌ Bouton menu non trouvé !');
+        return;
+      }
+      if (!mobileMenu) {
+        console.error('❌ Menu mobile non trouvé !');
+        return;
+      }
+      if (!mobileMenuBg) {
+        console.error('❌ Fond menu non trouvé !');
+        return;
+      }
+      
+      console.log('✅ Tous les éléments trouvés');
+      
       // Ouvrir le menu
-      menuBtn.addEventListener('click', function() {
-        console.log('Clic sur bouton menu');
+      menuBtn.addEventListener('click', function(e) {
+        console.log('🖱️ Clic sur bouton menu détecté');
+        e.preventDefault();
+        e.stopPropagation();
+        
+        console.log('📋 Classes avant:', {
+          menu: mobileMenu.className,
+          bg: mobileMenuBg.className
+        });
+        
         mobileMenu.classList.add('open');
         mobileMenuBg.classList.add('open');
-        console.log('Menu ouvert');
+        
+        console.log('📋 Classes après:', {
+          menu: mobileMenu.className,
+          bg: mobileMenuBg.className
+        });
+        
+        console.log('✅ Menu ouvert');
       });
       
       // Fermer le menu en cliquant sur le fond
       mobileMenuBg.addEventListener('click', function() {
-        console.log('Clic sur fond');
+        console.log('🖱️ Clic sur fond détecté');
         mobileMenu.classList.remove('open');
         mobileMenuBg.classList.remove('open');
-        console.log('Menu fermé');
+        console.log('✅ Menu fermé');
       });
       
       // Fermer le menu en cliquant sur un lien
       const menuLinks = mobileMenu.querySelectorAll('a');
       menuLinks.forEach(link => {
         link.addEventListener('click', function() {
-          console.log('Clic sur lien menu');
+          console.log('🖱️ Clic sur lien menu détecté');
           mobileMenu.classList.remove('open');
           mobileMenuBg.classList.remove('open');
         });
       });
+      
+      console.log('✅ Script menu mobile initialisé');
     });
   </script>
   

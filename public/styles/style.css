@@ -278,6 +278,19 @@ footer {
     cursor: pointer;
     box-shadow: 0 2px 8px rgba(123, 97, 255, 0.3);
     display: block;
+    /* Debug: s'assurer que le bouton est cliquable */
+    pointer-events: auto;
+    user-select: none;
+    -webkit-tap-highlight-color: rgba(123, 97, 255, 0.3);
+  }
+  
+  .mobile-menu-btn:hover {
+    background: #6849d6;
+    transform: scale(1.05);
+  }
+  
+  .mobile-menu-btn:active {
+    transform: scale(0.95);
   }
   
   .mobile-menu {
@@ -294,10 +307,17 @@ footer {
     display: flex;
     flex-direction: column;
     gap: 15px;
+    /* Debug: s'assurer que le menu est visible */
+    min-height: 200px;
+    border: 2px solid #7B61FF;
   }
   
   .mobile-menu.open {
     transform: translateY(0);
+    /* Debug: forcer l'affichage */
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
   
   .mobile-menu a {
