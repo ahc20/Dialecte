@@ -410,24 +410,27 @@ footer {
     box-sizing: border-box;
   }
   .review-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     margin: 1.2rem auto 0.7rem auto;
     max-width: 340px;
     width: 100vw;
     min-width: 0;
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
     padding: 0.7rem 0.1rem 0.7rem 0.1rem;
-    min-height: unset;
+    min-height: 340px;
     max-height: 70vh;
+    height: 70vh;
     overflow-y: auto;
   }
   .card-front, .card-back {
-    padding: 1.1rem 0.2rem;
+    padding: 1.1rem 0.2rem 0.7rem 0.2rem;
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
+    width: 100%;
+    text-align: center;
   }
   .quality-buttons {
     display: flex;
