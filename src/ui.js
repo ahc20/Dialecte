@@ -12,7 +12,7 @@ class CardManager {
     // Initialiser les cartes depuis le CSV
     async loadCards() {
         try {
-            const response = await fetch('/data3_niveaux.csv');
+            const response = await fetch('/data/data3_niveaux.csv');
             if (!response.ok) {
                 alert("Erreur lors du chargement du CSV : " + response.status + ' ' + response.statusText);
                 throw new Error('CSV fetch failed');
@@ -310,4 +310,67 @@ class CardManager {
 const cardManager = new CardManager();
 
 // Exporter pour utilisation dans d'autres modules
-window.cardManager = cardManager; 
+window.cardManager = cardManager;
+
+// Affichage dynamique des boutons d'authentification dans la nav
+export function renderNavAuthButtons(user) {
+  const navActions = document.querySelector('.nav-actions');
+  if (navActions) {
+    navActions.innerHTML = '';
+    if (user) {
+      // Si connecté : bouton Se déconnecter (gris)
+      const logoutBtn = document.createElement('button');
+      logoutBtn.textContent = 'Se déconnecter';
+      logoutBtn.className = 'btn btn-logout';
+      logoutBtn.onclick = async () => {
+        await import('./firebase.js').then(mod => mod.logout());
+        location.reload();
+      };
+      navActions.appendChild(logoutBtn);
+    } else {
+      // Si déconnecté : bouton Se connecter (violet) + S'inscrire (outline jaune)
+      const login = document.createElement('a');
+      login.href = 'login.html';
+      login.textContent = 'Se connecter';
+      login.className = 'btn btn-purple';
+      navActions.appendChild(login);
+      const signup = document.createElement('a');
+      signup.href = 'signup.html';
+      signup.textContent = "S'inscrire";
+      signup.className = 'btn btn-yellow';
+      navActions.appendChild(signup);
+    }
+  }
+  // Mise à jour dynamique de l'onglet Connexion/Déconnexion dans la nav principale
+  const navLinks = document.querySelector('.nav-links');
+  if (navLinks) {
+    const links = navLinks.querySelectorAll('a');
+    let loginLink = null;
+    links.forEach(link => {
+      if (link.textContent.trim() === 'Connexion' || link.textContent.trim() === 'Déconnexion') {
+        loginLink = link;
+      }
+    });
+    if (user) {
+      // Remplacer Connexion par Déconnexion
+      if (loginLink) {
+        loginLink.textContent = 'Déconnexion';
+        loginLink.className = 'btn btn-logout';
+        loginLink.href = '#';
+        loginLink.onclick = async (e) => {
+          e.preventDefault();
+          await import('./firebase.js').then(mod => mod.logout());
+          location.reload();
+        };
+      }
+    } else {
+      // Remettre Connexion
+      if (loginLink) {
+        loginLink.textContent = 'Connexion';
+        loginLink.className = '';
+        loginLink.href = 'login.html';
+        loginLink.onclick = null;
+      }
+    }
+  }
+} 

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dialecte – Accueil</title>
+  <link rel="stylesheet" href="../styles/style.css" />
+  <style>
+    .dialect-dropdown {
+      margin: 2.5em auto 1.5em auto;
+      max-width: 350px;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 2px 12px #0001;
+      padding: 2em 1.5em 1.5em 1.5em;
+      text-align: center;
+    }
+    .dialect-dropdown label {
+      font-size: 1.1rem;
+      color: var(--text-light);
+      margin-bottom: 0.7em;
+      display: block;
+    }
+    .dialect-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.5em 0 0 0;
+    }
+    .dialect-list li {
+      font-size: 1.15rem;
+      font-weight: 600;
+      padding: 0.7em 0.5em;
+      border-radius: 10px;
+      margin-bottom: 0.3em;
+      transition: background 0.18s, color 0.18s, filter 0.18s;
+      cursor: pointer;
+      background: #f5f3e7;
+      color: #7B61FF;
+      box-shadow: 0 1px 4px #7B61FF11;
+    }
+    .dialect-list li:not(.active) {
+      filter: blur(2.2px) grayscale(0.7) brightness(1.1);
+      color: #bdbdbd;
+      cursor: not-allowed;
+      background: #f5f3e7;
+      position: relative;
+    }
+    .dialect-list li:not(.active)::after {
+      content: 'Bientôt';
+      position: absolute;
+      right: 1.2em;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.95em;
+      color: #bfa100;
+      opacity: 0.7;
+    }
+    .dialect-list li.active {
+      background: linear-gradient(90deg, #b7c7a3 0%, #e6ebdf 100%);
+      color: #2d3a1f;
+      filter: none;
+      cursor: pointer;
+      box-shadow: 0 2px 8px #9EB79633;
+      border: 2px solid #7B61FF22;
+    }
+    .dialect-list li.active:hover {
+      background: #e6ebdf;
+      color: #7B61FF;
+      border-color: #7B61FF;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">Dialecte.</div>
+    <div class="nav-links">
+      <a href="index.html" class="active">Accueil</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-purple">Se connecter</a>
+      <a href="signup.html" class="btn btn-yellow">S'inscrire</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="main-card" style="max-width:700px;">
+      <h1>Reconnecte-toi à ta culture avec <span style="color:#7B61FF;">Dialecte</span></h1>
+      <p class="subtitle" style="font-size:1.25rem; margin-bottom:1.5em;">Découvre, apprends et partage les richesses de ta langue d'origine.</p>
+      <p style="color:var(--text-light); font-size:1.13rem; margin-bottom:2.2em;">
+        <b>Dialecte</b> est une application qui te permet de te reconnecter à ta culture à travers l'apprentissage de ton dialecte. <br>
+        
+        Notre mission&nbsp;: rendre chaque langue accessible, vivante et fièrement partagée.
+      </p>
+      <div class="dialect-dropdown">
+        <label for="dialect-select">Choisis ton dialecte&nbsp;:</label>
+        <ul class="dialect-list">
+          <li class="active" onclick="window.location.href='kabyle.html'">Kabyle</li>
+          <li>Peul</li>
+          <li>Wolof</li>
+          <li>Darija</li>
+          <li>Chaoui</li>
+          <li>Tamazight</li>
+          <li>Tachelhit</li>
+          <li>Chleuh</li>
+        </ul>
+      </div>
+      <p style="color:#bfa100; font-size:1.05rem; margin-top:1.5em;">D'autres dialectes arrivent très bientôt&nbsp;!</p>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 Dialecte
+  </footer>
+
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="ui.js"></script>
+  <script type="module">
+    import { auth, logout, initAuthListener } from "./firebase.js";
+    import { renderNavAuthButtons } from "./ui.js";
+
+    initAuthListener(user => {
+      renderNavAuthButtons(user);
+    });
+
+    // Initialiser le gestionnaire de cartes et mettre à jour le compteur
+    async function updateDueCount() {
+      await cardManager.loadCards();
+      const stats = cardManager.getStats();
+      document.getElementById('due-count').textContent = stats.due;
+    }
+
+    // Mettre à jour le compteur au chargement
+    updateDueCount();
+
+    // Génération dynamique du lexique à partir de data3.csv
+    const THEMES = [
+      { nom: 'Verbes', mots: ['être','venir','dire','voir','faire','manger','boire','prendre','aller','accompagner','jurer','tisser','réaliser','armer'] },
+      { nom: 'Nature', mots: ['eau','arbre','ciel','soleil','lune','terre','vent','montagne','herbe','mer','foin','boue','baie','oasis'] },
+      { nom: 'Corps humain', mots: ['main','tête','jambe','nez','bouche','œil','oreille','pied','dent','dos','cou','peau','sein','sang'] },
+      { nom: 'Animaux', mots: ['chat','bouc','hyène','âne','chien','oiseau','poisson','vache','mouton','cheval'] },
+      { nom: 'Nourriture', mots: ['pain','lait','fromage','viande','fruit','légume','miel','bière','melon','noix'] },
+      { nom: 'Maison', mots: ['maison','porte','fenêtre','chambre','lit','cuisine','table','chaise','clé'] },
+      { nom: 'Vêtements', mots: ['chemise','pantalon','robe','manteau','chapeau','chaussure','tablier'] },
+      { nom: 'Couleurs', mots: ['bleu','blanc','noir','rouge','vert','jaune','gris'] },
+      { nom: 'Famille', mots: ['père','mère','frère','soeur','fils','fille','oncle','tante','grand-mère','grand-père'] },
+      { nom: 'Objets du quotidien', mots: ['table','chaise','porte','fenêtre','lit','bol','cuir','bouteille','clé'] }
+    ];
+    function detectTheme(fr) {
+      for (const t of THEMES) {
+        for (const mot of t.mots) {
+          if (fr.toLowerCase().includes(mot)) return t.nom;
+        }
+      }
+      return 'Autres';
+    }
+    function renderLexique(data) {
+      const themes = {};
+      data.forEach(row => {
+        const fr = row['Français']?.trim();
+        const kab = row['Kabyle']?.trim();
+        if (!fr || !kab) return;
+        const theme = detectTheme(fr);
+        if (!themes[theme]) themes[theme] = [];
+        // Séparer les traductions multiples
+        const traductions = kab.split('/').map(t => t.trim()).filter(t => t);
+        themes[theme].push({ fr, kab });
+      });
+      // Remplir dynamiquement le menu déroulant avec les thèmes détectés
+      const themeSelect = document.getElementById('theme-select');
+      themeSelect.innerHTML = '<option value="all">Tous les thèmes</option>';
+      Object.keys(themes).forEach(theme => {
+        const option = document.createElement('option');
+        option.value = theme;
+        option.textContent = theme;
+        themeSelect.appendChild(option);
+      });
+      // Affichage filtré
+      function displayLexique(selectedTheme = 'all') {
+        let html = '';
+        Object.keys(themes).forEach(theme => {
+          if (selectedTheme === 'all' || theme === selectedTheme) {
+            html += `<div class='lexique-theme'><h3>${theme}</h3><ul class='lexique-list'>`;
+            themes[theme].forEach(({fr, kab}) => {
+              html += `<li><span class='fr'>${fr}</span> <span class='kab'>${kab}</span></li>`;
+            });
+            html += '</ul></div>';
+          }
+        });
+        document.getElementById('lexique-content').innerHTML = html;
+      }
+      displayLexique();
+      themeSelect.addEventListener('change', (e) => {
+        displayLexique(e.target.value);
+      });
+    }
+    Papa.parse('/data3.csv', {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      delimiter: ';',
+      complete: ({ data }) => renderLexique(data)
+    });
+  </script>
+</body>
+</html>

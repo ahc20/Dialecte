@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
       RECENT_LIMIT = 100;
 
   // 1) Charge et parse data3.csv (séparateur ;)
-  Papa.parse('/data3.csv', {
+  Papa.parse('/data/data3.csv', {
     download: true,
     header: true,
     skipEmptyLines: true,

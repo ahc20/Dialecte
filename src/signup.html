@@ -4,17 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dialecte – S'inscrire</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="../styles/style.css" />
   <script type="module" src="firebase.js"></script>
 </head>
 <body>
-  <header class="header">
-    <a href="index.html" class="home-icon">🏠</a>
-    <h1 class="logo">Créer un compte</h1>
-  </header>
+  <nav>
+    <div class="logo">Dialecte.</div>
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="review.html">Réviser</a>
+      <a href="progres.html">Progrès</a>
+      <a href="login.html">Connexion</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-purple">Se connecter</a>
+      <a href="signup.html" class="btn btn-yellow active">S'inscrire</a>
+    </div>
+  </nav>
 
   <main class="main signup-main">
-    <form id="signup-form" class="signup-form">
+    <form id="signup-form" class="signup-form card" style="max-width:400px; margin:auto;">
+      <h2>Créer un compte</h2>
       <label>Prénom
         <input type="text" name="firstName" required />
       </label>
@@ -24,13 +35,21 @@
       <label>Mot de passe
         <input type="password" name="password" required minlength="6" />
       </label>
-      <button type="submit" class="btn submit auth">S'inscrire</button>
+      <button type="submit" class="btn btn-yellow submit auth">S'inscrire</button>
     </form>
   </main>
 
+  <footer>
+    © 2025 Dialecte
+  </footer>
+
   <script type="module">
     import { signup } from "./firebase.js";
-
+    import { auth, logout, initAuthListener } from "./firebase.js";
+    import { renderNavAuthButtons } from "./ui.js";
+    initAuthListener(user => {
+      renderNavAuthButtons(user);
+    });
     document.getElementById('signup-form').addEventListener('submit', async e => {
       e.preventDefault();
       const f = e.target;

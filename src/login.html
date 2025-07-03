@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dialecte – Se connecter</title>
+  <link rel="stylesheet" href="../styles/style.css" />
+  <script type="module" src="firebase.js"></script>
+</head>
+<body>
+  <nav>
+    <div class="logo">Dialecte.</div>
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="review.html">Réviser</a>
+      <a href="progres.html">Progrès</a>
+      <a href="login.html" class="active">Connexion</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-purple">Se connecter</a>
+      <a href="signup.html" class="btn btn-yellow">S'inscrire</a>
+    </div>
+  </nav>
+
+  <main class="main signup-main">
+    <form id="login-form" class="signup-form card" style="max-width:400px; margin:auto;">
+      <h2>Se connecter</h2>
+      <label>Email
+        <input type="email" name="email" required />
+      </label>
+      <label>Mot de passe
+        <input type="password" name="password" required />
+      </label>
+      <button type="submit" class="btn btn-purple submit auth">Se connecter</button>
+    </form>
+  </main>
+
+  <footer>
+    © 2025 Dialecte
+  </footer>
+
+  <script type="module">
+    import { login } from "./firebase.js";
+    import { auth, logout, initAuthListener } from "./firebase.js";
+    import { renderNavAuthButtons } from "./ui.js";
+    initAuthListener(user => {
+      renderNavAuthButtons(user);
+    });
+    document.getElementById('login-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const f = e.target;
+      try {
+        await login(f.email.value, f.password.value);
+        alert('Connexion réussie !');
+        window.location.href = 'progres.html';
+      } catch (err) {
+        alert('Erreur connexion : ' + err.message);
+      }
+    });
+  </script>
+</body>
+</html>

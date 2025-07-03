@@ -4,43 +4,31 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dialecte – Quiz Classique</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="../styles/style.css" />
 </head>
 <body>
-  <header class="header">
-    <a href="index.html" class="home-icon">🏠</a>
-    <h1 class="logo">Dialecte – Quiz Classique</h1>
-    <div class="header-auth" id="header-auth">
-      <!-- Les boutons seront injectés ici par le script -->
+  <nav>
+    <div class="logo">Dialecte.</div>
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="quiz.html" class="active">Quiz</a>
+      <a href="review.html">Réviser</a>
+      <a href="progres.html">Progrès</a>
+      <a href="login.html">Connexion</a>
     </div>
-  </header>
-
-  <nav class="mobile-nav">
-    <a href="index.html">Lexique</a>
-    <a href="discovery.html">Découvrir</a>
-    <a href="review.html">Réviser</a>
-    <a href="quiz.html">Quiz Classique</a>
-    <a href="progres.html">Mes progrès</a>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-purple">Se connecter</a>
+      <a href="signup.html" class="btn btn-yellow">S'inscrire</a>
+    </div>
   </nav>
 
-  <div class="layout">
-    <nav class="sidebar">
-      <ul>
-        <li><a href="index.html">Lexique</a></li>
-        <li><a href="discovery.html">Découvrir</a></li>
-        <li><a href="review.html">Réviser</a></li>
-        <li><a href="quiz.html">Quiz Classique</a></li>
-        <li><a href="progres.html">Mes progrès</a></li>
-      </ul>
-    </nav>
-
-    <main class="main">
+  <main>
+    <section class="main-card" style="max-width:600px;">
       <div class="quiz-header">
         <h2>🎯 Quiz Classique</h2>
         <p>Testez vos connaissances avec le quiz traditionnel</p>
       </div>
 
-      <!-- Barre de progression -->
       <div class="progress-container">
         <div class="progress-bar-container">
           <div class="progress-bar" id="progress-bar"></div>
@@ -48,9 +36,8 @@
         <div class="progress-text" id="progress-text">0/0</div>
       </div>
 
-      <!-- Conteneur du quiz -->
       <div id="quiz-container">
-        <div class="quiz-start">
+        <div class="quiz-start card">
           <h3>Prêt pour le quiz ?</h3>
           <p>Choisissez le nombre de questions :</p>
           <div class="question-count-selector">
@@ -61,41 +48,21 @@
           </div>
         </div>
       </div>
-    </main>
-  </div>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 Dialecte
+  </footer>
 
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+  <script type="module" src="ui.js"></script>
   <script type="module">
     import { auth, logout, initAuthListener } from "./firebase.js";
-
-    const headerAuth = document.getElementById('header-auth');
-
-    function renderAuthButtons(user) {
-      headerAuth.innerHTML = '';
-      if (user) {
-        const btn = document.createElement('button');
-        btn.textContent = 'Se déconnecter';
-        btn.className = 'btn auth';
-        btn.onclick = async () => {
-          await logout();
-          location.reload();
-        };
-        headerAuth.appendChild(btn);
-      } else {
-        const login = document.createElement('a');
-        login.href = 'login.html';
-        login.textContent = 'Se connecter';
-        login.className = 'btn auth';
-        const signup = document.createElement('a');
-        signup.href = 'signup.html';
-        signup.textContent = "S'inscrire";
-        signup.className = 'btn auth';
-        headerAuth.append(login, signup);
-      }
-    }
+    import { renderNavAuthButtons } from "./ui.js";
 
     initAuthListener(user => {
-      renderAuthButtons(user);
+      renderNavAuthButtons(user);
     });
 
     // Variables globales pour le quiz
@@ -109,7 +76,7 @@
     async function loadQuizData() {
       return new Promise(async (resolve, reject) => {
         try {
-          const response = await fetch('data3.csv');
+          const response = await fetch('/data/data3.csv');
           const csvText = await response.text();
 
           // Essayer d'abord avec la virgule
