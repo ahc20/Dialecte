@@ -9,8 +9,8 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </head>
 <body>
-  <button class="burger-menu-btn" aria-label="Menu" onclick="document.querySelector('.burger-menu').classList.add('open');document.querySelector('.burger-menu-bg').classList.add('open');">☰</button>
-  <div class="burger-menu-bg" onclick="document.querySelector('.burger-menu').classList.remove('open');this.classList.remove('open');"></div>
+  <button class="burger-menu-btn" aria-label="Menu">☰</button>
+  <div class="burger-menu-bg"></div>
   <nav class="burger-menu">
     <a href="index.html">Accueil</a>
     <a href="quiz.html">Quiz</a>
@@ -77,6 +77,37 @@
 
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="ui.js" type="module"></script>
+  
+  <!-- Script pour le menu burger mobile -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const burgerBtn = document.querySelector('.burger-menu-btn');
+      const burgerMenu = document.querySelector('.burger-menu');
+      const burgerBg = document.querySelector('.burger-menu-bg');
+      
+      // Ouvrir le menu
+      burgerBtn.addEventListener('click', function() {
+        burgerMenu.classList.add('open');
+        burgerBg.classList.add('open');
+      });
+      
+      // Fermer le menu en cliquant sur le fond
+      burgerBg.addEventListener('click', function() {
+        burgerMenu.classList.remove('open');
+        burgerBg.classList.remove('open');
+      });
+      
+      // Fermer le menu en cliquant sur un lien
+      const burgerLinks = burgerMenu.querySelectorAll('a');
+      burgerLinks.forEach(link => {
+        link.addEventListener('click', function() {
+          burgerMenu.classList.remove('open');
+          burgerBg.classList.remove('open');
+        });
+      });
+    });
+  </script>
+  
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const path = window.location.pathname.split('/').pop();
