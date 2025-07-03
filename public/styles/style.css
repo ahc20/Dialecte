@@ -1256,21 +1256,21 @@ footer {
 }
 
 @media (min-width: 601px) {
-  .mobile-tabbar {
+  .mobile-menu-btn,
+  .mobile-menu,
+  .mobile-menu-bg {
     display: none !important;
     visibility: hidden !important;
     opacity: 0 !important;
     pointer-events: none !important;
     height: 0 !important;
     width: 0 !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    max-width: 0 !important;
+    max-height: 0 !important;
     position: absolute !important;
-  }
-  nav, .nav-links, .nav-actions {
-    display: flex !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: relative !important;
-    height: auto !important;
-    width: auto !important;
+    z-index: -1 !important;
+    overflow: hidden !important;
   }
 }
