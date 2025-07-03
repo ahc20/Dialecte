@@ -73,6 +73,15 @@
   </style>
 </head>
 <body>
+  <button class="burger-menu-btn" aria-label="Menu" onclick="document.querySelector('.burger-menu').classList.add('open');document.querySelector('.burger-menu-bg').classList.add('open');">☰</button>
+  <div class="burger-menu-bg" onclick="document.querySelector('.burger-menu').classList.remove('open');this.classList.remove('open');"></div>
+  <nav class="burger-menu">
+    <a href="index.html">Accueil</a>
+    <a href="quiz.html">Quiz</a>
+    <a href="review.html">Réviser</a>
+    <a href="progres.html">Progrès</a>
+    <a href="login.html">Connexion</a>
+  </nav>
   <nav>
     <div class="logo">Dialecte.</div>
     <div class="nav-links">
@@ -82,6 +91,12 @@
       <a href="login.html" class="btn btn-purple">Se connecter</a>
       <a href="signup.html" class="btn btn-yellow">S'inscrire</a>
     </div>
+  </nav>
+  <nav class="mobile-tabbar">
+    <a href="index.html"><span class="emoji">🏠</span><span>Accueil</span></a>
+    <a href="quiz.html"><span class="emoji">❓</span><span>Quiz</span></a>
+    <a href="review.html"><span class="emoji">🔁</span><span>Réviser</span></a>
+    <a href="progres.html"><span class="emoji">📈</span><span>Progrès</span></a>
   </nav>
 
   <main>
@@ -201,6 +216,27 @@
       skipEmptyLines: true,
       delimiter: ';',
       complete: ({ data }) => renderLexique(data)
+    });
+  </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const path = window.location.pathname.split('/').pop();
+      document.querySelectorAll('.mobile-tabbar a').forEach(link => {
+        if (link.getAttribute('href') === path) {
+          link.classList.add('active');
+        }
+      });
+    });
+  </script>
+  <script>
+    // Active link dans le menu burger
+    document.addEventListener('DOMContentLoaded', function() {
+      const path = window.location.pathname.split('/').pop();
+      document.querySelectorAll('.burger-menu a').forEach(link => {
+        if (link.getAttribute('href') === path) {
+          link.classList.add('active');
+        }
+      });
     });
   </script>
 </body>

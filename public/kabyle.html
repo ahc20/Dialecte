@@ -9,6 +9,15 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 </head>
 <body>
+  <button class="burger-menu-btn" aria-label="Menu" onclick="document.querySelector('.burger-menu').classList.add('open');document.querySelector('.burger-menu-bg').classList.add('open');">☰</button>
+  <div class="burger-menu-bg" onclick="document.querySelector('.burger-menu').classList.remove('open');this.classList.remove('open');"></div>
+  <nav class="burger-menu">
+    <a href="index.html">Accueil</a>
+    <a href="quiz.html">Quiz</a>
+    <a href="review.html">Réviser</a>
+    <a href="progres.html">Progrès</a>
+    <a href="login.html">Connexion</a>
+  </nav>
   <nav>
     <div class="logo">Dialecte.</div>
     <div class="nav-links">
@@ -22,6 +31,12 @@
       <a href="login.html" class="btn btn-purple">Se connecter</a>
       <a href="signup.html" class="btn btn-yellow">S'inscrire</a>
     </div>
+  </nav>
+  <nav class="mobile-tabbar">
+    <a href="index.html"><span class="emoji">🏠</span><span>Accueil</span></a>
+    <a href="quiz.html"><span class="emoji">❓</span><span>Quiz</span></a>
+    <a href="review.html"><span class="emoji">🔁</span><span>Réviser</span></a>
+    <a href="progres.html"><span class="emoji">📈</span><span>Progrès</span></a>
   </nav>
 
   <main>
@@ -62,5 +77,89 @@
 
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="ui.js" type="module"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const path = window.location.pathname.split('/').pop();
+      document.querySelectorAll('.mobile-tabbar a').forEach(link => {
+        if (link.getAttribute('href') === path) {
+          link.classList.add('active');
+        }
+      });
+      document.querySelectorAll('.burger-menu a').forEach(link => {
+        if (link.getAttribute('href') === path) {
+          link.classList.add('active');
+        }
+      });
+    });
+
+    // Génération dynamique du lexique à partir de data/data3.csv
+    const THEMES = [
+      { nom: 'Verbes', mots: ['être','venir','dire','voir','faire','manger','boire','prendre','aller','accompagner','jurer','tisser','réaliser','armer'] },
+      { nom: 'Nature', mots: ['eau','arbre','ciel','soleil','lune','terre','vent','montagne','herbe','mer','foin','boue','baie','oasis'] },
+      { nom: 'Corps humain', mots: ['main','tête','jambe','nez','bouche','œil','oreille','pied','dent','dos','cou','peau','sein','sang'] },
+      { nom: 'Animaux', mots: ['chat','bouc','hyène','âne','chien','oiseau','poisson','vache','mouton','cheval'] },
+      { nom: 'Nourriture', mots: ['pain','lait','fromage','viande','fruit','légume','miel','bière','melon','noix'] },
+      { nom: 'Maison', mots: ['maison','porte','fenêtre','chambre','lit','cuisine','table','chaise','clé'] },
+      { nom: 'Vêtements', mots: ['chemise','pantalon','robe','manteau','chapeau','chaussure','tablier'] },
+      { nom: 'Couleurs', mots: ['bleu','blanc','noir','rouge','vert','jaune','gris'] },
+      { nom: 'Famille', mots: ['père','mère','frère','soeur','fils','fille','oncle','tante','grand-mère','grand-père'] },
+      { nom: 'Objets du quotidien', mots: ['table','chaise','porte','fenêtre','lit','bol','cuir','bouteille','clé'] }
+    ];
+    function detectTheme(fr) {
+      for (const t of THEMES) {
+        for (const mot of t.mots) {
+          if (fr.toLowerCase().includes(mot)) return t.nom;
+        }
+      }
+      return 'Autres';
+    }
+    function renderLexique(data) {
+      const themes = {};
+      data.forEach(row => {
+        const fr = row['Français']?.trim();
+        const kab = row['Kabyle']?.trim();
+        if (!fr || !kab) return;
+        const theme = detectTheme(fr);
+        if (!themes[theme]) themes[theme] = [];
+        // Séparer les traductions multiples
+        const traductions = kab.split('/').map(t => t.trim()).filter(t => t);
+        themes[theme].push({ fr, kab });
+      });
+      // Remplir dynamiquement le menu déroulant avec les thèmes détectés
+      const themeSelect = document.getElementById('theme-select');
+      themeSelect.innerHTML = '<option value="all">Tous les thèmes</option>';
+      Object.keys(themes).forEach(theme => {
+        const option = document.createElement('option');
+        option.value = theme;
+        option.textContent = theme;
+        themeSelect.appendChild(option);
+      });
+      // Affichage filtré
+      function displayLexique(selectedTheme = 'all') {
+        let html = '';
+        Object.keys(themes).forEach(theme => {
+          if (selectedTheme === 'all' || theme === selectedTheme) {
+            html += `<div class='lexique-theme'><h3>${theme}</h3><ul class='lexique-list'>`;
+            themes[theme].forEach(({fr, kab}) => {
+              html += `<li><span class='fr'>${fr}</span> <span class='kab'>${kab}</span></li>`;
+            });
+            html += '</ul></div>';
+          }
+        });
+        document.getElementById('lexique-content').innerHTML = html;
+      }
+      displayLexique();
+      themeSelect.addEventListener('change', (e) => {
+        displayLexique(e.target.value);
+      });
+    }
+    Papa.parse('data/data3.csv', {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      delimiter: ';',
+      complete: ({ data }) => renderLexique(data)
+    });
+  </script>
 </body>
 </html> 
