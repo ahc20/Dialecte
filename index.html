@@ -39,14 +39,14 @@
       
       <!-- Bloc explicatif pédagogique -->
       <section class="info-section" style="background:#f9fafc; border-left:4px solid #4F8A8B; padding:1.5em 1em; border-radius:8px; margin-bottom:2em; max-width:600px; margin-left:auto; margin-right:auto;">
-        <b>Découvre, révise, progresse !</b><br>
-        Cette application t'aide à apprendre le kabyle facilement :<br>
+        <b>Découvre, révise, progresse !</b><br>
+        Cette application t'aide à apprendre le kabyle facilement :<br>
         <ul style="text-align:left; margin:0.7em auto 0.7em 1.2em; max-width:500px;">
           <li>Découvre de nouveaux mots adaptés à ton niveau.</li>
           <li>Révise régulièrement grâce à une méthode astucieuse de répétition qui t'aide à retenir durablement les mots importants.</li>
           <li>Joue à des quiz pour t'entraîner et tester tes connaissances.</li>
         </ul>
-        <span style="font-size:0.98em; color:#3b5c5c;">Tout ton historique de progression est sauvegardé : tu peux reprendre où tu t'es arrêté, sur n'importe quel appareil.</span>
+        <span style="font-size:0.98em; color:#3b5c5c;">Tout ton historique de progression est sauvegardé : tu peux reprendre où tu t'es arrêté, sur n'importe quel appareil.</span>
       </section>
 
       <!-- Encadrés des trois types de jeu -->
@@ -82,6 +82,64 @@
         <div id="lexique-content">Chargement du lexique…</div>
       </section>
     </main>
+  </div>
+
+  <!-- Bouton flottant Agent IA -->
+  <button class="ai-chat-button" id="ai-chat-button" title="Assistant IA">
+    🤖
+    <span class="ai-notification" id="ai-notification">!</span>
+  </button>
+
+  <!-- Fenêtre Modal Agent IA -->
+  <div class="ai-chat-modal" id="ai-chat-modal">
+    <div class="ai-chat-container">
+      <div class="ai-chat-header">
+        <div class="ai-chat-title">
+          <span class="ai-avatar">🤖</span>
+          <div>
+            <h3>Assistant IA Dialecte</h3>
+            <p>Votre compagnon d'apprentissage du kabyle</p>
+          </div>
+        </div>
+        <button class="ai-chat-close" id="ai-chat-close">✕</button>
+      </div>
+      
+      <div class="ai-chat-messages" id="ai-chat-messages">
+        <div class="ai-message">
+          <div class="ai-message-avatar">🤖</div>
+          <div class="ai-message-content">
+            <p>Bonjour ! Je suis votre assistant IA pour l'apprentissage du kabyle. Je peux vous aider à :</p>
+            <ul>
+              <li>Traduire des mots français-kabyle</li>
+              <li>Expliquer la grammaire kabyle</li>
+              <li>Donner des conseils d'apprentissage</li>
+              <li>Répondre à vos questions sur la culture berbère</li>
+            </ul>
+            <p>Comment puis-je vous aider aujourd'hui ?</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="ai-chat-input-container">
+        <div class="ai-suggestions">
+          <button class="ai-suggestion" data-text="Comment dit-on 'bonjour' en kabyle ?">Comment dit-on 'bonjour' en kabyle ?</button>
+          <button class="ai-suggestion" data-text="Explique-moi les bases de la grammaire kabyle">Explique-moi les bases de la grammaire</button>
+          <button class="ai-suggestion" data-text="Donne-moi des conseils pour apprendre efficacement">Conseils d'apprentissage</button>
+        </div>
+        <div class="ai-chat-input-wrapper">
+          <input 
+            type="text" 
+            class="ai-chat-input" 
+            id="ai-chat-input" 
+            placeholder="Tapez votre message..."
+            autocomplete="off"
+          />
+          <button class="ai-chat-send" id="ai-chat-send" disabled>
+            <span class="send-icon">➤</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
@@ -130,6 +188,156 @@
 
     // Mettre à jour le compteur au chargement
     updateDueCount();
+
+    // Agent IA Chat Functionality
+    const aiChatButton = document.getElementById('ai-chat-button');
+    const aiChatModal = document.getElementById('ai-chat-modal');
+    const aiChatClose = document.getElementById('ai-chat-close');
+    const aiChatInput = document.getElementById('ai-chat-input');
+    const aiChatSend = document.getElementById('ai-chat-send');
+    const aiChatMessages = document.getElementById('ai-chat-messages');
+    const aiNotification = document.getElementById('ai-notification');
+
+    // Ouvrir/fermer le chat
+    aiChatButton.addEventListener('click', () => {
+      aiChatModal.classList.add('active');
+      aiChatInput.focus();
+      aiNotification.style.display = 'none';
+    });
+
+    aiChatClose.addEventListener('click', () => {
+      aiChatModal.classList.remove('active');
+    });
+
+    // Fermer en cliquant à l'extérieur
+    aiChatModal.addEventListener('click', (e) => {
+      if (e.target === aiChatModal) {
+        aiChatModal.classList.remove('active');
+      }
+    });
+
+    // Gérer l'input
+    aiChatInput.addEventListener('input', () => {
+      aiChatSend.disabled = !aiChatInput.value.trim();
+    });
+
+    aiChatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    aiChatSend.addEventListener('click', sendMessage);
+
+    // Suggestions prédéfinies
+    document.querySelectorAll('.ai-suggestion').forEach(btn => {
+      btn.addEventListener('click', () => {
+        aiChatInput.value = btn.dataset.text;
+        aiChatSend.disabled = false;
+        sendMessage();
+      });
+    });
+
+    function sendMessage() {
+      const message = aiChatInput.value.trim();
+      if (!message) return;
+
+      // Ajouter le message de l'utilisateur
+      addMessage(message, 'user');
+      aiChatInput.value = '';
+      aiChatSend.disabled = true;
+
+      // Simuler la réponse de l'IA après un délai
+      addTypingIndicator();
+      setTimeout(() => {
+        removeTypingIndicator();
+        const response = generateAIResponse(message);
+        addMessage(response, 'ai');
+      }, 1000 + Math.random() * 1000);
+    }
+
+    function addMessage(content, sender) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = sender === 'user' ? 'user-message' : 'ai-message';
+      
+      if (sender === 'user') {
+        messageDiv.innerHTML = `
+          <div class="user-message-content">
+            <p>${content}</p>
+          </div>
+          <div class="user-message-avatar">👤</div>
+        `;
+      } else {
+        messageDiv.innerHTML = `
+          <div class="ai-message-avatar">🤖</div>
+          <div class="ai-message-content">
+            <p>${content}</p>
+          </div>
+        `;
+      }
+      
+      aiChatMessages.appendChild(messageDiv);
+      aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+    }
+
+    function addTypingIndicator() {
+      const typingDiv = document.createElement('div');
+      typingDiv.className = 'ai-message typing-indicator';
+      typingDiv.id = 'typing-indicator';
+      typingDiv.innerHTML = `
+        <div class="ai-message-avatar">🤖</div>
+        <div class="ai-message-content">
+          <div class="typing-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      `;
+      aiChatMessages.appendChild(typingDiv);
+      aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+    }
+
+    function removeTypingIndicator() {
+      const typingIndicator = document.getElementById('typing-indicator');
+      if (typingIndicator) {
+        typingIndicator.remove();
+      }
+    }
+
+    function generateAIResponse(message) {
+      const lowerMessage = message.toLowerCase();
+      
+      // Réponses préprogrammées simples
+      if (lowerMessage.includes('bonjour') || lowerMessage.includes('azul')) {
+        return "Azul ! En kabyle, on dit 'Azul' pour dire bonjour. C'est un salut traditionnel berbère qui signifie littéralement 'que tu sois béni'. Vous pouvez aussi dire 'Azul fellak' (à un homme) ou 'Azul fellik' (à une femme).";
+      }
+      
+      if (lowerMessage.includes('grammaire')) {
+        return "La grammaire kabyle est fascinante ! Voici les bases :\n\n• Les noms ont un genre (masculin/féminin)\n• Les verbes se conjuguent selon la personne\n• L'ordre des mots est généralement Verbe-Sujet-Objet\n• Il y a un état libre et un état d'annexion pour les noms\n\nVoulez-vous que je vous explique un point particulier ?";
+      }
+      
+      if (lowerMessage.includes('conseil') || lowerMessage.includes('apprendre')) {
+        return "Voici mes conseils pour bien apprendre le kabyle :\n\n🎯 Pratiquez régulièrement (15-20 min/jour)\n📱 Utilisez les modes Découverte et Révision\n🎵 Écoutez de la musique kabyle\n📚 Commencez par les mots du quotidien\n💬 Essayez de parler dès que possible\n\nLa répétition espacée de cette app vous aidera énormément !";
+      }
+      
+      if (lowerMessage.includes('merci') || lowerMessage.includes('tanemmirt')) {
+        return "Tanemmirt ! (De rien !) C'est avec plaisir que je vous aide dans votre apprentissage du kabyle. N'hésitez pas si vous avez d'autres questions !";
+      }
+      
+      if (lowerMessage.includes('famille')) {
+        return "Voici les mots de famille en kabyle :\n\n• Père : Baba / Vava\n• Mère : Yemma / Mama\n• Frère : Gma\n• Sœur : Weltma\n• Fils : Mmi-s / Qcic\n• Fille : Yelli-s / Taqcict\n• Grand-père : Jeddi\n• Grand-mère : Nana\n\nCes mots sont essentiels dans la vie quotidienne !";
+      }
+      
+      // Réponse générale
+      return "Merci pour votre question ! Je fais de mon mieux pour vous aider. Pour des traductions spécifiques, n'hésitez pas à consulter le lexique de l'application. Vous pouvez aussi me poser des questions plus précises sur la grammaire, la pronunciation ou la culture berbère.";
+    }
+
+    // Afficher une notification au bout de 5 secondes
+    setTimeout(() => {
+      aiNotification.style.display = 'block';
+    }, 5000);
 
     // Génération dynamique du lexique à partir de data3.csv
     const THEMES = [
