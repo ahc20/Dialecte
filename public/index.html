@@ -135,26 +135,39 @@
   <!-- Script pour le menu burger mobile -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('Script menu burger chargé');
+      
       const burgerBtn = document.querySelector('.burger-menu-btn');
       const burgerMenu = document.querySelector('.burger-menu');
       const burgerBg = document.querySelector('.burger-menu-bg');
       
+      console.log('Éléments trouvés:', {
+        burgerBtn: burgerBtn,
+        burgerMenu: burgerMenu,
+        burgerBg: burgerBg
+      });
+      
       // Ouvrir le menu
       burgerBtn.addEventListener('click', function() {
+        console.log('Clic sur bouton burger');
         burgerMenu.classList.add('open');
         burgerBg.classList.add('open');
+        console.log('Menu ouvert');
       });
       
       // Fermer le menu en cliquant sur le fond
       burgerBg.addEventListener('click', function() {
+        console.log('Clic sur fond');
         burgerMenu.classList.remove('open');
         burgerBg.classList.remove('open');
+        console.log('Menu fermé');
       });
       
       // Fermer le menu en cliquant sur un lien
       const burgerLinks = burgerMenu.querySelectorAll('a');
       burgerLinks.forEach(link => {
         link.addEventListener('click', function() {
+          console.log('Clic sur lien menu');
           burgerMenu.classList.remove('open');
           burgerBg.classList.remove('open');
         });
