@@ -73,14 +73,14 @@
   </style>
 </head>
 <body>
-  <button class="burger-menu-btn" aria-label="Menu">☰</button>
-  <div class="burger-menu-bg"></div>
-  <nav class="burger-menu">
-    <a href="index.html">Accueil</a>
-    <a href="quiz.html">Quiz</a>
-    <a href="review.html">Réviser</a>
-    <a href="progres.html">Progrès</a>
-    <a href="login.html">Connexion</a>
+  <button class="mobile-menu-btn">Menu</button>
+  <div class="mobile-menu-bg"></div>
+  <nav class="mobile-menu">
+    <a href="index.html">🏠 Accueil</a>
+    <a href="quiz.html">❓ Quiz</a>
+    <a href="review.html">🔁 Réviser</a>
+    <a href="progres.html">📈 Progrès</a>
+    <a href="login.html">🔐 Connexion</a>
   </nav>
   <nav>
     <div class="logo">Dialecte.</div>
@@ -132,44 +132,44 @@
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="ui.js" type="module"></script>
   
-  <!-- Script pour le menu burger mobile -->
+  <!-- Script pour le menu mobile -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('Script menu burger chargé');
+      console.log('Script menu mobile chargé');
       
-      const burgerBtn = document.querySelector('.burger-menu-btn');
-      const burgerMenu = document.querySelector('.burger-menu');
-      const burgerBg = document.querySelector('.burger-menu-bg');
+      const menuBtn = document.querySelector('.mobile-menu-btn');
+      const mobileMenu = document.querySelector('.mobile-menu');
+      const mobileMenuBg = document.querySelector('.mobile-menu-bg');
       
       console.log('Éléments trouvés:', {
-        burgerBtn: burgerBtn,
-        burgerMenu: burgerMenu,
-        burgerBg: burgerBg
+        menuBtn: menuBtn,
+        mobileMenu: mobileMenu,
+        mobileMenuBg: mobileMenuBg
       });
       
       // Ouvrir le menu
-      burgerBtn.addEventListener('click', function() {
-        console.log('Clic sur bouton burger');
-        burgerMenu.classList.add('open');
-        burgerBg.classList.add('open');
+      menuBtn.addEventListener('click', function() {
+        console.log('Clic sur bouton menu');
+        mobileMenu.classList.add('open');
+        mobileMenuBg.classList.add('open');
         console.log('Menu ouvert');
       });
       
       // Fermer le menu en cliquant sur le fond
-      burgerBg.addEventListener('click', function() {
+      mobileMenuBg.addEventListener('click', function() {
         console.log('Clic sur fond');
-        burgerMenu.classList.remove('open');
-        burgerBg.classList.remove('open');
+        mobileMenu.classList.remove('open');
+        mobileMenuBg.classList.remove('open');
         console.log('Menu fermé');
       });
       
       // Fermer le menu en cliquant sur un lien
-      const burgerLinks = burgerMenu.querySelectorAll('a');
-      burgerLinks.forEach(link => {
+      const menuLinks = mobileMenu.querySelectorAll('a');
+      menuLinks.forEach(link => {
         link.addEventListener('click', function() {
           console.log('Clic sur lien menu');
-          burgerMenu.classList.remove('open');
-          burgerBg.classList.remove('open');
+          mobileMenu.classList.remove('open');
+          mobileMenuBg.classList.remove('open');
         });
       });
     });
