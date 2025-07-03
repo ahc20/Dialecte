@@ -378,6 +378,37 @@ footer {
     margin-left: 2.5em;
     font-size: 1.5rem;
   }
+
+  .question-card {
+    margin: 2.5rem auto 1.5rem auto;
+    max-width: 340px;
+    width: 100vw;
+    min-width: 0;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.2rem 0.2rem;
+  }
+  .options-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .option-btn {
+    width: 95vw;
+    max-width: 320px;
+    min-width: 0;
+    font-size: 1.08rem;
+    text-align: center;
+    padding: 1.1rem 0.2rem;
+    margin: 0 auto;
+    box-sizing: border-box;
+  }
 }
 @media (max-width: 400px) {
   h1 { font-size: 1.05rem; }
