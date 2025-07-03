@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dialecte – Kabyle</title>
+  <link rel="stylesheet" href="../styles/style.css" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body>
+  <nav>
+    <div class="logo">Dialecte.</div>
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="review.html">Réviser</a>
+      <a href="progres.html">Progrès</a>
+      <a href="discovery.html">Découvrir</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-purple">Se connecter</a>
+      <a href="signup.html" class="btn btn-yellow">S'inscrire</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="main-card" style="max-width:700px;">
+      <h1>Apprends le kabyle simplement, à ton rythme</h1>
+      <p class="subtitle" style="font-size:1.18rem; margin-bottom:1.5em;">Découvre, révise et maîtrise le vocabulaire kabyle grâce à la méthode SM-2.</p>
+      <p style="color:var(--text-light); font-size:1.13rem; margin-bottom:2.2em;">
+        <b>Dialecte</b> t'accompagne pour apprendre le kabyle, que tu sois débutant ou que tu veuilles raviver tes connaissances. <br>
+        Profite d'exercices interactifs, d'un suivi de tes progrès, et d'une méthode efficace pour mémoriser durablement.<br><br>
+        <b>Commence dès maintenant ton voyage linguistique&nbsp;!</b>
+      </p>
+      <div class="cta-row" style="margin-bottom:2.2em; display:flex; justify-content:center; gap:1.2em; flex-wrap:wrap;">
+        <a href="review.html" class="btn btn-primary">Commencer</a>
+        <a href="discovery.html" class="btn btn-outline">Découvrir la méthode</a>
+      </div>
+      <div class="features-row" style="display:flex; justify-content:center; gap:2em; flex-wrap:wrap;">
+        <div class="feature"><span class="emoji">📚</span><br>Méthode<br>progressive</div>
+        <div class="feature"><span class="emoji">🧠</span><br>Exercices<br>interactifs</div>
+        <div class="feature"><span class="emoji">🔊</span><br>Audio<br>natif</div>
+        <div class="feature"><span class="emoji">📈</span><br>Suivi de tes<br>progrès</div>
+      </div>
+    </section>
+    <section class="card" style="max-width:700px;">
+      <h2>Lexique thématique</h2>
+      <div class="lexique-controls">
+        <label for="theme-select">Filtrer par thème :</label>
+        <select id="theme-select">
+          <option value="all">Tous les thèmes</option>
+        </select>
+      </div>
+      <div id="lexique-content">Chargement du lexique…</div>
+    </section>
+  </main>
+
+  <footer>
+    © 2025 Dialecte
+  </footer>
+
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+  <script type="module">
+    // Génération dynamique du lexique à partir de data3.csv
+    const THEMES = [
+      { nom: 'Verbes', mots: ['être','venir','dire','voir','faire','manger','boire','prendre','aller','accompagner','jurer','tisser','réaliser','armer'] },
+      { nom: 'Nature', mots: ['eau','arbre','ciel','soleil','lune','terre','vent','montagne','herbe','mer','foin','boue','baie','oasis'] },
+      { nom: 'Corps humain', mots: ['main','tête','jambe','nez','bouche','œil','oreille','pied','dent','dos','cou','peau','sein','sang'] },
+      { nom: 'Animaux', mots: ['chat','bouc','hyène','âne','chien','oiseau','poisson','vache','mouton','cheval'] },
+      { nom: 'Nourriture', mots: ['pain','lait','fromage','viande','fruit','légume','miel','bière','melon','noix'] },
+      { nom: 'Maison', mots: ['maison','porte','fenêtre','chambre','lit','cuisine','table','chaise','clé'] },
+      { nom: 'Vêtements', mots: ['chemise','pantalon','robe','manteau','chapeau','chaussure','tablier'] },
+      { nom: 'Couleurs', mots: ['bleu','blanc','noir','rouge','vert','jaune','gris'] },
+      { nom: 'Famille', mots: ['père','mère','frère','soeur','fils','fille','oncle','tante','grand-mère','grand-père'] },
+      { nom: 'Objets du quotidien', mots: ['table','chaise','porte','fenêtre','lit','bol','cuir','bouteille','clé'] }
+    ];
+    function detectTheme(fr) {
+      for (const t of THEMES) {
+        for (const mot of t.mots) {
+          if (fr.toLowerCase().includes(mot)) return t.nom;
+        }
+      }
+      return 'Autres';
+    }
+    function renderLexique(data) {
+      const themes = {};
+      data.forEach(row => {
+        const fr = row['Français']?.trim();
+        const kab = row['Kabyle']?.trim();
+        if (!fr || !kab) return;
+        const theme = detectTheme(fr);
+        if (!themes[theme]) themes[theme] = [];
+        // Séparer les traductions multiples
+        const traductions = kab.split('/').map(t => t.trim()).filter(t => t);
+        themes[theme].push({ fr, kab });
+      });
+      // Remplir dynamiquement le menu déroulant avec les thèmes détectés
+      const themeSelect = document.getElementById('theme-select');
+      themeSelect.innerHTML = '<option value="all">Tous les thèmes</option>';
+      Object.keys(themes).forEach(theme => {
+        const option = document.createElement('option');
+        option.value = theme;
+        option.textContent = theme;
+        themeSelect.appendChild(option);
+      });
+      // Affichage filtré
+      function displayLexique(selectedTheme = 'all') {
+        let html = '';
+        Object.keys(themes).forEach(theme => {
+          if (selectedTheme === 'all' || theme === selectedTheme) {
+            html += `<div class='lexique-theme'><h3>${theme}</h3><ul class='lexique-list'>`;
+            themes[theme].forEach(({fr, kab}) => {
+              html += `<li><span class='fr'>${fr}</span> <span class='kab'>${kab}</span></li>`;
+            });
+            html += '</ul></div>';
+          }
+        });
+        document.getElementById('lexique-content').innerHTML = html;
+      }
+      displayLexique();
+      themeSelect.addEventListener('change', (e) => {
+        displayLexique(e.target.value);
+      });
+    }
+    Papa.parse('/data3.csv', {
+      download: true,
+      header: true,
+      skipEmptyLines: true,
+      delimiter: ';',
+      complete: ({ data }) => renderLexique(data)
+    });
+  </script>
+</body>
+</html> 

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dialecte – Mode Révision</title>
+  <link rel="stylesheet" href="../styles/style.css" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body>
+  <nav>
+    <div class="logo">Dialecte.</div>
+    <div class="nav-links">
+      <a href="index.html">Accueil</a>
+      <a href="quiz.html">Quiz</a>
+      <a href="review.html" class="active">Réviser</a>
+      <a href="progres.html">Progrès</a>
+      <a href="login.html">Connexion</a>
+    </div>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-purple">Se connecter</a>
+      <a href="signup.html" class="btn btn-yellow">S'inscrire</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="review-header">
+      <h2>🔄 Mode Révision</h2>
+      <p>Révisez les mots appris avec la répétition espacée</p>
+      <p style="font-size:1.08em;color:#4F8A8B;margin-top:0.5em;">Essayez de deviner la traduction en kabyle du mot français affiché, puis cliquez pour vérifier la réponse.</p>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="progress-text" id="progress-text">0/0</div>
+    </div>
+
+    <div id="review-container">
+      <div class="review-loading card">
+        <h3>Chargement des cartes à réviser...</h3>
+        <div class="loading-spinner"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    © 2025 Dialecte
+  </footer>
+
+  <script type="module" src="ui.js"></script>
+  <script type="module" src="review.js"></script>
+  <script type="module">
+    import { auth, logout, initAuthListener } from "./firebase.js";
+    import { renderNavAuthButtons } from "./ui.js";
+
+    initAuthListener(user => {
+      renderNavAuthButtons(user);
+    });
+
+    // Démarrer la révision au chargement de la page
+    document.addEventListener('DOMContentLoaded', () => {
+      reviewMode.startReview();
+    });
+  </script>
+</body>
+</html> 
