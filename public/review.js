@@ -118,8 +118,8 @@ class ReviewMode {
                     const btns = qualityButtons.querySelectorAll('.quality-btn');
                     if (btns.length > 0) {
                         btns[btns.length - 1].scrollIntoView({ behavior: 'smooth', block: 'end' });
-                        // Décale la fenêtre de +250px pour que le menu soit bien en dessous de 'Très facile'
-                        window.scrollBy({ top: 250, behavior: 'smooth' });
+                        // Décale la fenêtre de +260px pour que le menu soit bien en dessous de 'Très facile'
+                        window.scrollBy({ top: 260, behavior: 'smooth' });
                     }
                 }, 200);
             }
