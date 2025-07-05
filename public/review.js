@@ -57,45 +57,71 @@ class ReviewMode {
         const reviewContainer = document.getElementById('review-container');
         
         reviewContainer.innerHTML = `
-            <div class="review-card">
-                <div class="card-front" id="card-front">
-                    <h2 class="card-text">${card.fr}</h2>
-                    <p class="card-hint">Cliquez pour voir la traduction</p>
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard">
+                    <div class="card-face front">
+                        <div class="card-text">${card.fr}</div>
+                        <div class="card-hint">Cliquez pour voir la traduction</div>
+                        <div class="flip-indicator">🔄</div>
+                    </div>
+                    <div class="card-face back">
+                        <div class="card-text">${card.kab}</div>
+                        <div class="card-original">${card.fr}</div>
+                        <div class="flip-indicator">🔄</div>
+                    </div>
                 </div>
-                <div class="card-back" id="card-back" style="display: none;">
-                    <h2 class="card-text">${card.kab}</h2>
-                    <p class="card-original">${card.fr}</p>
-                </div>
-                <div class="quality-buttons" id="quality-buttons" style="display: none;">
-                    <button class="quality-btn" data-quality="0">Difficile</button>
-                    <button class="quality-btn" data-quality="3">Correct</button>
-                    <button class="quality-btn" data-quality="4">Facile</button>
-                    <button class="quality-btn" data-quality="5">Très facile</button>
-                </div>
+            </div>
+            <div class="quality-buttons" id="quality-buttons" style="display: none;">
+                <button class="quality-btn" data-quality="0">Difficile</button>
+                <button class="quality-btn" data-quality="3">Correct</button>
+                <button class="quality-btn" data-quality="4">Facile</button>
+                <button class="quality-btn" data-quality="5">Très facile</button>
             </div>
         `;
 
         // Ajouter les événements
-        const cardFront = document.getElementById('card-front');
-        const cardBack = document.getElementById('card-back');
+        const flashcard = document.getElementById('flashcard');
         const qualityButtons = document.getElementById('quality-buttons');
 
-        cardFront.addEventListener('click', () => this.flipCard());
+        flashcard.addEventListener('click', () => this.flipCard());
         
         qualityButtons.querySelectorAll('.quality-btn').forEach(button => {
             button.addEventListener('click', (e) => this.handleQuality(e));
         });
+
+        // Après avoir affiché la réponse (flip), scroll la carte et les boutons dans la fenêtre sur mobile
+        setTimeout(() => {
+            const card = document.querySelector('.review-card');
+            if (card && window.innerWidth < 700) {
+                card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            const qualityBtns = document.querySelector('.quality-buttons');
+            if (qualityBtns && window.innerWidth < 700) {
+                qualityBtns.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 300);
     }
 
     // Retourner la carte
     flipCard() {
-        const cardFront = document.getElementById('card-front');
-        const cardBack = document.getElementById('card-back');
+        const flashcard = document.getElementById('flashcard');
         const qualityButtons = document.getElementById('quality-buttons');
 
-        cardFront.style.display = 'none';
-        cardBack.style.display = 'block';
-        qualityButtons.style.display = 'flex';
+        flashcard.classList.add('flipped');
+        
+        // Afficher les boutons de qualité après un délai pour laisser l'animation se terminer
+        setTimeout(() => {
+            qualityButtons.style.display = 'flex';
+            // Scroll automatique sur mobile pour afficher le dernier bouton au-dessus du menu
+            if (window.innerWidth < 700) {
+                setTimeout(() => {
+                    const btns = qualityButtons.querySelectorAll('.quality-btn');
+                    if (btns.length > 0) {
+                        btns[btns.length - 1].scrollIntoView({ behavior: 'smooth', block: 'end' });
+                    }
+                }, 200);
+            }
+        }, 300);
     }
 
     // Gérer l'évaluation de qualité
@@ -123,7 +149,6 @@ class ReviewMode {
             4: "Facile !",
             5: "Excellent !"
         };
-        console.log('[DEBUG] showFeedback: interval de la carte =', card && card.interval, card);
         reviewContainer.innerHTML = `
             <div class="feedback-card">
                 <h3>${feedbackMessages[quality]}</h3>
