@@ -170,7 +170,7 @@ class CardManager {
     // Sauvegarder toutes les données
     async saveToStorage() {
         try {
-            localStorage.setItem('dialecte_cards', JSON.stringify(this.cards));
+            localStorage.setItem('dialect_cards', JSON.stringify(this.cards));
         } catch (error) {
             console.error('Erreur lors de la sauvegarde:', error);
         }
@@ -179,7 +179,7 @@ class CardManager {
     // Charger les données sauvegardées
     async loadSavedData() {
         try {
-            const saved = localStorage.getItem('dialecte_cards');
+            const saved = localStorage.getItem('dialect_cards');
             if (saved) {
                 const savedCards = JSON.parse(saved);
                 // Fusionner avec les cartes du CSV
