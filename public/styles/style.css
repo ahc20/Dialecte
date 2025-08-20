@@ -1452,6 +1452,25 @@ footer {
   color: #4F8A8B;
 }
 
+/* Infos complémentaires au dos de la carte */
+.card-extra {
+  margin-top: 0.75rem;
+  max-width: 90%;
+  color: #2d3a1f;
+  text-align: center;
+}
+.card-comment {
+  font-size: 1rem;
+  color: #2d3a1f;
+  opacity: 0.9;
+  margin-bottom: 0.25rem;
+}
+.card-example {
+  font-size: 0.98rem;
+  color: #4F8A8B;
+  font-style: italic;
+}
+
 .flip-indicator {
   position: absolute;
   bottom: 1rem;

@@ -34,23 +34,54 @@ class CardManager {
                 delimiter = ';';
             }
 
+            // Indices de colonnes (robuste aux variations de casse/libellés)
+            const lowerHeaders = headers.map(h => h.toLowerCase());
+            const findIdx = (candidates) => {
+                for (const c of candidates) {
+                    const i = lowerHeaders.indexOf(c.toLowerCase());
+                    if (i !== -1) return i;
+                }
+                return -1;
+            };
+            const idxFr = findIdx(['Français', 'mot francais', 'francais']);
+            const idxKab = findIdx(['Kabyle', 'traduction kabyle', 'kabyle']);
+            const idxComment = findIdx(['Commentaire', 'Commentaires', 'commentaire', 'commentaires']);
+            const idxExample = findIdx(['Exemple', 'exemple', 'exemples']);
+            const idxFreq = findIdx(['Fréquence', 'frequence']);
+            const idxNiveau = findIdx(['Niveau', 'niveau']);
+
             this.cards = [];
             for (let i = 1; i < lines.length; i++) {
-                let values = lines[i].split(delimiter).map(v => v.trim());
-                if (values.length < 2 || !values[0] || !values[1]) continue;
+                let raw = lines[i];
+                if (!raw) continue;
+                let values = raw.split(delimiter).map(v => v.trim());
+                // Sécurité
+                if (values.length < Math.max(idxFr, idxKab) + 1) continue;
+
+                const frVal = (values[idxFr] || '').trim();
+                const kabVal = (values[idxKab] || '').trim();
+                if (!frVal || !kabVal) continue;
+
+                const commentVal = (idxComment !== -1 && values[idxComment]) ? values[idxComment].trim() : '';
+                const exampleVal = (idxExample !== -1 && values[idxExample]) ? values[idxExample].trim() : '';
+                const freqVal = (idxFreq !== -1 && values[idxFreq]) ? parseInt(values[idxFreq], 10) : 1;
+                const niveauVal = (idxNiveau !== -1 && values[idxNiveau]) ? parseInt(values[idxNiveau], 10) : 1;
+
                 const card = {
                     id: this.generateUUID(),
-                    fr: values[0] || '',
-                    kab: values[1] || '',
-                    frequency: parseInt(values[2]) || 1, // Fréquence par défaut
+                    fr: frVal,
+                    kab: kabVal,
+                    commentaire: commentVal,
+                    exemple: exampleVal,
+                    frequency: Number.isFinite(freqVal) ? freqVal : 1,
                     repetition: 0,
                     interval: 0,
                     easeFactor: 2.5,
                     dueDate: new Date(),
                     history: [],
-                    niveau: parseInt(values[values.length - 1]) || 10 // Ajout du niveau
+                    niveau: Number.isFinite(niveauVal) ? niveauVal : 1
                 };
-                if (card.fr && card.kab) this.cards.push(card);
+                this.cards.push(card);
             }
             console.log('[DEBUG] Après parsing CSV, cartes:', this.cards.length, this.cards.slice(0, 3));
             if (!this.cards || this.cards.length === 0) {
