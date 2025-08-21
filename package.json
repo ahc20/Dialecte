@@ -1,0 +1,9 @@
+{
+  "type": "module",
+  "scripts": {
+    "test": "echo \"No tests specified\""
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
