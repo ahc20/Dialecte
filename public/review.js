@@ -66,7 +66,8 @@ class ReviewMode {
                     </div>
                     <div class="card-face back">
                         <div class="card-text">${card.kab}</div>
-                        <div class="card-original">${card.fr}</div>
+                        ${card.commentaire ? `<div class="card-comment">${card.commentaire}</div>` : ''}
+                        ${card.exemple ? `<div class="card-example">${card.exemple}</div>` : ''}
                         <div class="flip-indicator">🔄</div>
                     </div>
                 </div>
@@ -131,35 +132,14 @@ class ReviewMode {
         const quality = parseInt(event.target.dataset.quality);
         const card = this.dueCards[this.currentCardIndex];
         await cardManager.processReview(card, quality);
-        // Relire la carte à jour depuis cardManager.cards
-        const updatedCard = cardManager.cards.find(c => c.id === card.id);
-        this.showFeedback(quality, updatedCard);
         localStorage.setItem('review_current_index', (this.currentCardIndex + 1).toString());
-        setTimeout(() => {
-            this.currentCardIndex++;
-            this.updateProgress();
-            this.displayCard();
-        }, 1500);
+        // Passer directement à la carte suivante sans écran de feedback
+        this.currentCardIndex++;
+        this.updateProgress();
+        this.displayCard();
     }
 
-    // Afficher le feedback selon la qualité
-    showFeedback(quality, card) {
-        const reviewContainer = document.getElementById('review-container');
-        const feedbackMessages = {
-            0: "Pas de problème, on va revoir ça bientôt !",
-            3: "Correct !",
-            4: "Facile !",
-            5: "Excellent !"
-        };
-        reviewContainer.innerHTML = `
-            <div class="feedback-card">
-                <h3>${feedbackMessages[quality]}</h3>
-                <div class="next-interval">
-                    ${this.getNextIntervalText(card)}
-                </div>
-            </div>
-        `;
-    }
+
 
     // Texte pour le prochain intervalle
     getNextIntervalText(card) {
@@ -199,7 +179,7 @@ class ReviewMode {
             const total = cardsNiveau.length;
             const mastered = cardsNiveau.filter(c => c.repetition >= 3 || c.interval >= 15).length;
             const percent = total > 0 ? mastered / total : 0;
-            if (percent >= 0.8 && niveau < 10) {
+            if (percent >= 0.8 && niveau < 20) {
                 // Débloquer le niveau suivant
                 nextLevel = niveau + 1;
                 await setUserLevel(window.auth.currentUser.uid, nextLevel);

@@ -1443,13 +1443,24 @@ footer {
   color: #4F8A8B;
 }
 
-.card-original {
-  font-size: 1.2rem;
-  opacity: 0.7;
-  text-align: center;
-  margin-top: 0.5rem;
+.card-comment {
+  font-size: 1rem;
+  color: #6B7280;
+  margin-top: 0.8rem;
   font-style: italic;
+  text-align: center;
+  max-width: 90%;
+  line-height: 1.4;
+}
+
+.card-example {
+  font-size: 1rem;
   color: #4F8A8B;
+  margin-top: 0.5rem;
+  text-align: center;
+  max-width: 90%;
+  line-height: 1.4;
+  font-weight: 500;
 }
 
 .flip-indicator {

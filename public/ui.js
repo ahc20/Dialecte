@@ -34,21 +34,31 @@ class CardManager {
                 delimiter = ';';
             }
 
+            // Normaliser les en-têtes
+            headers = headers.map(h => h.trim().toLowerCase());
+            const frCol = headers.indexOf('français');
+            const kabCol = headers.indexOf('kabyle');
+            const commentCol = headers.indexOf('commentaire');
+            const exampleCol = headers.indexOf('exemple');
+            const niveauCol = headers.indexOf('niveau');
+
             this.cards = [];
             for (let i = 1; i < lines.length; i++) {
                 let values = lines[i].split(delimiter).map(v => v.trim());
-                if (values.length < 2 || !values[0] || !values[1]) continue;
+                if (values.length < 2 || !values[frCol] || !values[kabCol]) continue;
                 const card = {
                     id: this.generateUUID(),
-                    fr: values[0] || '',
-                    kab: values[1] || '',
-                    frequency: parseInt(values[2]) || 1, // Fréquence par défaut
+                    fr: values[frCol] || '',
+                    kab: values[kabCol] || '',
+                    frequency: 1, // Fréquence par défaut
                     repetition: 0,
                     interval: 0,
                     easeFactor: 2.5,
                     dueDate: new Date(),
                     history: [],
-                    niveau: parseInt(values[values.length - 1]) || 10 // Ajout du niveau
+                    niveau: parseInt(values[niveauCol]) || 1,
+                    commentaire: values[commentCol] || '',
+                    exemple: values[exampleCol] || ''
                 };
                 if (card.fr && card.kab) this.cards.push(card);
             }
