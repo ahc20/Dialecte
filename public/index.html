@@ -219,25 +219,68 @@
     // Mettre à jour le compteur au chargement
     updateDueCount();
 
-    // Génération dynamique du lexique à partir de data3.csv
-    const THEMES = [
-      { nom: 'Verbes', mots: ['être','venir','dire','voir','faire','manger','boire','prendre','aller','accompagner','jurer','tisser','réaliser','armer'] },
-      { nom: 'Nature', mots: ['eau','arbre','ciel','soleil','lune','terre','vent','montagne','herbe','mer','foin','boue','baie','oasis'] },
-      { nom: 'Corps humain', mots: ['main','tête','jambe','nez','bouche','œil','oreille','pied','dent','dos','cou','peau','sein','sang'] },
-      { nom: 'Animaux', mots: ['chat','bouc','hyène','âne','chien','oiseau','poisson','vache','mouton','cheval'] },
-      { nom: 'Nourriture', mots: ['pain','lait','fromage','viande','fruit','légume','miel','bière','melon','noix'] },
-      { nom: 'Maison', mots: ['maison','porte','fenêtre','chambre','lit','cuisine','table','chaise','clé'] },
-      { nom: 'Vêtements', mots: ['chemise','pantalon','robe','manteau','chapeau','chaussure','tablier'] },
-      { nom: 'Couleurs', mots: ['bleu','blanc','noir','rouge','vert','jaune','gris'] },
-      { nom: 'Famille', mots: ['père','mère','frère','soeur','fils','fille','oncle','tante','grand-mère','grand-père'] },
-      { nom: 'Objets du quotidien', mots: ['table','chaise','porte','fenêtre','lit','bol','cuir','bouteille','clé'] }
-    ];
+    // Génération dynamique du lexique à partir de data3.csv (348 mots)
     function detectTheme(fr) {
-      for (const t of THEMES) {
-        for (const mot of t.mots) {
-          if (fr.toLowerCase().includes(mot)) return t.nom;
-        }
+      const frLower = fr.toLowerCase();
+      
+      // Détection automatique des thèmes basée sur le contenu
+      if (frLower.includes('être') || frLower.includes('avoir') || frLower.includes('faire') || 
+          frLower.includes('aller') || frLower.includes('venir') || frLower.includes('voir') ||
+          frLower.includes('dire') || frLower.includes('manger') || frLower.includes('boire') ||
+          frLower.includes('dormir') || frLower.includes('travailler') || frLower.includes('apprendre')) {
+        return 'Verbes';
       }
+      if (frLower.includes('homme') || frLower.includes('femme') || frLower.includes('enfant') ||
+          frLower.includes('père') || frLower.includes('mère') || frLower.includes('frère') ||
+          frLower.includes('soeur') || frLower.includes('famille')) {
+        return 'Personnes & Famille';
+      }
+      if (frLower.includes('eau') || frLower.includes('feu') || frLower.includes('terre') ||
+          frLower.includes('ciel') || frLower.includes('soleil') || frLower.includes('lune') ||
+          frLower.includes('montagne') || frLower.includes('mer') || frLower.includes('arbre')) {
+        return 'Nature';
+      }
+      if (frLower.includes('pain') || frLower.includes('lait') || frLower.includes('viande') ||
+          frLower.includes('fruit') || frLower.includes('fromage') || frLower.includes('miel')) {
+        return 'Nourriture';
+      }
+      if (frLower.includes('maison') || frLower.includes('porte') || frLower.includes('fenêtre') ||
+          frLower.includes('chambre') || frLower.includes('cuisine') || frLower.includes('table')) {
+        return 'Habitat';
+      }
+      if (frLower.includes('chat') || frLower.includes('chien') || frLower.includes('cheval') ||
+          frLower.includes('vache') || frLower.includes('mouton') || frLower.includes('oiseau')) {
+        return 'Animaux';
+      }
+      if (frLower.includes('main') || frLower.includes('tête') || frLower.includes('œil') ||
+          frLower.includes('nez') || frLower.includes('bouche') || frLower.includes('jambe')) {
+        return 'Corps humain';
+      }
+      if (frLower.includes('blanc') || frLower.includes('noir') || frLower.includes('rouge') ||
+          frLower.includes('vert') || frLower.includes('bleu') || frLower.includes('jaune')) {
+        return 'Couleurs';
+      }
+      if (frLower.includes('un') || frLower.includes('deux') || frLower.includes('trois') ||
+          frLower.includes('quatre') || frLower.includes('cinq') || frLower.includes('dix')) {
+        return 'Nombres';
+      }
+      if (frLower.includes('bonjour') || frLower.includes('merci') || frLower.includes('au revoir') ||
+          frLower.includes('oui') || frLower.includes('non') || frLower.includes('bonne')) {
+        return 'Salutations & Communication';
+      }
+      if (frLower.includes('bon') || frLower.includes('mauvais') || frLower.includes('grand') ||
+          frLower.includes('petit') || frLower.includes('beau') || frLower.includes('chaud')) {
+        return 'Qualités & Adjectifs';
+      }
+      if (frLower.includes('ici') || frLower.includes('là') || frLower.includes('dedans') ||
+          frLower.includes('dehors') || frLower.includes('devant') || frLower.includes('derrière')) {
+        return 'Lieux & Positions';
+      }
+      if (frLower.includes('maintenant') || frLower.includes('aujourd') || frLower.includes('demain') ||
+          frLower.includes('hier') || frLower.includes('jour') || frLower.includes('nuit')) {
+        return 'Temps';
+      }
+      
       return 'Autres';
     }
     function renderLexique(data) {
@@ -280,7 +323,7 @@
         displayLexique(e.target.value);
       });
     }
-    Papa.parse('/data3.csv', {
+    Papa.parse('/data/320_mots_a_la_main.csv', {
       download: true,
       header: true,
       skipEmptyLines: true,

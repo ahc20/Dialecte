@@ -66,11 +66,8 @@ class ReviewMode {
                     </div>
                     <div class="card-face back">
                         <div class="card-text">${card.kab}</div>
-                        ${card.commentaire || card.exemple ? `
-                        <div class="card-extra">
-                          ${card.commentaire ? `<div class=\"card-comment\">${card.commentaire}</div>` : ''}
-                          ${card.exemple ? `<div class=\"card-example\">${card.exemple}</div>` : ''}
-                        </div>` : ''}
+                        ${card.commentaire ? `<div class="card-comment">${card.commentaire}</div>` : ''}
+                        ${card.exemple ? `<div class="card-example">${card.exemple}</div>` : ''}
                         <div class="flip-indicator">🔄</div>
                     </div>
                 </div>
@@ -135,14 +132,14 @@ class ReviewMode {
         const quality = parseInt(event.target.dataset.quality);
         const card = this.dueCards[this.currentCardIndex];
         await cardManager.processReview(card, quality);
-        // Avancer immédiatement à la carte suivante (aucun écran intermédiaire)
         localStorage.setItem('review_current_index', (this.currentCardIndex + 1).toString());
+        // Passer directement à la carte suivante sans écran de feedback
         this.currentCardIndex++;
         this.updateProgress();
         this.displayCard();
     }
 
-    // (Feedback supprimé pour fluidifier la navigation entre cartes)
+
 
     // Texte pour le prochain intervalle
     getNextIntervalText(card) {
