@@ -118,6 +118,28 @@
       </div>
       <p style="color:#bfa100; font-size:1.05rem; margin-top:1.5em;">D'autres dialectes arrivent très bientôt&nbsp;!</p>
     </section>
+
+    <!-- Section Lexique Thématique -->
+    <section class="main-card" style="max-width:900px; margin-top:2em;">
+      <h2 style="color:#7B61FF; margin-bottom:1.5em;">📚 Lexique Thématique Kabyle</h2>
+      <p style="color:var(--text-light); font-size:1.1rem; margin-bottom:1.5em;">
+        Découvre notre collection de <strong>320 mots</strong> organisés par thèmes pour faciliter ton apprentissage.
+      </p>
+      
+      <div class="lexique-controls" style="margin-bottom:2em;">
+        <label for="theme-select" style="font-weight:600; color:var(--text-dark); margin-right:1em;">Filtrer par thème :</label>
+        <select id="theme-select" style="padding:0.5em 1em; border:2px solid #7B61FF; border-radius:8px; background:#fff; color:var(--text-dark); font-size:1rem;">
+          <option value="all">Tous les thèmes</option>
+        </select>
+      </div>
+      
+      <div id="lexique-content" style="min-height:200px; padding:1em; background:#f8f9fa; border-radius:12px; border:2px dashed #7B61FF33;">
+        <div style="text-align:center; color:var(--text-light);">
+          <div style="font-size:2em; margin-bottom:0.5em;">⏳</div>
+          <div>Chargement du lexique...</div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>

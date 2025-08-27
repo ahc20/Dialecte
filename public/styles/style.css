@@ -1599,3 +1599,124 @@ footer {
     letter-spacing: 0.01em;
   }
 }
+
+/* Styles pour le Lexique Thématique */
+.lexique-theme {
+  margin-bottom: 2em;
+  background: #fff;
+  border-radius: 16px;
+  padding: 1.5em;
+  box-shadow: 0 4px 20px rgba(123, 97, 255, 0.1);
+  border: 1px solid rgba(123, 97, 255, 0.2);
+}
+
+.lexique-theme h3 {
+  color: #7B61FF;
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 1em;
+  padding-bottom: 0.5em;
+  border-bottom: 2px solid rgba(123, 97, 255, 0.3);
+  font-family: 'Playfair Display', serif;
+}
+
+.lexique-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1em;
+}
+
+.lexique-list li {
+  background: #f8f9fa;
+  padding: 1em;
+  border-radius: 12px;
+  border: 1px solid rgba(123, 97, 255, 0.15);
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lexique-list li:hover {
+  background: #fff;
+  border-color: #7B61FF;
+  box-shadow: 0 4px 12px rgba(123, 97, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.lexique-list .fr {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 1.1rem;
+}
+
+.lexique-list .kab {
+  color: #7B61FF;
+  font-weight: 500;
+  font-size: 1rem;
+  text-align: right;
+  max-width: 45%;
+  word-break: break-word;
+}
+
+.lexique-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.lexique-controls label {
+  font-weight: 600;
+  color: var(--text);
+}
+
+.lexique-controls select {
+  padding: 0.7em 1.2em;
+  border: 2px solid #7B61FF;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lexique-controls select:hover {
+  border-color: #6849d6;
+  box-shadow: 0 2px 8px rgba(123, 97, 255, 0.2);
+}
+
+.lexique-controls select:focus {
+  outline: none;
+  border-color: #6849d6;
+  box-shadow: 0 0 0 3px rgba(123, 97, 255, 0.1);
+}
+
+/* Responsive pour le lexique */
+@media (max-width: 768px) {
+  .lexique-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .lexique-list li {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5em;
+  }
+  
+  .lexique-list .kab {
+    max-width: 100%;
+    text-align: center;
+  }
+  
+  .lexique-controls {
+    flex-direction: column;
+    text-align: center;
+  }
+}
