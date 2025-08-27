@@ -286,8 +286,8 @@
     function renderLexique(data) {
       const themes = {};
       data.forEach(row => {
-        const fr = row['Français']?.trim();
-        const kab = row['Kabyle']?.trim();
+        const fr = row['mot francais']?.trim();
+        const kab = row['traduction kabyle']?.trim();
         if (!fr || !kab) return;
         const theme = detectTheme(fr);
         if (!themes[theme]) themes[theme] = [];
