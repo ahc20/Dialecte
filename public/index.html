@@ -121,9 +121,9 @@
 
     <!-- Section Vocabulaire Simple -->
     <section class="main-card" style="max-width:900px; margin-top:2em;">
-      <h2 style="color:#7B61FF; margin-bottom:1.5em;">📚 Vocabulaire Kabyle (320 mots)</h2>
+      <h2 style="color:#7B61FF; margin-bottom:1.5em;">📚 Vocabulaire Kabyle</h2>
       <p style="color:var(--text-light); font-size:1.1rem; margin-bottom:1.5em;">
-        Liste complète de nos mots français-kabyle.
+        Liste de nos 320 mots français-kabyle.
       </p>
       
       <div id="vocabulaire-content" style="min-height:200px; padding:1em; background:#f8f9fa; border-radius:12px; border:2px dashed #7B61FF33;">
@@ -276,6 +276,7 @@
         console.error('❌ Container vocabulaire non trouvé !');
       }
     }
+    console.log('🔄 Début du chargement CSV...');
     Papa.parse('/data/320_mots_a_la_main.csv', {
       download: true,
       header: true,
@@ -285,10 +286,12 @@
         console.log('📊 Données CSV chargées:', data);
         console.log('📊 Nombre de lignes:', data.length);
         console.log('📊 Première ligne:', data[0]);
+        console.log('📊 Colonnes disponibles:', Object.keys(data[0] || {}));
         afficherVocabulaire(data);
       },
       error: (error) => {
         console.error('❌ Erreur de chargement CSV:', error);
+        console.error('❌ Détails de l\'erreur:', error.message);
       }
     });
   </script>
