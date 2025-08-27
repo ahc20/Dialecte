@@ -202,6 +202,7 @@
   </script>
   
   <script type="module">
+    console.log('🚀 Script principal chargé !');
     import { auth, logout, initAuthListener } from "./firebase.js";
     import { renderNavAuthButtons } from "./ui.js";
 
@@ -219,6 +220,7 @@
     // Mettre à jour le compteur au chargement
     updateDueCount();
 
+    console.log('📚 Script vocabulaire chargé !');
     // Génération dynamique du lexique à partir de data3.csv (348 mots)
     function detectTheme(fr) {
       const frLower = fr.toLowerCase();
