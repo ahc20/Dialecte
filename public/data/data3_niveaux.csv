@@ -15,7 +15,7 @@ nationalité;nasyonaliti;Nasyonalitiw d fransi.;Ma nationalité est française.;
 père;baba;Baba-iw yella di wexxam.;Mon père est à la maison.;1
 mère;yemma;Yemma-iw tella di wexxam.;Ma mère est à la maison.;1
 frère;gma;Gma-iw yella di taddart.;Mon frère est au village.;1
-sœur;weltma;Weltma-iw tella di tamdint.;Ma sœur est en ville.;1
+sœur;weltma;Weltma-iw tella di tamdint.;Ma sœur est en ville.;2
 enfant;aqcic (garçon) / taceccit (fille);Aqcic yella di wexxam.;L’enfant (garçon) est à la maison.;2
 bébé;mummu;Mummu yella di wexxam.;Le bébé est à la maison.;2
 grand-père;jeddi;Jeddi-iw yella di taddart.;Mon grand-père est au village.;2
@@ -31,8 +31,8 @@ voisin;adjar;Adjar-iw yefk-as tacrict.;Mon voisin lui a donné une aide.;2
 voisine;tadjart (aussi adjar invariable);Tadjart-iw tella di taddart.;Ma voisine est au village.;2
 maison;axxam;Nekk di wexxam.;Je suis à la maison.;2
 appartement;tamudrut;Tettzdeɣ di tamudrut.;Elle habite en appartement.;2
-chambre;taxxamt;Taxxamt-a d tameqqrant.;Cette chambre est grande.;2
-salon;tazeɣimit;Nnig tazeɣimit neččaɣ.;On mange au salon.;2
+chambre;taxxamt;Taxxamt-a d tameqqrant.;Cette chambre est grande.;3
+salon;tazeɣimit;Nnig tazeɣimit neččaɣ.;On mange au salon.;3
 cuisine;tanwalt;Tanwalt tella d tazɣagt.;La cuisine est propre.;3
 salle de bain;tazeqcaft (alt. taxxam n lma);Yekker ɣer tazeqcaft.;Il est entré dans la salle de bain.;3
 lit;lita (emprunt usuel);Yegdem ɣer lita.;Il va au lit.;3
@@ -47,9 +47,9 @@ clé;tasarut;Sken tasarut di tfella.;Mets la clé dans la serrure.;3
 mur;afrag;Iruḥ ɣer wefragh.;Il va vers le mur.;3
 sol;aṣaḍ (intérieur / plancher);Sfeḍ ɣef waṣaḍ.;Marche sur le sol.;3
 plafond;sqef (emprunt stabilisé);Abrid iɛella ɣer s-seqef.;Le fil va jusqu’au plafond.;3
-cuillère;taɣenjayt;Serreɣ taɣenjayt ɣef aṭṭas.;Je pose la cuillère sur la table.;3
-fourchette;tazzert (alt. usuel furšit emprunt);Ttuğeḍ s tazzert.;Tu manges avec une fourchette.;3
-couteau;mus (emprunt très courant);Gzem s w-mus.;Coupe avec le couteau.;3
+cuillère;taɣenjayt;Serreɣ taɣenjayt ɣef aṭṭas.;Je pose la cuillère sur la table.;4
+fourchette;tazzert (alt. usuel furšit emprunt);Ttuğeḍ s tazzert.;Tu manges avec une fourchette.;4
+couteau;mus (emprunt très courant);Gzem s w-mus.;Coupe avec le couteau.;4
 assiette;ṣḥan / aḍebsi (selon usage);Rzen asekri deg ṣḥan.;Ils mettent le plat dans l’assiette.;4
 verre;lkas;Sew si lkas aman.;Bois de l’eau dans le verre.;4
 tasse;tassa (pour boisson chaude);Sew aṭay deg t-tassa.;Bois le thé dans la tasse.;4
@@ -63,10 +63,10 @@ aujourd’hui;ass-a;Ass-a ara n-ruḥ.;Aujourd’hui on partira.;4
 demain;azekka;Azekka ad nermes.;Demain, on écrira.;4
 hier;iḍelli;Iḍelli yusa ameddakel-iw.;Hier mon ami est venu.;4
 matin;ṣṣbeḥ (matin), alt. ifaw;Di ṣṣbeḥ ad n-sew aṭay.;Le matin, on boira du thé.;4
-après-midi;talgat;Talgat ad nemɣer.;L’après-midi, nous sortirons.;4
-soir;asra (soirée), (alt. tin yits);Di l-asra ad neqqar.;Le soir, nous lirons.;4
-nuit;iḍ;Di iḍ ad nesni.;La nuit, nous dormons.;4
-heure;tassaɛt;Tassaɛt-k acḥal?;Il est quelle heure ?;4
+après-midi;talgat;Talgat ad nemɣer.;L’après-midi, nous sortirons.;5
+soir;asra (soirée), (alt. tin yits);Di l-asra ad neqqar.;Le soir, nous lirons.;5
+nuit;iḍ;Di iḍ ad nesni.;La nuit, nous dormons.;5
+heure;tassaɛt;Tassaɛt-k acḥal?;Il est quelle heure ?;5
 minute;timinut;Sber timinut sennig.;Attends une minute, stp.;5
 seconde;tasnidt (2ᵉ : emprunt tsaniya);Sber tasnidt.;Attends une seconde.;5
 jour;ass;Ass-a d ameqqran.;Cette journée est importante.;5
@@ -79,11 +79,11 @@ mercredi;akras;Akras ad nsew aman.;Mercredi, on boira de l’eau.;5
 jeudi;akwas;Akwas ad nɛeddi.;Jeudi, on marchera.;5
 vendredi;asimwas;Asimwas ad neqqar.;Vendredi, on lira.;5
 samedi;asidyas;Asidyas ad nennu.;Samedi, on se reposera.;5
-dimanche;asamas;Asamas ad nṛuḥ ɣer taddart.;Dimanche, on ira au village.;5
-maintenant;tura;Tura ad n-bdu.;Maintenant, on commence.;5
-bientôt;akken kan (plutôt « dès que ») / qariban(emprunt « bientôt »);Ad nruḥ qariban.;On partira bientôt.;5
-tard;deffir (plus tard) / i l-axir n llaɛḍa (tard, heure avancée);Ad nnes deffir.;Nous le ferons plus tard.;5
-tôt;tazwara (de bonne heure);Rzu tazwara.;Viens de bonne heure (tôt).;5
+dimanche;asamas;Asamas ad nṛuḥ ɣer taddart.;Dimanche, on ira au village.;6
+maintenant;tura;Tura ad n-bdu.;Maintenant, on commence.;6
+bientôt;akken kan (plutôt « dès que ») / qariban(emprunt « bientôt »);Ad nruḥ qariban.;On partira bientôt.;6
+tard;deffir (plus tard) / i l-axir n llaɛḍa (tard, heure avancée);Ad nnes deffir.;Nous le ferons plus tard.;6
+tôt;tazwara (de bonne heure);Rzu tazwara.;Viens de bonne heure (tôt).;6
 soleil;iṭij (alt. tafukt = lumière/soleil);Iṭij yezga.;Le soleil s’est levé.;6
 lune;ayyur;Ayyur yella deg igenni.;La lune est dans le ciel.;6
 étoile;iṭri;Iṭri yettban di igenni.;L’étoile apparaît dans le ciel.;6
@@ -95,12 +95,12 @@ orage;tignut;Tignut tella ihi.;Il y a de l’orage.;6
 tonnerre;amzẓiɣ (ou expr. amzwar n tignut);Amzẓiɣ yezɣa.;Le tonnerre gronde.;6
 feu;timest;Ur qqen ara i t-timest.;Ne touche pas au feu.;6
 mer;lbaḥr (emprunt usuel);Nruḥ ɣer lbaḥr.;On va à la mer.;6
-rivière;asif;Asif yeɣli ɣer azga.;La rivière coule vers la plaine.;6
-lac;agelmim;Agelmim-a d ameqqran.;Ce lac est grand.;6
-montagne;adrar;Adrar-a d ameqqran.;Cette montagne est grande.;6
-désert;tanezruft;Tanezruft d azɣar.;Le désert est vaste.;6
-arbre;ttejṛa;Ttejṛa t'germi tilawin.;L’arbre donne des fruits.;6
-fleur;tajaḍit;Tajaḍit-a d tazalit.;Cette fleur est belle.;6
+rivière;asif;Asif yeɣli ɣer azga.;La rivière coule vers la plaine.;7
+lac;agelmim;Agelmim-a d ameqqran.;Ce lac est grand.;7
+montagne;adrar;Adrar-a d ameqqran.;Cette montagne est grande.;7
+désert;tanezruft;Tanezruft d azɣar.;Le désert est vaste.;7
+arbre;ttejṛa;Ttejṛa t'germi tilawin.;L’arbre donne des fruits.;7
+fleur;tajaḍit;Tajaḍit-a d tazalit.;Cette fleur est belle.;7
 herbe;iccer;Iccer yeqqen ɣef uɣarav.;L’herbe pousse dans le champ.;7
 sable;ijdi;Ijdi yella deg wamanas.;Il y a du sable dans le oued.;7
 pierre;aẓru;Aẓru-a d uɣrum.;Cette pierre est lourde.;7
@@ -111,13 +111,13 @@ chien;aqjun;Aqjun yeger ɣer taddart.;Le chien court vers le village.;7
 pain;aɣrum;Aɣrum-a d ameqqran.;Ce pain est grand.;7
 eau;aman;Sew aman, ma ulac aɣilif.;Bois de l’eau, s’il te plaît.;7
 lait;ayefki;Sew ayefki di t-tassa.;Bois du lait dans la tasse.;7
-fromage;frumaj (moderne), takemmart (trad.);Neččaɣ frumaj.;Je mange du fromage.;7
-beurre;zzebda;Serreɣ zzebda ɣef aɣrum.;Je mets du beurre sur le pain.;7
-huile;zzit (souvent huile d’olive);Rzu zzit ɣer t-tanwalt.;Apporte l’huile à la cuisine.;7
-viande;aksum;Aksum d axxam-is.;La viande est chez lui.;7
-poulet;djej (emprunt courant);Neččaɣ djej ass-a.;Je mange du poulet aujourd’hui.;7
-bœuf;lḥem n teɣerɣart;Neččaɣ lḥem n teɣerɣart.;Je mange du bœuf.;7
-poisson;leḥut;Aɣrum akked leḥut d iḥlan.;Pain et poisson, c’est bon.;7
+fromage;frumaj (moderne), takemmart (trad.);Neččaɣ frumaj.;Je mange du fromage.;8
+beurre;zzebda;Serreɣ zzebda ɣef aɣrum.;Je mets du beurre sur le pain.;8
+huile;zzit (souvent huile d’olive);Rzu zzit ɣer t-tanwalt.;Apporte l’huile à la cuisine.;8
+viande;aksum;Aksum d axxam-is.;La viande est chez lui.;8
+poulet;djej (emprunt courant);Neččaɣ djej ass-a.;Je mange du poulet aujourd’hui.;8
+bœuf;lḥem n teɣerɣart;Neččaɣ lḥem n teɣerɣart.;Je mange du bœuf.;8
+poisson;leḥut;Aɣrum akked leḥut d iḥlan.;Pain et poisson, c’est bon.;8
 œuf;tamellalt;Neččaɣ tamellalt di ṣ-ṣbaḥ.;Je mange un œuf le matin.;8
 pomme;ttefaḥ;Ttefaḥ-a d tazalit.;Cette pomme est belle.;8
 banane;tabanant;Tabanant-a d tazalit.;Cette banane est belle.;8
@@ -127,14 +127,14 @@ datte;azemz;Azemz d aḥlaw.;La datte est sucrée.;8
 tomate;ṭmaṭem (var. ṭmaṭeš);Ḥder ṭmaṭem di t-tanwalt;Prépare la tomate à la cuisine.;8
 oignon;aẓalim;Aẓalim yella di tanwalt.;L’oignon est dans la cuisine.;8
 ail;tiskart;Tiskart tella ɣef ṭabla.;L’ail est sur la table.;8
-pomme de terre;batata;Batata llan di tanwalt.;Les pommes de terre sont dans la cuisine.;8
-carotte;jazar;Gzem jazar s w-mus.;Coupe la carotte avec le couteau.;8
-riz;ṛṛuz;Neččaɣ ṛṛuz.;Je mange du riz.;8
-couscous;seksu;Neččaɣ seksu ass-a.;Je mange du couscous aujourd’hui.;8
-semoule;semid;Ssexdem semid i seksu.;Utilise de la semoule pour le couscous.;8
-soupe;askaf;Neččaɣ askaf.;Je mange de la soupe.;8
-thé;aṭay;Sew aṭay di t-tassa.;Bois le thé dans la tasse.;8
-café;lqahwa;Sew lqahwa di ṣ-ṣbeḥ.;Bois du café le matin.;8
+pomme de terre;batata;Batata llan di tanwalt.;Les pommes de terre sont dans la cuisine.;9
+carotte;jazar;Gzem jazar s w-mus.;Coupe la carotte avec le couteau.;9
+riz;ṛṛuz;Neččaɣ ṛṛuz.;Je mange du riz.;9
+couscous;seksu;Neččaɣ seksu ass-a.;Je mange du couscous aujourd’hui.;9
+semoule;semid;Ssexdem semid i seksu.;Utilise de la semoule pour le couscous.;9
+soupe;askaf;Neččaɣ askaf.;Je mange de la soupe.;9
+thé;aṭay;Sew aṭay di t-tassa.;Bois le thé dans la tasse.;9
+café;lqahwa;Sew lqahwa di ṣ-ṣbeḥ.;Bois du café le matin.;9
 sucré;aḥlaw;Ačini d aḥlaw.;L’orange est sucrée.;9
 salé;melḥi;Aksum melḥi aṭas.;La viande est très salée.;9
 chaud;ḥṛan;Aṭay ḥṛan.;Le thé est chaud.;9
@@ -143,15 +143,15 @@ faim;lǧuɛ;Ɣur-i lǧuɛ.;J’ai faim.;9
 soif;lɛṭaš;Ɣur-i lɛṭaš.;J’ai soif.;9
 tête;ixef;D ixef.;C’est la tête.;9
 cheveux;čaɛr (emprunt courant);D čaɛr.;Ce sont les cheveux.;9
-œil;tiṭ;D tiṭ.;C’est l’œil.;9
-nez;afunas;D afunas.;C’est le nez.;9
-bouche;imi;D imi.;C’est la bouche.;9
-oreille;ameẓẓuɣ;D ameẓẓuɣ.;C’est l’oreille.;9
-main;afus;D afus.;C’est la main.;9
-bras;afus;Yekker afus-is.;Il/Elle lève le bras.;9
-jambe;aḍaṛ;D aḍaṛ.;C’est la jambe.;9
-pied;aḍaṛ;D aḍaṛ.;C’est le pied.;9
-dos;uɛrur;D uɛrur.;C’est le dos.;9
+œil;tiṭ;D tiṭ.;C’est l’œil.;10
+nez;afunas;D afunas.;C’est le nez.;10
+bouche;imi;D imi.;C’est la bouche.;10
+oreille;ameẓẓuɣ;D ameẓẓuɣ.;C’est l’oreille.;10
+main;afus;D afus.;C’est la main.;10
+bras;afus;Yekker afus-is.;Il/Elle lève le bras.;10
+jambe;aḍaṛ;D aḍaṛ.;C’est la jambe.;10
+pied;aḍaṛ;D aḍaṛ.;C’est le pied.;10
+dos;uɛrur;D uɛrur.;C’est le dos.;10
 ventre;aɛebbuḍ;D aɛebbuḍ.;C’est le ventre.;10
 cœur;ul;D ul.;C’est le cœur.;10
 sang;idammen;D idammen.;C’est le sang.;10
@@ -159,190 +159,163 @@ os;aɣes;D aɣes.;C’est l’os.;10
 peau;aɣlim;D aɣlim.;C’est la peau.;10
 malade;yuḍen;Yuḍen.;Il est malade.;10
 blessé;amejruḥ;Yella d amejruḥ.;Il est blessé.;10
-douleur;iɣer;Ɣur-i iɣer.;J’ai une douleur.;10
-fièvre;tawla;Ɣur-i tawla.;J’ai de la fièvre.;10
-rhume;aḍu;Ɣur-is aḍu.;Il a un rhume.;10
-docteur;amejjay;Amejjay yella dagi.;Le docteur est ici.;10
-médicament;asafar;Su asafar.;Prends le médicament.;10
-hôpital;sbiṭar;Iruḥ ɣer sbiṭar.;Il est allé à l’hôpital.;10
-repos;talwit;Ad nesɛa talwit.;Nous avons besoin de repos.;10
-mort;amutt (var. amuttu);Amutt yettwas.;La mort est arrivée. (forme à valider dialectalement);10
-chemise;chemisa (emprunt);Sserg-iyi chemisa.;Mets ma chemise.;10
-pantalon;pantalun (emprunt);Sru pantalun-iw.;Enlève mon pantalon.;10
+douleur;iɣer;Ɣur-i iɣer.;J’ai une douleur.;11
+fièvre;tawla;Ɣur-i tawla.;J’ai de la fièvre.;11
+rhume;aḍu;Ɣur-is aḍu.;Il a un rhume.;11
+docteur;amejjay;Amejjay yella dagi.;Le docteur est ici.;11
+médicament;asafar;Su asafar.;Prends le médicament.;11
+hôpital;sbiṭar;Iruḥ ɣer sbiṭar.;Il est allé à l’hôpital.;11
+repos;talwit;Ad nesɛa talwit.;Nous avons besoin de repos.;11
+mort;amutt (var. amuttu);Amutt yettwas.;La mort est arrivée. (forme à valider dialectalement);11
+chemise;chemisa (emprunt);Sserg-iyi chemisa.;Mets ma chemise.;11
+pantalon;pantalun (emprunt);Sru pantalun-iw.;Enlève mon pantalon.;11
 robe;taqendurt;Taqendurt-iw tella d tazlit.;Ma robe est belle.;11
 jupe;jupe (emprunt);Timmura jupe-a.;Elle porte une jupe.;11
 t-shirt;tishirt (emprunt);Tishirt-iw ḥelu.;Mon t-shirt est propre.;11
 veste;vesta (emprunt : veste);Rzen ɣer vesta.;Mets la veste.;11
 chaussures;tsawat / tifaxxit (var.);Ssu tsawat-inek.;Enlève tes chaussures.;11
 chaussettes;tasqic (ou chaussette emprunt);Ssu tasqic-inek.;Retire tes chaussettes.;11
-bonnet;amsari / bonnet (emprunt);Yettaf amsari-is.;Il porte son bonnet.;11
-foulard;amendil / tafulart;Tamendil-a tella d ameggaz.;Le foulard est grand.;11
-ceinture;abagus;Asab abagus-inek.;Attache ta ceinture.;11
-noir;aβracan (var. abarkan);Ameqqran aβracan.;C’est très noir.;11
-blanc;amellal;Tama amellal.;C’est blanc.;11
-rouge;azeggag (var. azeqqaɣ);Tama azeggag.;C’est rouge.;11
-bleu;aẓeṛqaq;Igenni d aẓeṛqaq.;Le ciel est bleu.;11
-vert;azegzaw;Tameṭṭut tazegzaw.;La couleur verte est belle.;11
-jaune;aweṛaɣ (var. aweṛag);Tama aweṛaɣ.;C’est jaune.;11
-gris;arsassi;Tama arsassi.;C’est gris.;11
-rose;axuxi;Tama axuxi.;C’est rose.;11
+bonnet;amsari / bonnet (emprunt);Yettaf amsari-is.;Il porte son bonnet.;12
+foulard;amendil / tafulart;Tamendil-a tella d ameggaz.;Le foulard est grand.;12
+ceinture;abagus;Asab abagus-inek.;Attache ta ceinture.;12
+noir;aβracan (var. abarkan);Ameqqran aβracan.;C’est très noir.;12
+blanc;amellal;Tama amellal.;C’est blanc.;12
+rouge;azeggag (var. azeqqaɣ);Tama azeggag.;C’est rouge.;12
+bleu;aẓeṛqaq;Igenni d aẓeṛqaq.;Le ciel est bleu.;12
+vert;azegzaw;Tameṭṭut tazegzaw.;La couleur verte est belle.;12
+jaune;aweṛaɣ (var. aweṛag);Tama aweṛaɣ.;C’est jaune.;12
+gris;arsassi;Tama arsassi.;C’est gris.;12
+rose;axuxi;Tama axuxi.;C’est rose.;12
 orange (couleur);ačini (fruit) / tazizt (couleur rare);Tama ačini.;C’est orange.;12
 marron;amɣur (approx.);Tama amɣur.;C’est marron. (à valider);12
 violet;amur (approx.);Tama amur.;C’est violet. (à valider);12
 porter;ssur / lleɛ (porter vêtement);Yessur vesta.;Il porte la veste.;12
 mettre;ssur / sefru;Ssur chemisa-iyi.;Mets ma chemise.;12
-enlever;ssu / seqqeṛ;Ssu pantalun-inek.;Enlève ton pantalon.;12
-laver;ifess / setta;Ifess tamendil-a.;Lave le foulard.;12
-repasser;tiseggat / ifess amezruy;Tiseggat chemisa-a.;Repasse la chemise.;12
-être;yerna / d (copule);Nekk d amdan.;Je suis une personne.;12
-avoir;lli / yenna (avoir poss.);Yenna imi d yisem-iw.;J’ai ceci comme nom.;12
-faire;aserg / ssur;Ad aserg aẓul.;Il va faire la cuisine.;12
-aller;adḥa / ṛuḥ;Adḥaɣ ɣer tamdint.;Je vais à la ville.;12
-venir;ddu / as;Ddu sɣur wen.;Il vient chez toi.;12
-partir;ṛuḥ / ffeɣ;ṛuḥ-iyi ɣer lma.;Je pars à la mer.;12
-manger;ecc / ečč;Neččaɣ ecc.;Je mange.;12
-boire;sew / su;Nekk tessew ayefki.;Je bois du lait.;12
-dormir;ṭṭes;Yettṭes azwaw.;Le bébé dort.;12
+enlever;ssu / seqqeṛ;Ssu pantalun-inek.;Enlève ton pantalon.;13
+laver;ifess / setta;Ifess tamendil-a.;Lave le foulard.;13
+repasser;tiseggat / ifess amezruy;Tiseggat chemisa-a.;Repasse la chemise.;13
+être;yerna / d (copule);Nekk d amdan.;Je suis une personne.;13
+avoir;lli / yenna (avoir poss.);Yenna imi d yisem-iw.;J’ai ceci comme nom.;13
+faire;aserg / ssur;Ad aserg aẓul.;Il va faire la cuisine.;13
+aller;adḥa / ṛuḥ;Adḥaɣ ɣer tamdint.;Je vais à la ville.;13
+venir;ddu / as;Ddu sɣur wen.;Il vient chez toi.;13
+partir;ṛuḥ / ffeɣ;ṛuḥ-iyi ɣer lma.;Je pars à la mer.;13
+manger;ecc / ečč;Neččaɣ ecc.;Je mange.;13
+boire;sew / su;Nekk tessew ayefki.;Je bois du lait.;13
+dormir;ṭṭes;Yettṭes azwaw.;Le bébé dort.;13
 se lever;yekker;S yiɣil i d-yekker.;Elle a eu du mal à se lever.;13
 s’asseoir;gawr / ggiwer / qejdem;Gawr ɣef akkersi.;Assieds-toi sur la chaise.;13
 marcher;ddu / lḥu;Nruḥ ad neddu.;Nous allons marcher.;13
 courir;azzel;Azzel iɣer tugna.;Il court vers la place.;13
-sauter;yengez;Yengez d adrar.;Il saute par‑dessus la pierre.;13
-tomber;ɣli;Yettɣli s tezwart.;Il est tombé de l’arbre.;13
-porter;asiy / ssur;Yasiy tabrat-inek.;Il porte ton sac.;13
-parler;neḥder / ahdar;Neḥder ɣer umḍan.;Je parle à l’homme.;13
-écouter;ssef / ssefled;Assef ad t-yessefd.;Écoute ce qu’il dit.;13
-voir;wali;Wali-iyi tamdint.;Je vois la ville.;13
-regarder;wali / erçi;Erçi ɣer igenni.;Regarde le ciel.;13
-entendre;sel;Ħeǧ-iyi sel-agi?;As‑tu entendu cela ?;13
-aimer;eɣs / ri;Eɣs-iyi tameṭṭut.;J’aime ma femme.;13
-vouloir;bɣiɣ / jivra (var.);Bɣiɣ ad nnexxi.;Je veux partir.;13
-pouvoir;zmer;Zmer-iyi ad nesraḥ.;Je peux parler.;13
-savoir;issin / fhem (pour comprendre);Issin‑iyi taslit ?;Sais‑tu la vérité ?;13
-devoir;tadelsant / yella ad + verbe (périphrase);Yella ad nerga tadelsant‑i.;Je dois faire mon devoir.;13
+sauter;yengez;Yengez d adrar.;Il saute par‑dessus la pierre.;14
+tomber;ɣli;Yettɣli s tezwart.;Il est tombé de l’arbre.;14
+porter;asiy / ssur;Yasiy tabrat-inek.;Il porte ton sac.;14
+parler;neḥder / ahdar;Neḥder ɣer umḍan.;Je parle à l’homme.;14
+écouter;ssef / ssefled;Assef ad t-yessefd.;Écoute ce qu’il dit.;14
+voir;wali;Wali-iyi tamdint.;Je vois la ville.;14
+regarder;wali / erçi;Erçi ɣer igenni.;Regarde le ciel.;14
+entendre;sel;Ħeǧ-iyi sel-agi?;As‑tu entendu cela ?;14
+aimer;eɣs / ri;Eɣs-iyi tameṭṭut.;J’aime ma femme.;14
+vouloir;bɣiɣ / jivra (var.);Bɣiɣ ad nnexxi.;Je veux partir.;14
+pouvoir;zmer;Zmer-iyi ad nesraḥ.;Je peux parler.;14
+savoir;issin / fhem (pour comprendre);Issin‑iyi taslit ?;Sais‑tu la vérité ?;14
+devoir;tadelsant / yella ad + verbe (périphrase);Yella ad nerga tadelsant‑i.;Je dois faire mon devoir.;14
 bonjour;azul;Azul, mačči k‑w?;Bonjour, comment vas‑tu ?;14
 salut;azul / asleɣ;Azul!;Salut !;14
 au revoir;ad ɣer ara / ad d‑yemɣa;Ad d‑yemɣa, s slamt.;Au revoir, sois en paix.;14
-merci;tanemmirt;Tanemmirt ɣef tallalt‑ik.;Merci pour ton aide.;14
-pardon;smah / s-suref-iyi;Sameh‑iyi, ur ḥeqq‑ɣ ara.;Pardonne‑moi, je n’ai pas fait exprès.;14
-s’il te plaît;afak;Afak, ɛaṭini aman.;S'il te plaît, donne‑moi de l'eau.;14
-oui;iyi / ih / ayi;Iyi, ad d‑nruḥ.;Oui, nous partirons.;14
-non;ulac (existentiel) — réponse courte: ayi / ih;Ulac, ur ḍirdɣ ara.;Il n'y en a pas / Non (usage existentiel).;14
-peut-être;yerna;Yerna ad nesraḥ?;Peut‑être que je parlerai ?;14
-d’accord;zwaɣ;Zwaɣ, ad nerɛu.;D'accord, je le ferai.;14
-pas du tout;ur illa ara;Ur illa ara, ur d‑nniɣ.;Pas du tout, je ne suis pas d'accord.;14
-comment ça va;mata d‑ammek?;Mata d‑ammek?;Comment ça va ?;14
-ça va bien;labas;Labas, tanemmirt.;Ça va bien, merci.;14
-et toi;kek‑k / kečč‑k;Kek‑k, mata d‑ammek?;Et toi, comment vas‑tu ?;14
-je ne sais pas;ur ɣurɣ ara;Ur ɣurɣ ara, s s‑tma.;Je ne sais pas, attends un peu.;14
-pourquoi;acuy;Acuy i d‑ttwaḥ?;Pourquoi est‑ce arrivé ?;14
-parce que;mi / miṭṭan;Mi, ur t‑ḥeqq ara.;Parce que cela n'était pas possible.;14
+merci;tanemmirt;Tanemmirt ɣef tallalt‑ik.;Merci pour ton aide.;15
+pardon;smah / s-suref-iyi;Sameh‑iyi, ur ḥeqq‑ɣ ara.;Pardonne‑moi, je n’ai pas fait exprès.;15
+s’il te plaît;afak;Afak, ɛaṭini aman.;S'il te plaît, donne‑moi de l'eau.;15
+oui;iyi / ih / ayi;Iyi, ad d‑nruḥ.;Oui, nous partirons.;15
+non;ulac (existentiel) — réponse courte: ayi / ih;Ulac, ur ḍirdɣ ara.;Il n'y en a pas / Non (usage existentiel).;15
+peut-être;yerna;Yerna ad nesraḥ?;Peut‑être que je parlerai ?;15
+d’accord;zwaɣ;Zwaɣ, ad nerɛu.;D'accord, je le ferai.;15
+pas du tout;ur illa ara;Ur illa ara, ur d‑nniɣ.;Pas du tout, je ne suis pas d'accord.;15
+comment ça va;mata d‑ammek?;Mata d‑ammek?;Comment ça va ?;15
+ça va bien;labas;Labas, tanemmirt.;Ça va bien, merci.;15
+et toi;kek‑k / kečč‑k;Kek‑k, mata d‑ammek?;Et toi, comment vas‑tu ?;15
+je ne sais pas;ur ɣurɣ ara;Ur ɣurɣ ara, s s‑tma.;Je ne sais pas, attends un peu.;15
+pourquoi;acuy;Acuy i d‑ttwaḥ?;Pourquoi est‑ce arrivé ?;15
+parce que;mi / miṭṭan;Mi, ur t‑ḥeqq ara.;Parce que cela n'était pas possible.;15
 quand;miṭel?;Miṭel ad nḥer?;Quand partirons‑nous ?;15
 où;taynna / aynna;Taynna ad d‑ruḥ?;Où allons‑nous ?;15
-comment;ama;Ama ad t‑imfel?;Comment vas‑tu faire ça ?;15
-quoi;anka;Anka ara t‑ssawal?;Qu'est‑ce que tu demandes ?;15
-beaucoup;aṭas (var. attas);Aṭas n waman.;Beaucoup d'eau.;15
-un peu;ciṭuḥ (ou kra en tournure partitive);Sber ciṭuḥ.;Attends un peu.;15
-jamais;ulac‑ara / tournure négative ur ... ara;Ulac‑ara ad d‑ukk.;Je ne le ferai jamais.;15
-toujours;ɣef‑us;Yella ɣef‑us.;Il est toujours là.;15
-parfois;ad‑yella;Ad‑yella s‑waḍ.;Parfois il revient.;15
-voiture;tomobil / tamobil (recommandé) — var. takeṛṛust;Tomobil‑iɣ yella sin.;Ma voiture a deux portes.;15
-bus;abus;Nruḥ s abus.;Nous prenons le bus.;15
-train;tiren;Nruḥ s tiren.;Nous allons en train.;15
-avion;timesrifegt;Nruḥ s timesrifegt.;Nous prendrons l'avion.;15
-vélo;tasnasɣalt;Tasnasɣalt‑iɣ deg garaj.;Mon vélo est dans le garage.;15
-moto;moto (emprunt courant);Isɛa moto.;Il a une moto.;15
-route;abrid;Abrid tella ɣezzif.;La route est longue.;15
-rue;tala;Tala n taẓallit.;La rue principale.;15
+comment;ama;Ama ad t‑imfel?;Comment vas‑tu faire ça ?;16
+quoi;anka;Anka ara t‑ssawal?;Qu'est‑ce que tu demandes ?;16
+beaucoup;aṭas (var. attas);Aṭas n waman.;Beaucoup d'eau.;16
+un peu;ciṭuḥ (ou kra en tournure partitive);Sber ciṭuḥ.;Attends un peu.;16
+jamais;ulac‑ara / tournure négative ur ... ara;Ulac‑ara ad d‑ukk.;Je ne le ferai jamais.;16
+toujours;ɣef‑us;Yella ɣef‑us.;Il est toujours là.;16
+parfois;ad‑yella;Ad‑yella s‑waḍ.;Parfois il revient.;16
+voiture;tomobil / tamobil (recommandé) — var. takeṛṛust;Tomobil‑iɣ yella sin.;Ma voiture a deux portes.;16
+bus;abus;Nruḥ s abus.;Nous prenons le bus.;16
+train;tiren;Nruḥ s tiren.;Nous allons en train.;16
+avion;timesrifegt;Nruḥ s timesrifegt.;Nous prendrons l'avion.;16
+vélo;tasnasɣalt;Tasnasɣalt‑iɣ deg garaj.;Mon vélo est dans le garage.;16
+moto;moto (emprunt courant);Isɛa moto.;Il a une moto.;16
+route;abrid;Abrid tella ɣezzif.;La route est longue.;16
+rue;tala;Tala n taẓallit.;La rue principale.;16
 chemin;asenfa;Asenfa ad yettu.;Le chemin monte.;16
-trottoir;taɣrest;Taɣrest tella s‑tafukt.;Le trottoir est éclairé.;16
-marcher;lḥu;Nruḥ ad neddu.;Nous allons marcher.;16
-courir;azzel;Azzel iɣer tugna.;Il court vers la place.;16
-conduire;yessfer (ou yefk tomobil);Yessfer tomobil-iw.;Il conduit ma voiture.;16
-voyager;yessafar / yessfer (emprunt);Yessafar ad nerga.;Il va voyager.;16
-arriver;ddu;Ddu sɣur wen.;Il arrive chez toi.;16
-partir;ṛuḥ / ffeɣ;ṛuḥ-iyi ɣer lma.;Je pars à la mer.;16
-station;tiggant / lagar;Tiggant-a tella amdyaz.;La station est pleine.;16
-arrêt;axsal / asebdded (arrêt de bus);Axsal n ubus tella.;Il y a un arrêt de bus.;16
-ticket;tikit / tawriqt;Ssefru tikit-agi.;Prends ce ticket.;16
-carte;takarḍa / ani / acku;Takarḍa-iyi d imenza.;Ma carte est valide.;16
-bagage;tadggart ittyamaẓn / tabalizt / tibalizin;Yessu tibalizin.;Les bagages sont arrivés.;16
-école;tamassant / aɣerbaz;Tamassant-iw tella ɣer tamdint.;Mon école est en ville.;16
-université;aɣzuran / tasdawit;Nruḥ ɣer tasdawit.;Nous allons à l’université.;16
-cahier;azmam / assnnaṭ;Arwi azmam-agi.;Écris dans ce cahier.;16
-livre;adlis;Iɣeṛ adlis.;Il/elle lit un livre.;16
-stylo;agali / imru / leqlam;Asru agali-iyi.;Donne‑moi mon stylo.;17
-crayon;tiggnt / akeryun / ṭṭikuk;Sserg tiggnt-agi.;Prends le crayon.;17
-lire;ɣeṛ;Nekk ad ɣeṛ adlis.;Je vais lire un livre.;17
-écrire;aruɣ / aru;Aruɣ tazwara.;Écris l’heure.;17
-apprendre;ssefru / lmed;Yessefru ad awal.;Il apprend un mot.;17
-comprendre;ifhem / fhem;Ur fhemɣ ara.;Je ne comprends pas.;17
-enseigner;seddaw / sselmed;Aseddaw amlal.;Il enseigne la langue.;17
-professeur;amḍif / amaslu / aselmad;Amḍif-agi yella dagi.;Le professeur est ici.;17
-élève;tallalt (à valider selon dialecte);Tallalt-a yella di tamassant.;L’élève est à l’école.;17
-étudiant;amaɣzay / amezruy (var.);Amaɣzay-agi yessufar.;L’étudiant voyage.;17
-classe;taqsiṭ / taqsiṭ n tamassant;Taqsiṭ-agi tella d timlilit.;La classe est pleine.;17
-note;tafsit / asnawen (selon contexte);Ad ḥudra tafsit.;Prends une note.;17
-travail;axeddim;Yesseɣ axeddim.;Il fait le travail.;17
-métier;amuggaru / asbadu (var.);Amuggaru-iyi d tabbay.;Mon métier est la menuiserie.;17
-bureau;iburo / taburo (emprunt);Iburo-agi yezmer.;Le bureau est fermé.;17
-ordinateur;amsusl / ordinateur (emprunt);Yessker amsusl.;Il allume l’ordinateur.;17
-patron;ameṛṛu / amras (var.);Ameṛṛu-agi yella di l‑khedma.;Le patron est au travail.;17
-collègue;ameddakel / aḍbib;Ameddakel-iw yessufar.;Mon collègue est parti.;18
-chercher;nadi;Nadiɣ agali-iyi.;Je cherche mon stylo.;18
-trouver;yefka;Yefka-t tasla.;Il/elle a trouvé la clé.;18
-gagner;rbeḥ;Rbeḥ-it di asirem.;Il a gagné le match.;18
-perdre;xseṛ;Xseṛ-it asirem.;Il a perdu le match.;18
-rendez-vous;taktut;Taktut-agi yella ɣer taddart.;Il a un rendez‑vous au village.;18
-maison;axxam;Nekk di axxam.;Je suis à la maison.;18
-école;tamassant;Tamassant-iw tella ɣer tamdint.;Mon école est en ville.;18
-marché;amglal / aswaq (emprunt);Nruḥ ad nesraḥ ɣer amglal.;Nous allons au marché.;18
-mosquée;tamesgida;Nruḥ ɣer tamesgida.;Nous allons à la mosquée.;18
-église;tamẓẓalt / tamẓẓalut;Tamẓẓalt-a tella ɣer taddart.;Il y a une église au village.;18
-hôpital;sbiṭar;Nruḥ s sbiṭar.;Nous allons à l'hôpital.;18
-pharmacie;tamdunt n tṭṭawin / pharmacie (emprunt);Ad nwali ɣer tamdunt.;Je vais à la pharmacie.;18
-magasin;taḥanutt / magazin (emprunt);Taḥanutt-a yezmer.;Le magasin est fermé.;18
-banque;lbanka / banka;Nruḥ ɣer lbanka.;Je vais à la banque.;18
-poste;tamtint n lbarid;Nruḥ ɣer tamtint n lbarid.;Je vais à la poste.;18
-parc;parc / tamdawt (emprunt/var.);Ad neddu ɣer parc.;Nous allons nous promener au parc.;18
-rue;tala;Tala-agi tella ɣer tamdint.;Cette rue est en ville.;19
-place;amkuẓ;Amkuẓ tella ḥemml.;La place est pleine.;19
-village;taddart;Taddart-iw tella ɣer iferḥan.;Mon village est joli.;19
-ville;tamdint;Tamdint-a tella ɣer asqif.;La ville est animée.;19
-pays;tamurt;Tamurt-iw d Dzayer.;Mon pays est l'Algérie.;19
-fête;tameɣra / asirem (var.);Tameɣra tteddu ɣef ussan.;La fête a commencé aujourd'hui.;19
-mariage;zzawj / jjwaɣ (var.);Ttettzawajt di tammurt.;Il/elle s'est marié(e) dans le pays.;19
-anniversaire;amulli / anniversaire (emprunt);Amulli ameggaz a-wennes!;Joyeux anniversaire à toi !;19
-visite;tazrawt / zen (verbe);Nruḥ ad neẓẓar.;Nous allons faire une visite / visiter.;19
-invité;amezwaru / amedu (var.);Amezwaru-yenna d ifassen.;L'invité est arrivé.;19
-cadeau;tarzeft / tirzaf;Tarzeft-agi yettneḍfaɣ.;Ce cadeau est beau.;19
-chose;ayen;Ayen-agi ur yesɛi.;Cette chose n'est pas utile.;19
-objet;amekkan;Ameḳkan-agi d asirem.;Cet objet est un outil.;19
-truc;afellay / ayen (familier);Afellay-agi ur yella kra.;Ce truc ne sert à rien.;19
-idée;tazwara / tazwart;Tazwara-iyi d amkan.;Mon idée est bonne.;19
-problème;taluft / agnu (var.);Taluft-agi yettusnaḥ.;Le problème a été résolu.;19
-solution;tifrat;Yesguma ad s-yaf tifrat.;Il n'arrive pas à trouver de solution.;19
-argent;idrimen;Idrimen-agi yella di tasedda.;L'argent est sur la table.;20
-prix;ssuma;Tzemreḍ ad d-teǧǧeḍ acemma deg ssuma?;Peux-tu baisser un peu le prix?;20
-valeur;takelt / timlilit;Takelt n amgarru tella ɣef umalu.;La valeur de l'objet est élevée.;20
-coût;asuma / ssuma;Asuma n ttwasal d ameqqran.;Le coût du transport est élevé.;20
-gratuit;ur yettla ara (expr.);Ur yettla ara, asma.;C'est gratuit, prends‑le.;20
-cher;ameqqran;Ameqqran‑agi ssuma.;Cet article est cher.;20
-bonheur;tamegrast / tazwara (à valider);Tamegrast‑iɣ yettwasnuf.;Mon bonheur a grandi. (forme à valider selon dialecte);20
-tristesse;tazrant / timlilit;Tazrant‑agi tessawleḍ‑i.;Cette tristesse l’affecte.;20
-peur;tasɣa / tazlalt;Tasɣa‑i yettban.;Il a peur.;20
-colère;targit / asleqq;Targit‑igi tessawleḍ.;Sa colère s'est calmée.;20
-amour;tifawin / eɣs (verbe);Tifawin‑iɣ d ameṭṭut.;Mon amour est grand.;20
-haine;tigizit / tiɛemmurt (var.);Tigizit‑agi d asirem.;Cette haine est néfaste.;20
-facile;assel / asel (à valider);Asel‑agi i d‑truḥ.;Ceci est facile à faire.;20
-difficile;ameqqran / ẓẓer;Ameqqran‑agi i d‑ssens.;C'est difficile.;20
-long;ameqqran;Ameqqran‑uḍal d wass.;Cela prend longtemps.;20
-court;amecṭuḥ / ameċṭuḥ;Ameċṭuḥ‑agi d abaḍu.;C'est court.;20
-grand;ameqqran / akken ameqqran;Ameqqran‑agi i d‑tawil.;Il est grand.;20
-petit;amecṭuḥ / amcuh;Amecṭuḥ‑agi yella.;Il est petit.;21
-VRAI;yeqqim;Agellid‑agi yeqqim.;Cela est vrai.;21
-FAUX;ur yeqqim ara / azayen;Azayen‑agi ur yeqqim ara.;Cela est faux.;21
-bien;labas / yal;Labas, tanemmirt.;Ça va bien, merci.;21
-mal;yerra / ur yettnaẓal;Yerra‑iyi.;Cela va mal.;21
-vite;sser / deg‑s;Azzel sser ɣer tugna.;Il court vite vers la place.;21
-lentement;aḥric / ažem;Yessaw aḥric.;Il marche lentement.;21
+trottoir;taɣrest;Taɣrest tella s‑tafukt.;Le trottoir est éclairé.;17
+marcher;lḥu;Nruḥ ad neddu.;Nous allons marcher.;17
+courir;azzel;Azzel iɣer tugna.;Il court vers la place.;17
+conduire;yessfer (ou yefk tomobil);Yessfer tomobil-iw.;Il conduit ma voiture.;17
+voyager;yessafar / yessfer (emprunt);Yessafar ad nerga.;Il va voyager.;17
+arriver;ddu;Ddu sɣur wen.;Il arrive chez toi.;17
+partir;ṛuḥ / ffeɣ;ṛuḥ-iyi ɣer lma.;Je pars à la mer.;17
+station;tiggant / lagar;Tiggant-a tella amdyaz.;La station est pleine.;17
+arrêt;axsal / asebdded (arrêt de bus);Axsal n ubus tella.;Il y a un arrêt de bus.;17
+ticket;tikit / tawriqt;Ssefru tikit-agi.;Prends ce ticket.;17
+carte;takarḍa / ani / acku;Takarḍa-iyi d imenza.;Ma carte est valide.;17
+bagage;tadggart ittyamaẓn / tabalizt / tibalizin;Yessu tibalizin.;Les bagages sont arrivés.;17
+école;tamassant / aɣerbaz;Tamassant-iw tella ɣer tamdint.;Mon école est en ville.;17
+université;aɣzuran / tasdawit;Nruḥ ɣer tasdawit.;Nous allons à l’université.;17
+cahier;azmam / assnnaṭ;Arwi azmam-agi.;Écris dans ce cahier.;17
+livre;adlis;Iɣeṛ adlis.;Il/elle lit un livre.;17
+stylo;agali / imru / leqlam;Asru agali-iyi.;Donne‑moi mon stylo.;18
+crayon;tiggnt / akeryun / ṭṭikuk;Sserg tiggnt-agi.;Prends le crayon.;18
+lire;ɣeṛ;Nekk ad ɣeṛ adlis.;Je vais lire un livre.;18
+écrire;aruɣ / aru;Aruɣ tazwara.;Écris l’heure.;18
+apprendre;ssefru / lmed;Yessefru ad awal.;Il apprend un mot.;18
+comprendre;ifhem / fhem;Ur fhemɣ ara.;Je ne comprends pas.;18
+enseigner;seddaw / sselmed;Aseddaw amlal.;Il enseigne la langue.;18
+professeur;amḍif / amaslu / aselmad;Amḍif-agi yella dagi.;Le professeur est ici.;18
+élève;tallalt (à valider selon dialecte);Tallalt-a yella di tamassant.;L’élève est à l’école.;18
+étudiant;amaɣzay / amezruy (var.);Amaɣzay-agi yessufar.;L’étudiant voyage.;18
+classe;taqsiṭ / taqsiṭ n tamassant;Taqsiṭ-agi tella d timlilit.;La classe est pleine.;18
+note;tafsit / asnawen (selon contexte);Ad ḥudra tafsit.;Prends une note.;18
+travail;axeddim;Yesseɣ axeddim.;Il fait le travail.;18
+métier;amuggaru / asbadu (var.);Amuggaru-iyi d tabbay.;Mon métier est la menuiserie.;18
+bureau;iburo / taburo (emprunt);Iburo-agi yezmer.;Le bureau est fermé.;18
+ordinateur;amsusl / ordinateur (emprunt);Yessker amsusl.;Il allume l’ordinateur.;18
+patron;ameṛṛu / amras (var.);Ameṛṛu-agi yella di l‑khedma.;Le patron est au travail.;19
+collègue;ameddakel / aḍbib;Ameddakel-iw yessufar.;Mon collègue est parti.;19
+chercher;nadi;Nadiɣ agali-iyi.;Je cherche mon stylo.;19
+trouver;yefka;Yefka-t tasla.;Il/elle a trouvé la clé.;19
+gagner;rbeḥ;Rbeḥ-it di asirem.;Il a gagné le match.;19
+perdre;xseṛ;Xseṛ-it asirem.;Il a perdu le match.;19
+rendez-vous;taktut;Taktut-agi yella ɣer taddart.;Il a un rendez‑vous au village.;19
+maison;axxam;Nekk di axxam.;Je suis à la maison.;19
+école;tamassant;Tamassant-iw tella ɣer tamdint.;Mon école est en ville.;19
+marché;amglal / aswaq (emprunt);Nruḥ ad nesraḥ ɣer amglal.;Nous allons au marché.;19
+mosquée;tamesgida;Nruḥ ɣer tamesgida.;Nous allons à la mosquée.;19
+église;tamẓẓalt / tamẓẓalut;Tamẓẓalt-a tella ɣer taddart.;Il y a une église au village.;19
+hôpital;sbiṭar;Nruḥ s sbiṭar.;Nous allons à l'hôpital.;19
+pharmacie;tamdunt n tṭṭawin / pharmacie (emprunt);Ad nwali ɣer tamdunt.;Je vais à la pharmacie.;19
+magasin;taḥanutt / magazin (emprunt);Taḥanutt-a yezmer.;Le magasin est fermé.;19
+banque;lbanka / banka;Nruḥ ɣer lbanka.;Je vais à la banque.;19
+poste;tamtint n lbarid;Nruḥ ɣer tamtint n lbarid.;Je vais à la poste.;20
+parc;parc / tamdawt (emprunt/var.);Ad neddu ɣer parc.;Nous allons nous promener au parc.;20
+rue;tala;Tala-agi tella ɣer tamdint.;Cette rue est en ville.;20
+place;amkuẓ;Amkuẓ tella ḥemml.;La place est pleine.;20
+village;taddart;Taddart-iw tella ɣer iferḥan.;Mon village est joli.;20
+ville;tamdint;Tamdint-a tella ɣer asqif.;La ville est animée.;20
+pays;tamurt;Tamurt-iw d Dzayer.;Mon pays est l'Algérie.;20
+fête;tameɣra / asirem (var.);Tameɣra tteddu ɣef ussan.;La fête a commencé aujourd'hui.;20
+mariage;zzawj / jjwaɣ (var.);Ttettzawajt di tammurt.;Il/elle s'est marié(e) dans le pays.;20
+anniversaire;amulli / anniversaire (emprunt);Amulli ameggaz a-wennes!;Joyeux anniversaire à toi !;20
+visite;tazrawt / zen (verbe);Nruḥ ad neẓẓar.;Nous allons faire une visite / visiter.;20
+invité;amezwaru / amedu (var.);Amezwaru-yenna d ifassen.;L'invité est arrivé.;20
+cadeau;tarzeft / tirzaf;Tarzeft-agi yettneḍfaɣ.;Ce cadeau est beau.;20
+chose;ayen;Ayen-agi ur yesɛi.;Cette chose n'est pas utile.;20
+objet;amekkan;Ameḳkan-agi d asirem.;Cet objet est un outil.;20
+truc;afellay / ayen (familier);Afellay-agi ur yella kra.;Ce truc ne sert à rien.;20
