@@ -210,14 +210,21 @@
       renderNavAuthButtons(user);
     });
 
-    // Initialiser le gestionnaire de cartes et mettre à jour le compteur
+    // Initialiser le gestionnaire de cartes et mettre à jour le compteur (optionnel)
     async function updateDueCount() {
-      await cardManager.loadCards();
-      const stats = cardManager.getStats();
-      document.getElementById('due-count').textContent = stats.due;
+      try {
+        await cardManager.loadCards();
+        const stats = cardManager.getStats();
+        const dueCountElement = document.getElementById('due-count');
+        if (dueCountElement) {
+          dueCountElement.textContent = stats.due;
+        }
+      } catch (error) {
+        console.log('ℹ️ Compteur de cartes non disponible sur cette page');
+      }
     }
 
-    // Mettre à jour le compteur au chargement
+    // Mettre à jour le compteur au chargement (si possible)
     updateDueCount();
 
     console.log('📚 Script vocabulaire chargé !');
