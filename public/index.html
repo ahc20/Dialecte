@@ -119,24 +119,17 @@
       <p style="color:#bfa100; font-size:1.05rem; margin-top:1.5em;">D'autres dialectes arrivent très bientôt&nbsp;!</p>
     </section>
 
-    <!-- Section Lexique Thématique -->
+    <!-- Section Vocabulaire Simple -->
     <section class="main-card" style="max-width:900px; margin-top:2em;">
-      <h2 style="color:#7B61FF; margin-bottom:1.5em;">📚 Lexique Thématique Kabyle</h2>
+      <h2 style="color:#7B61FF; margin-bottom:1.5em;">📚 Vocabulaire Kabyle (320 mots)</h2>
       <p style="color:var(--text-light); font-size:1.1rem; margin-bottom:1.5em;">
-        Découvre notre collection de <strong>320 mots</strong> organisés par thèmes pour faciliter ton apprentissage.
+        Liste complète de nos mots français-kabyle.
       </p>
       
-      <div class="lexique-controls" style="margin-bottom:2em;">
-        <label for="theme-select" style="font-weight:600; color:var(--text-dark); margin-right:1em;">Filtrer par thème :</label>
-        <select id="theme-select" style="padding:0.5em 1em; border:2px solid #7B61FF; border-radius:8px; background:#fff; color:var(--text-dark); font-size:1rem;">
-          <option value="all">Tous les thèmes</option>
-        </select>
-      </div>
-      
-      <div id="lexique-content" style="min-height:200px; padding:1em; background:#f8f9fa; border-radius:12px; border:2px dashed #7B61FF33;">
+      <div id="vocabulaire-content" style="min-height:200px; padding:1em; background:#f8f9fa; border-radius:12px; border:2px dashed #7B61FF33;">
         <div style="text-align:center; color:var(--text-light);">
           <div style="font-size:2em; margin-bottom:0.5em;">⏳</div>
-          <div>Chargement du lexique...</div>
+          <div>Chargement du vocabulaire...</div>
         </div>
       </div>
     </section>
@@ -250,116 +243,38 @@
     updateDueCount();
 
     console.log('📚 Script vocabulaire chargé !');
-    // Génération dynamique du lexique à partir de data3.csv (348 mots)
-    function detectTheme(fr) {
-      const frLower = fr.toLowerCase();
+    
+    // Fonction simple pour afficher le vocabulaire
+    function afficherVocabulaire(data) {
+      console.log('🎯 afficherVocabulaire appelée avec:', data);
       
-      // Détection automatique des thèmes basée sur le contenu
-      if (frLower.includes('être') || frLower.includes('avoir') || frLower.includes('faire') || 
-          frLower.includes('aller') || frLower.includes('venir') || frLower.includes('voir') ||
-          frLower.includes('dire') || frLower.includes('manger') || frLower.includes('boire') ||
-          frLower.includes('dormir') || frLower.includes('travailler') || frLower.includes('apprendre')) {
-        return 'Verbes';
-      }
-      if (frLower.includes('homme') || frLower.includes('femme') || frLower.includes('enfant') ||
-          frLower.includes('père') || frLower.includes('mère') || frLower.includes('frère') ||
-          frLower.includes('soeur') || frLower.includes('famille')) {
-        return 'Personnes & Famille';
-      }
-      if (frLower.includes('eau') || frLower.includes('feu') || frLower.includes('terre') ||
-          frLower.includes('ciel') || frLower.includes('soleil') || frLower.includes('lune') ||
-          frLower.includes('montagne') || frLower.includes('mer') || frLower.includes('arbre')) {
-        return 'Nature';
-      }
-      if (frLower.includes('pain') || frLower.includes('lait') || frLower.includes('viande') ||
-          frLower.includes('fruit') || frLower.includes('fromage') || frLower.includes('miel')) {
-        return 'Nourriture';
-      }
-      if (frLower.includes('maison') || frLower.includes('porte') || frLower.includes('fenêtre') ||
-          frLower.includes('chambre') || frLower.includes('cuisine') || frLower.includes('table')) {
-        return 'Habitat';
-      }
-      if (frLower.includes('chat') || frLower.includes('chien') || frLower.includes('cheval') ||
-          frLower.includes('vache') || frLower.includes('mouton') || frLower.includes('oiseau')) {
-        return 'Animaux';
-      }
-      if (frLower.includes('main') || frLower.includes('tête') || frLower.includes('œil') ||
-          frLower.includes('nez') || frLower.includes('bouche') || frLower.includes('jambe')) {
-        return 'Corps humain';
-      }
-      if (frLower.includes('blanc') || frLower.includes('noir') || frLower.includes('rouge') ||
-          frLower.includes('vert') || frLower.includes('bleu') || frLower.includes('jaune')) {
-        return 'Couleurs';
-      }
-      if (frLower.includes('un') || frLower.includes('deux') || frLower.includes('trois') ||
-          frLower.includes('quatre') || frLower.includes('cinq') || frLower.includes('dix')) {
-        return 'Nombres';
-      }
-      if (frLower.includes('bonjour') || frLower.includes('merci') || frLower.includes('au revoir') ||
-          frLower.includes('oui') || frLower.includes('non') || frLower.includes('bonne')) {
-        return 'Salutations & Communication';
-      }
-      if (frLower.includes('bon') || frLower.includes('mauvais') || frLower.includes('grand') ||
-          frLower.includes('petit') || frLower.includes('beau') || frLower.includes('chaud')) {
-        return 'Qualités & Adjectifs';
-      }
-      if (frLower.includes('ici') || frLower.includes('là') || frLower.includes('dedans') ||
-          frLower.includes('dehors') || frLower.includes('devant') || frLower.includes('derrière')) {
-        return 'Lieux & Positions';
-      }
-      if (frLower.includes('maintenant') || frLower.includes('aujourd') || frLower.includes('demain') ||
-          frLower.includes('hier') || frLower.includes('jour') || frLower.includes('nuit')) {
-        return 'Temps';
-      }
+      let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1em;">';
       
-      return 'Autres';
-    }
-    function renderLexique(data) {
-      console.log('🎯 renderLexique appelée avec:', data);
-      const themes = {};
       data.forEach((row, index) => {
         const fr = row['mot francais']?.trim();
         const kab = row['traduction kabyle']?.trim();
+        
         console.log(`📝 Ligne ${index}: fr="${fr}", kab="${kab}"`);
-        if (!fr || !kab) {
-          console.log(`⚠️ Ligne ${index} ignorée: fr ou kab manquant`);
-          return;
+        
+        if (fr && kab) {
+          html += `
+            <div style="background:#fff; padding:1em; border-radius:12px; border:1px solid #7B61FF33; box-shadow:0 2px 8px rgba(123,97,255,0.1);">
+              <div style="font-weight:600; color:#333; margin-bottom:0.5em;">${fr}</div>
+              <div style="color:#7B61FF; font-size:0.95em;">${kab}</div>
+            </div>
+          `;
         }
-        const theme = detectTheme(fr);
-        console.log(`🏷️ Thème détecté pour "${fr}": ${theme}`);
-        if (!themes[theme]) themes[theme] = [];
-        // Séparer les traductions multiples
-        const traductions = kab.split('/').map(t => t.trim()).filter(t => t);
-        themes[theme].push({ fr, kab });
       });
-      console.log('🎨 Thèmes créés:', themes);
-      // Remplir dynamiquement le menu déroulant avec les thèmes détectés
-      const themeSelect = document.getElementById('theme-select');
-      themeSelect.innerHTML = '<option value="all">Tous les thèmes</option>';
-      Object.keys(themes).forEach(theme => {
-        const option = document.createElement('option');
-        option.value = theme;
-        option.textContent = theme;
-        themeSelect.appendChild(option);
-      });
-      // Affichage filtré
-      function displayLexique(selectedTheme = 'all') {
-        let html = '';
-        Object.keys(themes).forEach(theme => {
-          if (selectedTheme === 'all' || theme === selectedTheme) {
-            html += `<div class='lexique-theme'><h3>${theme}</h3><ul class='lexique-list'>`;
-            themes[theme].forEach(({fr, kab}) => {
-              html += `<li><span class='fr'>${fr}</span> <span class='kab'>${kab}</span></li>`;
-            });
-            html += '</ul></div>';
-          }
-        });
-        document.getElementById('lexique-content').innerHTML = html;
+      
+      html += '</div>';
+      
+      const container = document.getElementById('vocabulaire-content');
+      if (container) {
+        container.innerHTML = html;
+        console.log('✅ Vocabulaire affiché !');
+      } else {
+        console.error('❌ Container vocabulaire non trouvé !');
       }
-      displayLexique();
-      themeSelect.addEventListener('change', (e) => {
-        displayLexique(e.target.value);
-      });
     }
     Papa.parse('/data/320_mots_a_la_main.csv', {
       download: true,
@@ -370,7 +285,7 @@
         console.log('📊 Données CSV chargées:', data);
         console.log('📊 Nombre de lignes:', data.length);
         console.log('📊 Première ligne:', data[0]);
-        renderLexique(data);
+        afficherVocabulaire(data);
       },
       error: (error) => {
         console.error('❌ Erreur de chargement CSV:', error);
