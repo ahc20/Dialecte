@@ -284,17 +284,24 @@
       return 'Autres';
     }
     function renderLexique(data) {
+      console.log('🎯 renderLexique appelée avec:', data);
       const themes = {};
-      data.forEach(row => {
+      data.forEach((row, index) => {
         const fr = row['mot francais']?.trim();
         const kab = row['traduction kabyle']?.trim();
-        if (!fr || !kab) return;
+        console.log(`📝 Ligne ${index}: fr="${fr}", kab="${kab}"`);
+        if (!fr || !kab) {
+          console.log(`⚠️ Ligne ${index} ignorée: fr ou kab manquant`);
+          return;
+        }
         const theme = detectTheme(fr);
+        console.log(`🏷️ Thème détecté pour "${fr}": ${theme}`);
         if (!themes[theme]) themes[theme] = [];
         // Séparer les traductions multiples
         const traductions = kab.split('/').map(t => t.trim()).filter(t => t);
         themes[theme].push({ fr, kab });
       });
+      console.log('🎨 Thèmes créés:', themes);
       // Remplir dynamiquement le menu déroulant avec les thèmes détectés
       const themeSelect = document.getElementById('theme-select');
       themeSelect.innerHTML = '<option value="all">Tous les thèmes</option>';
@@ -328,7 +335,15 @@
       header: true,
       skipEmptyLines: true,
       delimiter: ';',
-      complete: ({ data }) => renderLexique(data)
+      complete: ({ data }) => {
+        console.log('📊 Données CSV chargées:', data);
+        console.log('📊 Nombre de lignes:', data.length);
+        console.log('📊 Première ligne:', data[0]);
+        renderLexique(data);
+      },
+      error: (error) => {
+        console.error('❌ Erreur de chargement CSV:', error);
+      }
     });
   </script>
   <script>
