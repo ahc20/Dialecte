@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <title>Dialect – Accueil</title>
+  <title>Dialect – Accueil</title>
   <link rel="stylesheet" href="styles/style.css" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -18,17 +19,20 @@
       padding: 2em 1.5em 1.5em 1.5em;
       text-align: center;
     }
+
     .dialect-dropdown label {
       font-size: 1.1rem;
       color: var(--text-light);
       margin-bottom: 0.7em;
       display: block;
     }
+
     .dialect-list {
       list-style: none;
       padding: 0;
       margin: 0.5em 0 0 0;
     }
+
     .dialect-list li {
       font-size: 1.15rem;
       font-weight: 600;
@@ -41,6 +45,7 @@
       color: #7B61FF;
       box-shadow: 0 1px 4px #7B61FF11;
     }
+
     .dialect-list li:not(.active) {
       filter: blur(2.2px) grayscale(0.7) brightness(1.1);
       color: #bdbdbd;
@@ -48,6 +53,7 @@
       background: #f5f3e7;
       position: relative;
     }
+
     .dialect-list li:not(.active)::after {
       content: 'Bientôt';
       position: absolute;
@@ -58,6 +64,7 @@
       color: #bfa100;
       opacity: 0.7;
     }
+
     .dialect-list li.active {
       background: linear-gradient(90deg, #b7c7a3 0%, #e6ebdf 100%);
       color: #2d3a1f;
@@ -66,6 +73,7 @@
       box-shadow: 0 2px 8px #9EB79633;
       border: 2px solid #7B61FF22;
     }
+
     .dialect-list li.active:hover {
       background: #e6ebdf;
       color: #7B61FF;
@@ -73,18 +81,19 @@
     }
   </style>
 </head>
+
 <body>
   <button class="mobile-menu-btn">Menu</button>
   <div class="mobile-menu-bg"></div>
   <nav class="mobile-menu">
     <a href="index.html">🏠 Accueil</a>
-    <a href="quiz.html">❓ Quiz</a>
-    <a href="review.html">🔁 Réviser</a>
+    <a href="review.html">🧠 Apprendre</a>
     <a href="progres.html">📈 Progrès</a>
     <a href="login.html">🔐 Connexion</a>
   </nav>
   <nav>
-    <div class="logo"><img src="images/logo.png" alt="Dialect logo" style="height:48px;vertical-align:middle;" onerror="this.style.display='none';this.parentNode.textContent='Dialect.';"></div>
+    <div class="logo"><img src="images/logo.png" alt="Dialect logo" style="height:48px;vertical-align:middle;"
+        onerror="this.style.display='none';this.parentNode.textContent='Dialect.';"></div>
     <div class="nav-links">
       <a href="index.html" class="active">Accueil</a>
     </div>
@@ -97,10 +106,12 @@
   <main>
     <section class="main-card" style="max-width:700px;">
       <h1>Reconnecte-toi à ta culture avec <span style="color:#7B61FF;">Dialect.</span></h1>
-      <p class="subtitle" style="font-size:1.25rem; margin-bottom:1.5em;">Découvre, apprends et partage les richesses de ta langue d'origine.</p>
+      <p class="subtitle" style="font-size:1.25rem; margin-bottom:1.5em;">Découvre, apprends et partage les richesses de
+        ta langue d'origine.</p>
       <p style="color:var(--text-light); font-size:1.13rem; margin-bottom:2.2em;">
-        <b>Dialect</b> est une application qui te permet de te reconnecter à ta culture à travers l'apprentissage de ton dialecte. <br>
-        
+        <b>Dialect</b> est une application qui te permet de te reconnecter à ta culture à travers l'apprentissage de ton
+        dialecte. <br>
+
         Notre mission&nbsp;: rendre chaque langue accessible, vivante et fièrement partagée.
       </p>
       <div class="dialect-dropdown">
@@ -125,8 +136,9 @@
       <p style="color:var(--text-light); font-size:1.1rem; margin-bottom:1.5em;">
         Liste de nos 320 mots français-kabyle.
       </p>
-      
-      <div id="vocabulaire-content" style="min-height:200px; padding:1em; background:#f8f9fa; border-radius:12px; border:2px dashed #7B61FF33;">
+
+      <div id="vocabulaire-content"
+        style="min-height:200px; padding:1em; background:#f8f9fa; border-radius:12px; border:2px dashed #7B61FF33;">
         <div style="text-align:center; color:var(--text-light);">
           <div style="font-size:2em; margin-bottom:0.5em;">⏳</div>
           <div>Chargement du vocabulaire...</div>
@@ -141,22 +153,22 @@
 
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="ui.js" type="module"></script>
-  
+
   <!-- Script pour le menu mobile -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       console.log('=== DÉBOGAGE MENU MOBILE ===');
-      
+
       const menuBtn = document.querySelector('.mobile-menu-btn');
       const mobileMenu = document.querySelector('.mobile-menu');
       const mobileMenuBg = document.querySelector('.mobile-menu-bg');
-      
+
       console.log('Éléments trouvés:', {
         menuBtn: menuBtn,
         mobileMenu: mobileMenu,
         mobileMenuBg: mobileMenuBg
       });
-      
+
       if (!menuBtn) {
         console.error('❌ Bouton menu non trouvé !');
         return;
@@ -169,53 +181,53 @@
         console.error('❌ Fond menu non trouvé !');
         return;
       }
-      
+
       console.log('✅ Tous les éléments trouvés');
-      
+
       // Ouvrir le menu
-      menuBtn.addEventListener('click', function(e) {
+      menuBtn.addEventListener('click', function (e) {
         console.log('🖱️ Clic sur bouton menu détecté');
         e.preventDefault();
         e.stopPropagation();
-        
+
         console.log('📋 Classes avant:', {
           menu: mobileMenu.className,
           bg: mobileMenuBg.className
         });
-        
+
         mobileMenu.classList.add('open');
         mobileMenuBg.classList.add('open');
-        
+
         console.log('📋 Classes après:', {
           menu: mobileMenu.className,
           bg: mobileMenuBg.className
         });
-        
+
         console.log('✅ Menu ouvert');
       });
-      
+
       // Fermer le menu en cliquant sur le fond
-      mobileMenuBg.addEventListener('click', function() {
+      mobileMenuBg.addEventListener('click', function () {
         console.log('🖱️ Clic sur fond détecté');
         mobileMenu.classList.remove('open');
         mobileMenuBg.classList.remove('open');
         console.log('✅ Menu fermé');
       });
-      
+
       // Fermer le menu en cliquant sur un lien
       const menuLinks = mobileMenu.querySelectorAll('a');
       menuLinks.forEach(link => {
-        link.addEventListener('click', function() {
+        link.addEventListener('click', function () {
           console.log('🖱️ Clic sur lien menu détecté');
           mobileMenu.classList.remove('open');
           mobileMenuBg.classList.remove('open');
         });
       });
-      
+
       console.log('✅ Script menu mobile initialisé');
     });
   </script>
-  
+
   <script type="module">
     console.log('🚀 Script principal chargé !');
     import { auth, logout, initAuthListener } from "./firebase.js";
@@ -243,19 +255,19 @@
     updateDueCount();
 
     console.log('📚 Script vocabulaire chargé !');
-    
+
     // Fonction simple pour afficher le vocabulaire
     function afficherVocabulaire(data) {
       console.log('🎯 afficherVocabulaire appelée avec:', data);
-      
+
       let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1em;">';
-      
+
       data.forEach((row, index) => {
         const fr = row['mot francais']?.trim();
         const kab = row['traduction kabyle']?.trim();
-        
+
         console.log(`📝 Ligne ${index}: fr="${fr}", kab="${kab}"`);
-        
+
         if (fr && kab) {
           html += `
             <div style="background:#fff; padding:1em; border-radius:12px; border:1px solid #7B61FF33; box-shadow:0 2px 8px rgba(123,97,255,0.1);">
@@ -265,9 +277,9 @@
           `;
         }
       });
-      
+
       html += '</div>';
-      
+
       const container = document.getElementById('vocabulaire-content');
       if (container) {
         container.innerHTML = html;
@@ -296,7 +308,7 @@
     });
   </script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const path = window.location.pathname.split('/').pop();
       document.querySelectorAll('.mobile-tabbar a').forEach(link => {
         if (link.getAttribute('href') === path) {
@@ -307,7 +319,7 @@
   </script>
   <script>
     // Active link dans le menu burger
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const path = window.location.pathname.split('/').pop();
       document.querySelectorAll('.burger-menu a').forEach(link => {
         if (link.getAttribute('href') === path) {
@@ -317,4 +329,5 @@
     });
   </script>
 </body>
+
 </html>

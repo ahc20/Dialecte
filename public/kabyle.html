@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,24 +10,24 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" href="images/logo.png" />
 </head>
+
 <body>
   <button class="mobile-menu-btn">Menu</button>
   <div class="mobile-menu-bg"></div>
   <nav class="mobile-menu">
     <a href="index.html">🏠 Accueil</a>
-    <a href="quiz.html">❓ Quiz</a>
-    <a href="review.html">🔁 Réviser</a>
+    <a href="review.html">🧠 Apprendre</a>
     <a href="progres.html">📈 Progrès</a>
     <a href="login.html">🔐 Connexion</a>
   </nav>
   <nav>
-    <div class="logo"><img src="images/logo.png" alt="Dialect logo" style="height:48px;vertical-align:middle;" onerror="this.style.display='none';this.parentNode.textContent='Dialect.';"></div>
+    <div class="logo"><img src="images/logo.png" alt="Dialect logo" style="height:48px;vertical-align:middle;"
+        onerror="this.style.display='none';this.parentNode.textContent='Dialect.';"></div>
     <div class="nav-links">
       <a href="index.html">Accueil</a>
-      <a href="quiz.html">Quiz</a>
-      <a href="review.html">Réviser</a>
+      <a href="review.html">Apprendre</a>
       <a href="progres.html">Progrès</a>
-      <a href="discovery.html">Découvrir</a>
+      <a href="login.html">Connexion</a>
     </div>
     <div class="nav-actions">
       <a href="login.html" class="btn btn-purple">Se connecter</a>
@@ -37,13 +38,17 @@
   <main>
     <section class="main-card" style="max-width:700px;">
       <h1>Apprends le kabyle simplement, à ton rythme</h1>
-      <p class="subtitle" style="font-size:1.18rem; margin-bottom:1.5em;">Découvre, révise et maîtrise le vocabulaire kabyle grâce à la révision intelligente.</p>
+      <p class="subtitle" style="font-size:1.18rem; margin-bottom:1.5em;">Découvre, révise et maîtrise le vocabulaire
+        kabyle grâce à la révision intelligente.</p>
       <p style="color:var(--text-light); font-size:1.13rem; margin-bottom:2.2em;">
-        <b>Dialect</b> t'accompagne pour apprendre le kabyle, que tu sois débutant ou que tu veuilles raviver tes connaissances. <br>
-        Profite d'exercices interactifs, d'un suivi de tes progrès, et d'une méthode efficace pour mémoriser durablement.<br><br>
+        <b>Dialect</b> t'accompagne pour apprendre le kabyle, que tu sois débutant ou que tu veuilles raviver tes
+        connaissances. <br>
+        Profite d'exercices interactifs, d'un suivi de tes progrès, et d'une méthode efficace pour mémoriser
+        durablement.<br><br>
         <b>Commence dès maintenant ton voyage linguistique&nbsp;!</b>
       </p>
-      <div class="cta-row" style="margin-bottom:2.2em; display:flex; justify-content:center; gap:1.2em; flex-wrap:wrap;">
+      <div class="cta-row"
+        style="margin-bottom:2.2em; display:flex; justify-content:center; gap:1.2em; flex-wrap:wrap;">
         <a href="review.html" class="btn btn-primary">Commencer</a>
         <a href="discovery.html" class="btn btn-outline">Découvrir la méthode</a>
       </div>
@@ -72,39 +77,39 @@
 
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="ui.js" type="module"></script>
-  
+
   <!-- Script pour le menu mobile -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const menuBtn = document.querySelector('.mobile-menu-btn');
       const mobileMenu = document.querySelector('.mobile-menu');
       const mobileMenuBg = document.querySelector('.mobile-menu-bg');
-      
+
       // Ouvrir le menu
-      menuBtn.addEventListener('click', function() {
+      menuBtn.addEventListener('click', function () {
         mobileMenu.classList.add('open');
         mobileMenuBg.classList.add('open');
       });
-      
+
       // Fermer le menu en cliquant sur le fond
-      mobileMenuBg.addEventListener('click', function() {
+      mobileMenuBg.addEventListener('click', function () {
         mobileMenu.classList.remove('open');
         mobileMenuBg.classList.remove('open');
       });
-      
+
       // Fermer le menu en cliquant sur un lien
       const menuLinks = mobileMenu.querySelectorAll('a');
       menuLinks.forEach(link => {
-        link.addEventListener('click', function() {
+        link.addEventListener('click', function () {
           mobileMenu.classList.remove('open');
           mobileMenuBg.classList.remove('open');
         });
       });
     });
   </script>
-  
+
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const path = window.location.pathname.split('/').pop();
       document.querySelectorAll('.mobile-tabbar a').forEach(link => {
         if (link.getAttribute('href') === path) {
@@ -120,16 +125,16 @@
 
     // Génération dynamique du lexique à partir de data/data3.csv
     const THEMES = [
-      { nom: 'Verbes', mots: ['être','venir','dire','voir','faire','manger','boire','prendre','aller','accompagner','jurer','tisser','réaliser','armer'] },
-      { nom: 'Nature', mots: ['eau','arbre','ciel','soleil','lune','terre','vent','montagne','herbe','mer','foin','boue','baie','oasis'] },
-      { nom: 'Corps humain', mots: ['main','tête','jambe','nez','bouche','œil','oreille','pied','dent','dos','cou','peau','sein','sang'] },
-      { nom: 'Animaux', mots: ['chat','bouc','hyène','âne','chien','oiseau','poisson','vache','mouton','cheval'] },
-      { nom: 'Nourriture', mots: ['pain','lait','fromage','viande','fruit','légume','miel','bière','melon','noix'] },
-      { nom: 'Maison', mots: ['maison','porte','fenêtre','chambre','lit','cuisine','table','chaise','clé'] },
-      { nom: 'Vêtements', mots: ['chemise','pantalon','robe','manteau','chapeau','chaussure','tablier'] },
-      { nom: 'Couleurs', mots: ['bleu','blanc','noir','rouge','vert','jaune','gris'] },
-      { nom: 'Famille', mots: ['père','mère','frère','soeur','fils','fille','oncle','tante','grand-mère','grand-père'] },
-      { nom: 'Objets du quotidien', mots: ['table','chaise','porte','fenêtre','lit','bol','cuir','bouteille','clé'] }
+      { nom: 'Verbes', mots: ['être', 'venir', 'dire', 'voir', 'faire', 'manger', 'boire', 'prendre', 'aller', 'accompagner', 'jurer', 'tisser', 'réaliser', 'armer'] },
+      { nom: 'Nature', mots: ['eau', 'arbre', 'ciel', 'soleil', 'lune', 'terre', 'vent', 'montagne', 'herbe', 'mer', 'foin', 'boue', 'baie', 'oasis'] },
+      { nom: 'Corps humain', mots: ['main', 'tête', 'jambe', 'nez', 'bouche', 'œil', 'oreille', 'pied', 'dent', 'dos', 'cou', 'peau', 'sein', 'sang'] },
+      { nom: 'Animaux', mots: ['chat', 'bouc', 'hyène', 'âne', 'chien', 'oiseau', 'poisson', 'vache', 'mouton', 'cheval'] },
+      { nom: 'Nourriture', mots: ['pain', 'lait', 'fromage', 'viande', 'fruit', 'légume', 'miel', 'bière', 'melon', 'noix'] },
+      { nom: 'Maison', mots: ['maison', 'porte', 'fenêtre', 'chambre', 'lit', 'cuisine', 'table', 'chaise', 'clé'] },
+      { nom: 'Vêtements', mots: ['chemise', 'pantalon', 'robe', 'manteau', 'chapeau', 'chaussure', 'tablier'] },
+      { nom: 'Couleurs', mots: ['bleu', 'blanc', 'noir', 'rouge', 'vert', 'jaune', 'gris'] },
+      { nom: 'Famille', mots: ['père', 'mère', 'frère', 'soeur', 'fils', 'fille', 'oncle', 'tante', 'grand-mère', 'grand-père'] },
+      { nom: 'Objets du quotidien', mots: ['table', 'chaise', 'porte', 'fenêtre', 'lit', 'bol', 'cuir', 'bouteille', 'clé'] }
     ];
     function detectTheme(fr) {
       for (const t of THEMES) {
@@ -166,7 +171,7 @@
         Object.keys(themes).forEach(theme => {
           if (selectedTheme === 'all' || theme === selectedTheme) {
             html += `<div class='lexique-theme'><h3>${theme}</h3><ul class='lexique-list'>`;
-            themes[theme].forEach(({fr, kab}) => {
+            themes[theme].forEach(({ fr, kab }) => {
               html += `<li><span class='fr'>${fr}</span> <span class='kab'>${kab}</span></li>`;
             });
             html += '</ul></div>';
@@ -188,4 +193,5 @@
     });
   </script>
 </body>
-</html> 
+
+</html>

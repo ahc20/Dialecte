@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,22 +10,22 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" href="images/logo.png" />
 </head>
+
 <body>
   <button class="mobile-menu-btn">Menu</button>
   <div class="mobile-menu-bg"></div>
   <nav class="mobile-menu">
     <a href="index.html">🏠 Accueil</a>
-    <a href="quiz.html">❓ Quiz</a>
-    <a href="review.html">🔁 Réviser</a>
+    <a href="review.html">🧠 Apprendre</a>
     <a href="progres.html">📈 Progrès</a>
     <a href="login.html">🔐 Connexion</a>
   </nav>
   <nav>
-    <div class="logo"><img src="images/logo.png" alt="Dialect logo" style="height:48px;vertical-align:middle;" onerror="this.style.display='none';this.parentNode.textContent='Dialect.';"></div>
+    <div class="logo"><img src="images/logo.png" alt="Dialect logo" style="height:48px;vertical-align:middle;"
+        onerror="this.style.display='none';this.parentNode.textContent='Dialect.';"></div>
     <div class="nav-links">
       <a href="index.html">Accueil</a>
-      <a href="quiz.html" class="active">Quiz</a>
-      <a href="review.html">Réviser</a>
+      <a href="review.html" class="active">Apprendre</a>
       <a href="progres.html">Progrès</a>
       <a href="login.html">Connexion</a>
     </div>
@@ -36,9 +37,11 @@
 
   <main>
     <section class="main-card" style="max-width:600px;">
+      <div style="text-align:left; margin-bottom:1em;"><a href="review.html"
+          style="color:#7B61FF; font-size:0.95rem; text-decoration:none;">← Retour aux flashcards</a></div>
       <div class="quiz-header">
         <h2>🎯 Quiz Classique</h2>
-        <p>Testez vos connaissances avec le quiz traditionnel</p>
+        <p>Teste tes connaissances avec le quiz</p>
       </div>
 
       <div class="progress-container">
@@ -69,37 +72,37 @@
 
   <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
   <script src="ui.js" type="module"></script>
-  
+
   <!-- Script pour le menu mobile -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const menuBtn = document.querySelector('.mobile-menu-btn');
       const mobileMenu = document.querySelector('.mobile-menu');
       const mobileMenuBg = document.querySelector('.mobile-menu-bg');
-      
+
       // Ouvrir le menu
-      menuBtn.addEventListener('click', function() {
+      menuBtn.addEventListener('click', function () {
         mobileMenu.classList.add('open');
         mobileMenuBg.classList.add('open');
       });
-      
+
       // Fermer le menu en cliquant sur le fond
-      mobileMenuBg.addEventListener('click', function() {
+      mobileMenuBg.addEventListener('click', function () {
         mobileMenu.classList.remove('open');
         mobileMenuBg.classList.remove('open');
       });
-      
+
       // Fermer le menu en cliquant sur un lien
       const menuLinks = mobileMenu.querySelectorAll('a');
       menuLinks.forEach(link => {
-        link.addEventListener('click', function() {
+        link.addEventListener('click', function () {
           mobileMenu.classList.remove('open');
           mobileMenuBg.classList.remove('open');
         });
       });
     });
   </script>
-  
+
   <script type="module">
     import { auth, logout, initAuthListener } from "./firebase.js";
     import { renderNavAuthButtons } from "./ui.js";
@@ -166,7 +169,7 @@
       const shuffled = [...quizData].sort(() => Math.random() - 0.5);
       const selectedData = shuffled.slice(0, questionCount);
       console.log('selectedData:', selectedData);
-      
+
       const quiz = selectedData.map(item => {
         const correctAnswer = item['Kabyle'];
         const distractors = getDistractors(correctAnswer, 3);
@@ -186,7 +189,7 @@
       const otherAnswers = quizData
         .filter(item => item['Kabyle'] !== correctAnswer)
         .map(item => item['Kabyle']);
-      
+
       const shuffled = otherAnswers.sort(() => Math.random() - 0.5);
       return shuffled.slice(0, count);
     }
@@ -200,7 +203,7 @@
 
       const question = currentQuiz[currentQuestionIndex];
       const quizContainer = document.getElementById('quiz-container');
-      
+
       quizContainer.innerHTML = `
         <div class="question-card">
           <h2 class="question-text">${question.question}</h2>
@@ -262,7 +265,7 @@
     function updateProgress() {
       const progressBar = document.getElementById('progress-bar');
       const progressText = document.getElementById('progress-text');
-      
+
       if (progressBar && progressText) {
         const progress = totalQuestions > 0 ? (currentQuestionIndex / totalQuestions) * 100 : 0;
         progressBar.style.width = `${progress}%`;
@@ -274,7 +277,7 @@
     function finishQuiz() {
       const quizContainer = document.getElementById('quiz-container');
       const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
-      
+
       quizContainer.innerHTML = `
         <div class="quiz-results">
           <h2>Quiz terminé !</h2>
@@ -335,7 +338,7 @@
       await loadQuizData();
       // Activer les boutons une fois les données chargées
       questionButtons.forEach(btn => btn.disabled = false);
-      
+
       questionButtons.forEach(button => {
         button.addEventListener('click', () => {
           const count = parseInt(button.dataset.count);
@@ -350,7 +353,7 @@
       });
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const path = window.location.pathname.split('/').pop();
       document.querySelectorAll('.mobile-tabbar a').forEach(link => {
         if (link.getAttribute('href') === path) {
@@ -360,7 +363,7 @@
     });
 
     // Active link dans le menu burger
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const path = window.location.pathname.split('/').pop();
       document.querySelectorAll('.burger-menu a').forEach(link => {
         if (link.getAttribute('href') === path) {
@@ -370,4 +373,5 @@
     });
   </script>
 </body>
+
 </html>
