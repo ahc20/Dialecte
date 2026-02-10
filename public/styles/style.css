@@ -53,6 +53,9 @@ nav {
   z-index: 10;
 }
 nav .nav-links {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   gap: 2.2rem;
   align-items: center;
@@ -261,36 +264,36 @@ footer {
   /* NOUVEAU MENU MOBILE SIMPLE */
   .mobile-menu-btn {
     position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 16px;
+    right: 16px;
     z-index: 1001;
     background: #7B61FF;
     color: white;
     border: none;
-    border-radius: 25px;
-    padding: 15px 30px;
-    font-size: 1.1rem;
+    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    font-size: 1.3rem;
     font-weight: 600;
     cursor: pointer;
     box-shadow: 0 4px 16px rgba(123, 97, 255, 0.4);
-    display: block;
-    /* Debug: s'assurer que le bouton est cliquable */
+    display: flex;
+    align-items: center;
+    justify-content: center;
     pointer-events: auto;
     user-select: none;
     -webkit-tap-highlight-color: rgba(123, 97, 255, 0.3);
-    /* Style amélioré pour le bas */
-    min-width: 120px;
     text-align: center;
   }
   
   .mobile-menu-btn:hover {
     background: #6849d6;
-    transform: translateX(-50%) scale(1.05);
+    transform: scale(1.05);
   }
   
   .mobile-menu-btn:active {
-    transform: translateX(-50%) scale(0.95);
+    transform: scale(0.95);
   }
   
   .mobile-menu {
