@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Dialect – Mes progrès</title>
-  <link rel="stylesheet" href="styles/style.css"/>
+  <link rel="stylesheet" href="styles/style.css" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" href="images/logo.png" />
 </head>
+
 <body>
   <button class="mobile-menu-btn">Menu</button>
   <div class="mobile-menu-bg"></div>
@@ -20,7 +22,8 @@
     <a href="login.html">🔐 Connexion</a>
   </nav>
   <nav>
-    <div class="logo"><img src="images/logo.png" alt="Dialect logo" style="height:48px;vertical-align:middle;" onerror="this.style.display='none';this.parentNode.textContent='Dialect.';"></div>
+    <div class="logo"><img src="images/logo.png" alt="Dialect logo" style="height:48px;vertical-align:middle;"
+        onerror="this.style.display='none';this.parentNode.textContent='Dialect.';"></div>
     <div class="nav-links">
       <a href="index.html">Accueil</a>
       <a href="quiz.html">Quiz</a>
@@ -66,13 +69,15 @@
       <h3>🎯 Quiz Classique</h3>
       <div class="score-summary">
         <div class="score-label">Taux de réussite :</div>
-        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
         <div id="progress-percent-old" class="progress-percent">0 %</div>
       </div>
     </section>
 
     <section class="card stats-section">
-      <h3>📅 Historique des révisions (SM-2)</h3>
+      <h3>📅 Historique des révisions</h3>
       <div id="history-container">
         <p>Chargement de l'historique...</p>
       </div>
@@ -84,37 +89,37 @@
   </footer>
 
   <script src="ui.js" type="module"></script>
-  
+
   <!-- Script pour le menu mobile -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const menuBtn = document.querySelector('.mobile-menu-btn');
       const mobileMenu = document.querySelector('.mobile-menu');
       const mobileMenuBg = document.querySelector('.mobile-menu-bg');
-      
+
       // Ouvrir le menu
-      menuBtn.addEventListener('click', function() {
+      menuBtn.addEventListener('click', function () {
         mobileMenu.classList.add('open');
         mobileMenuBg.classList.add('open');
       });
-      
+
       // Fermer le menu en cliquant sur le fond
-      mobileMenuBg.addEventListener('click', function() {
+      mobileMenuBg.addEventListener('click', function () {
         mobileMenu.classList.remove('open');
         mobileMenuBg.classList.remove('open');
       });
-      
+
       // Fermer le menu en cliquant sur un lien
       const menuLinks = mobileMenu.querySelectorAll('a');
       menuLinks.forEach(link => {
-        link.addEventListener('click', function() {
+        link.addEventListener('click', function () {
           mobileMenu.classList.remove('open');
           mobileMenuBg.classList.remove('open');
         });
       });
     });
   </script>
-  
+
   <script type="module">
     import { auth, logout, initAuthListener, getScore, getUserLevel } from "./firebase.js";
     import { renderNavAuthButtons } from "./ui.js";
@@ -216,24 +221,24 @@
       const w = document.getElementById('welcome');
       const u = document.getElementById('username');
       const fill = document.getElementById('progress-fill');
-      const pct  = document.getElementById('progress-percent-old');
+      const pct = document.getElementById('progress-percent-old');
       let niveauCourant = 1;
       if (user && user.displayName) {
         w.textContent = 'Bienvenue !';
         u.textContent = user.displayName;
         const { totalAnswers, correctAnswers } = await getScore(user.uid);
         const percent = totalAnswers
-          ? Math.round((correctAnswers/totalAnswers)*100)
+          ? Math.round((correctAnswers / totalAnswers) * 100)
           : 0;
-        fill.style.width = percent+'%';
-        pct.textContent  = percent+' %';
+        fill.style.width = percent + '%';
+        pct.textContent = percent + ' %';
         // Récupérer le niveau courant depuis Firebase
         niveauCourant = await getUserLevel(user.uid);
       } else {
         w.textContent = 'Bienvenue invité !';
         u.textContent = '';
         fill.style.width = '0%';
-        pct.textContent  = '0 %';
+        pct.textContent = '0 %';
       }
       // Afficher le niveau courant
       displayNiveau(niveauCourant);
@@ -242,7 +247,7 @@
     });
   </script>
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const path = window.location.pathname.split('/').pop();
       document.querySelectorAll('.mobile-tabbar a').forEach(link => {
         if (link.getAttribute('href') === path) {
@@ -253,7 +258,7 @@
   </script>
   <script>
     // Active link dans le menu burger
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const path = window.location.pathname.split('/').pop();
       document.querySelectorAll('.burger-menu a').forEach(link => {
         if (link.getAttribute('href') === path) {
@@ -263,4 +268,5 @@
     });
   </script>
 </body>
+
 </html>

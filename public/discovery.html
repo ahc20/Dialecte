@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dialect – La méthode SM-2</title>
+  <title>Dialect – Comment ça marche ?</title>
   <link rel="stylesheet" href="styles/style.css" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" href="images/logo.png" />
 </head>
+
 <body>
   <button class="mobile-menu-btn">Menu</button>
   <div class="mobile-menu-bg"></div>
@@ -20,7 +22,8 @@
     <a href="login.html">🔐 Connexion</a>
   </nav>
   <nav>
-    <div class="logo"><img src="images/logo.png" alt="Dialect logo" style="height:48px;vertical-align:middle;" onerror="this.style.display='none';this.parentNode.textContent='Dialect.';"></div>
+    <div class="logo"><img src="images/logo.png" alt="Dialect logo" style="height:48px;vertical-align:middle;"
+        onerror="this.style.display='none';this.parentNode.textContent='Dialect.';"></div>
     <div class="nav-links">
       <a href="index.html">Accueil</a>
       <a href="quiz.html">Quiz</a>
@@ -36,31 +39,37 @@
 
   <main>
     <section class="main-card" style="max-width:700px;">
-      <h1>La méthode SM-2</h1>
-      <p class="subtitle">La répétition espacée pour une mémorisation durable</p>
+      <h1>Comment ça marche ?</h1>
+      <p class="subtitle">Apprends sans effort grâce à la révision intelligente</p>
       <p style="margin-bottom:2em; color:var(--text-light); font-size:1.1rem;">
-        La méthode SM-2 est un algorithme de répétition espacée qui optimise le moment où tu dois revoir chaque mot pour le retenir à long terme.<br>
-        Plus tu réussis à te souvenir d'un mot, plus l'intervalle avant la prochaine révision s'allonge. Si tu oublies, l'intervalle raccourcit.<br><br>
-        <b>Résultat&nbsp;:</b> tu passes moins de temps à réviser ce que tu connais déjà, et tu te concentres sur ce qui est le plus utile pour toi.
+        Dialect choisit automatiquement le bon moment pour te reproposer chaque mot.<br>
+        Plus tu réussis à te souvenir d'un mot, plus l'intervalle avant la prochaine révision s'allonge. Si tu oublies,
+        l'intervalle raccourcit.<br><br>
+        <b>Résultat&nbsp;:</b> tu passes moins de temps à réviser ce que tu connais déjà, et tu te concentres sur ce qui
+        est le plus utile pour toi.
       </p>
       <p style="color:var(--text-light); font-size:1.05rem;">
-        <b>Dialect</b> utilise la méthode SM-2 pour t'aider à apprendre efficacement, sans surcharge, et à ancrer durablement le vocabulaire kabyle.
+        <b>Dialect</b> t'aide à apprendre efficacement, sans surcharge, et à ancrer durablement le vocabulaire kabyle.
       </p>
       <div style="display:flex; flex-direction:column; align-items:center; margin:2.5em 0 1.5em 0;">
-        <h2 style="font-family:Playfair Display,serif; font-size:1.3em; color:#6a5c3a; margin-bottom:0.5em;">La courbe d'Ebbinghaus</h2>
-        <svg width="340" height="200" viewBox="0 0 340 200" fill="none" xmlns="http://www.w3.org/2000/svg" style="background:#f5f3e7; border-radius:16px; box-shadow:0 2px 8px #0001;">
+        <h2 style="font-family:Playfair Display,serif; font-size:1.3em; color:#6a5c3a; margin-bottom:0.5em;">Pourquoi ça
+          marche ?</h2>
+        <svg width="340" height="200" viewBox="0 0 340 200" fill="none" xmlns="http://www.w3.org/2000/svg"
+          style="background:#f5f3e7; border-radius:16px; box-shadow:0 2px 8px #0001;">
           <!-- Axes -->
-          <line x1="40" y1="20" x2="40" y2="180" stroke="#444" stroke-width="1.5"/>
-          <line x1="40" y1="180" x2="320" y2="180" stroke="#444" stroke-width="1.5"/>
+          <line x1="40" y1="20" x2="40" y2="180" stroke="#444" stroke-width="1.5" />
+          <line x1="40" y1="180" x2="320" y2="180" stroke="#444" stroke-width="1.5" />
           <!-- Courbe normale de l'oubli -->
-          <path d="M40,40 Q80,80 100,120 Q120,150 200,170 Q260,178 320,180" stroke="#B0B0B0" stroke-width="2" fill="none" stroke-dasharray="4 3"/>
+          <path d="M40,40 Q80,80 100,120 Q120,150 200,170 Q260,178 320,180" stroke="#B0B0B0" stroke-width="2"
+            fill="none" stroke-dasharray="4 3" />
           <!-- Courbe avec rappels (effet "sauts" et maintien proche de 100%) -->
-          <polyline points="40,40 80,80 80,40 130,100 130,45 190,120 190,50 250,140 250,55 320,70" stroke="#7B61FF" stroke-width="3" fill="none"/>
+          <polyline points="40,40 80,80 80,40 130,100 130,45 190,120 190,50 250,140 250,55 320,70" stroke="#7B61FF"
+            stroke-width="3" fill="none" />
           <!-- Traits verticaux pour rappels -->
-          <line x1="80" y1="80" x2="80" y2="180" stroke="#7B61FF" stroke-width="1" stroke-dasharray="2 3"/>
-          <line x1="130" y1="100" x2="130" y2="180" stroke="#7B61FF" stroke-width="1" stroke-dasharray="2 3"/>
-          <line x1="190" y1="120" x2="190" y2="180" stroke="#7B61FF" stroke-width="1" stroke-dasharray="2 3"/>
-          <line x1="250" y1="140" x2="250" y2="180" stroke="#7B61FF" stroke-width="1" stroke-dasharray="2 3"/>
+          <line x1="80" y1="80" x2="80" y2="180" stroke="#7B61FF" stroke-width="1" stroke-dasharray="2 3" />
+          <line x1="130" y1="100" x2="130" y2="180" stroke="#7B61FF" stroke-width="1" stroke-dasharray="2 3" />
+          <line x1="190" y1="120" x2="190" y2="180" stroke="#7B61FF" stroke-width="1" stroke-dasharray="2 3" />
+          <line x1="250" y1="140" x2="250" y2="180" stroke="#7B61FF" stroke-width="1" stroke-dasharray="2 3" />
           <!-- Labels X -->
           <text x="30" y="195" font-size="12" fill="#888">0</text>
           <text x="80" y="195" font-size="12" fill="#888">10 min</text>
@@ -72,13 +81,14 @@
           <text x="5" y="45" font-size="12" fill="#888">100%</text>
           <text x="10" y="180" font-size="12" fill="#888">20%</text>
           <!-- Légende -->
-          <rect x="180" y="30" width="12" height="3" fill="#7B61FF"/>
+          <rect x="180" y="30" width="12" height="3" fill="#7B61FF" />
           <text x="200" y="36" font-size="12" fill="#7B61FF">Gain grâce au rappel</text>
-          <rect x="180" y="45" width="12" height="3" fill="#B0B0B0"/>
+          <rect x="180" y="45" width="12" height="3" fill="#B0B0B0" />
           <text x="200" y="51" font-size="12" fill="#B0B0B0">Courbe normale de l'oubli</text>
         </svg>
         <div style="max-width:340px; color:#6a5c3a; font-size:0.98em; margin-top:0.7em; text-align:center;">
-          Sans rappel, on oublie vite ce qu'on apprend (courbe grise). Grâce aux rappels espacés, la mémoire reste forte beaucoup plus longtemps (courbe violette).
+          Sans rappel, on oublie vite ce qu'on apprend (courbe grise). Grâce aux rappels espacés, la mémoire reste forte
+          beaucoup plus longtemps (courbe violette).
         </div>
       </div>
     </section>
@@ -88,39 +98,39 @@
     © 2025 Dialect
   </footer>
   <script src="ui.js" type="module"></script>
-  
+
   <!-- Script pour le menu mobile -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const menuBtn = document.querySelector('.mobile-menu-btn');
       const mobileMenu = document.querySelector('.mobile-menu');
       const mobileMenuBg = document.querySelector('.mobile-menu-bg');
-      
+
       // Ouvrir le menu
-      menuBtn.addEventListener('click', function() {
+      menuBtn.addEventListener('click', function () {
         mobileMenu.classList.add('open');
         mobileMenuBg.classList.add('open');
       });
-      
+
       // Fermer le menu en cliquant sur le fond
-      mobileMenuBg.addEventListener('click', function() {
+      mobileMenuBg.addEventListener('click', function () {
         mobileMenu.classList.remove('open');
         mobileMenuBg.classList.remove('open');
       });
-      
+
       // Fermer le menu en cliquant sur un lien
       const menuLinks = mobileMenu.querySelectorAll('a');
       menuLinks.forEach(link => {
-        link.addEventListener('click', function() {
+        link.addEventListener('click', function () {
           mobileMenu.classList.remove('open');
           mobileMenuBg.classList.remove('open');
         });
       });
     });
   </script>
-  
+
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const path = window.location.pathname.split('/').pop();
       document.querySelectorAll('.mobile-tabbar a').forEach(link => {
         if (link.getAttribute('href') === path) {
@@ -135,4 +145,5 @@
     });
   </script>
 </body>
-</html> 
+
+</html>
