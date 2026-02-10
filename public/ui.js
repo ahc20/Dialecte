@@ -1,7 +1,21 @@
 // Module de gestion des cartes avec algorithme SM-2
-import { saveUserCardsHistory, loadUserCardsHistory } from './firebase.js';
-import { auth } from './firebase.js';
-window.auth = auth;
+// Firebase imports are loaded dynamically to avoid blocking card loading
+// if the Firebase CDN is unreachable (slow network, adblocker, etc.)
+let saveUserCardsHistory = async () => {};
+let loadUserCardsHistory = async () => [];
+let auth = null;
+
+try {
+    const fb = await import('./firebase.js');
+    saveUserCardsHistory = fb.saveUserCardsHistory;
+    loadUserCardsHistory = fb.loadUserCardsHistory;
+    auth = fb.auth;
+    window.auth = auth;
+    console.log('[DEBUG] Firebase loaded successfully');
+} catch (e) {
+    console.warn('[WARN] Firebase unavailable, running in offline mode:', e.message);
+    window.auth = null;
+}
 
 class CardManager {
     constructor() {

@@ -1,4 +1,11 @@
-import { getUserLevel } from './firebase.js';
+// Dynamic import to avoid blocking if Firebase CDN is unreachable
+let getUserLevel = async () => 1;
+try {
+    const fb = await import('./firebase.js');
+    getUserLevel = fb.getUserLevel;
+} catch (e) {
+    console.warn('[WARN] Firebase unavailable in review.js, defaulting to level 1');
+}
 
 // Module pour le mode révision (algorithme SM-2)
 class ReviewMode {
@@ -55,7 +62,7 @@ class ReviewMode {
 
         const card = this.dueCards[this.currentCardIndex];
         const reviewContainer = document.getElementById('review-container');
-        
+
         reviewContainer.innerHTML = `
             <div class="flashcard-container">
                 <div class="flashcard" id="flashcard">
@@ -85,7 +92,7 @@ class ReviewMode {
         const qualityButtons = document.getElementById('quality-buttons');
 
         flashcard.addEventListener('click', () => this.flipCard());
-        
+
         qualityButtons.querySelectorAll('.quality-btn').forEach(button => {
             button.addEventListener('click', (e) => this.handleQuality(e));
         });
@@ -109,7 +116,7 @@ class ReviewMode {
         const qualityButtons = document.getElementById('quality-buttons');
 
         flashcard.classList.add('flipped');
-        
+
         // Afficher les boutons de qualité après un délai pour laisser l'animation se terminer
         setTimeout(() => {
             qualityButtons.style.display = 'flex';
@@ -156,7 +163,7 @@ class ReviewMode {
     updateProgress() {
         const progressBar = document.getElementById('progress-bar');
         const progressText = document.getElementById('progress-text');
-        
+
         if (progressBar && progressText) {
             const progress = this.dueCards.length > 0 ? (this.currentCardIndex / this.dueCards.length) * 100 : 0;
             progressBar.style.width = `${progress}%`;
@@ -231,7 +238,7 @@ class ReviewMode {
     // Afficher le message quand il n'y a pas de cartes à réviser
     showNoCardsMessage() {
         const reviewContainer = document.getElementById('review-container');
-        
+
         reviewContainer.innerHTML = `
             <div class="no-cards-message">
                 <h2>🎉 Aucune carte à réviser !</h2>
@@ -264,7 +271,7 @@ class ReviewMode {
             const nextDue = cardManager.cards
                 .filter(card => card.repetition > 0)
                 .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))[0];
-            
+
             if (nextDue) {
                 const daysUntil = Math.ceil((new Date(nextDue.dueDate) - new Date()) / (1000 * 60 * 60 * 24));
                 if (daysUntil <= 0) return "Aujourd'hui";

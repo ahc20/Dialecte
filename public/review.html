@@ -99,17 +99,45 @@
   </script>
 
   <script type="module">
-    import { auth, logout, initAuthListener } from "./firebase.js";
-    import { renderNavAuthButtons } from "./ui.js";
+    // Try to load Firebase auth, but don't let it block the review
+    try {
+      const { auth, initAuthListener } = await import("./firebase.js");
+      const { renderNavAuthButtons } = await import("./ui.js");
+      initAuthListener(user => {
+        renderNavAuthButtons(user);
+      });
+    } catch (e) {
+      console.warn('[WARN] Firebase auth unavailable, skipping nav auth buttons:', e.message);
+    }
 
-    initAuthListener(user => {
-      renderNavAuthButtons(user);
-    });
+    // Start the review — cardManager and reviewMode should be ready from ui.js and review.js
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        if (window.reviewMode) window.reviewMode.startReview();
+      });
+    } else {
+      if (window.reviewMode) window.reviewMode.startReview();
+    }
+  </script>
 
-    // Démarrer la révision au chargement de la page
-    document.addEventListener('DOMContentLoaded', () => {
-      reviewMode.startReview();
-    });
+  <!-- Safety fallback: if module scripts fail entirely (e.g. Firebase CDN blocked),
+       retry loading after a timeout using a non-module script -->
+  <script>
+    setTimeout(function () {
+      var container = document.getElementById('review-container');
+      if (container && container.querySelector('.review-loading')) {
+        console.warn('[FALLBACK] Review still loading after 5s, attempting manual start...');
+        if (window.reviewMode && window.cardManager) {
+          window.reviewMode.startReview();
+        } else {
+          // Module scripts failed completely — show error message
+          container.innerHTML = '<div class="no-cards-message"><h2>⚠️ Erreur de chargement</h2>' +
+            '<p>Impossible de charger les cartes. Vérifiez votre connexion internet.</p>' +
+            '<div class="action-buttons"><button class="btn btn-primary" onclick="location.reload()">Réessayer</button>' +
+            '<button class="btn btn-secondary" onclick="location.href=\'index.html\'">Retour à l\'accueil</button></div></div>';
+        }
+      }
+    }, 5000);
   </script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
