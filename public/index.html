@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dialect – Accueil</title>
-  <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/style.css?v=3" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" href="images/logo.png" />
@@ -13,18 +13,22 @@
     .dialect-dropdown {
       margin: 2.5em auto 1.5em auto;
       max-width: 350px;
-      background: #fff;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 18px;
-      box-shadow: 0 2px 12px #0001;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       padding: 2em 1.5em 1.5em 1.5em;
       text-align: center;
     }
 
     .dialect-dropdown label {
-      font-size: 1.1rem;
-      color: var(--text-light);
+      font-size: 1.05rem;
+      color: var(--text-secondary, rgba(241, 240, 255, 0.6));
       margin-bottom: 0.7em;
       display: block;
+      font-family: 'Outfit', sans-serif;
     }
 
     .dialect-list {
@@ -34,50 +38,50 @@
     }
 
     .dialect-list li {
-      font-size: 1.15rem;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.1rem;
       font-weight: 600;
-      padding: 0.7em 0.5em;
-      border-radius: 10px;
-      margin-bottom: 0.3em;
-      transition: background 0.18s, color 0.18s, filter 0.18s;
+      padding: 0.75em 0.7em;
+      border-radius: 12px;
+      margin-bottom: 0.4em;
+      transition: all 0.25s ease;
       cursor: pointer;
-      background: #f5f3e7;
-      color: #7B61FF;
-      box-shadow: 0 1px 4px #7B61FF11;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-secondary, rgba(241, 240, 255, 0.6));
+      border: 1px solid transparent;
     }
 
     .dialect-list li:not(.active) {
-      filter: blur(2.2px) grayscale(0.7) brightness(1.1);
-      color: #bdbdbd;
+      filter: blur(1.5px) grayscale(0.5);
+      color: rgba(241, 240, 255, 0.3);
       cursor: not-allowed;
-      background: #f5f3e7;
       position: relative;
     }
 
     .dialect-list li:not(.active)::after {
       content: 'Bientôt';
       position: absolute;
-      right: 1.2em;
+      right: 1em;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 0.95em;
-      color: #bfa100;
-      opacity: 0.7;
+      font-size: 0.85em;
+      color: var(--accent, #38D9A9);
+      opacity: 0.6;
+      filter: none;
     }
 
     .dialect-list li.active {
-      background: linear-gradient(90deg, #b7c7a3 0%, #e6ebdf 100%);
-      color: #2d3a1f;
+      background: linear-gradient(135deg, var(--primary, #7C5CFC), #9B7BFF);
+      color: #fff;
       filter: none;
       cursor: pointer;
-      box-shadow: 0 2px 8px #9EB79633;
-      border: 2px solid #7B61FF22;
+      box-shadow: 0 4px 16px rgba(124, 92, 252, 0.3);
+      border-color: transparent;
     }
 
     .dialect-list li.active:hover {
-      background: #e6ebdf;
-      color: #7B61FF;
-      border-color: #7B61FF;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(124, 92, 252, 0.4);
     }
   </style>
 </head>
@@ -92,10 +96,12 @@
     <a href="login.html">🔐 Connexion</a>
   </nav>
   <nav>
-    <div class="logo"><img src="images/logo.png" alt="Dialect logo" style="height:48px;vertical-align:middle;"
-        onerror="this.style.display='none';this.parentNode.textContent='Dialect.';"></div>
+    <a href="index.html" class="logo">Dialect</a>
     <div class="nav-links">
       <a href="index.html" class="active">Accueil</a>
+      <a href="review.html">Apprendre</a>
+      <a href="progres.html">Progrès</a>
+      <a href="login.html">Connexion</a>
     </div>
     <div class="nav-actions">
       <a href="login.html" class="btn btn-purple">Se connecter</a>
@@ -130,28 +136,13 @@
       <p style="color:#bfa100; font-size:1.05rem; margin-top:1.5em;">D'autres dialectes arrivent très bientôt&nbsp;!</p>
     </section>
 
-    <!-- Section Vocabulaire Simple -->
-    <section class="main-card" style="max-width:900px; margin-top:2em;">
-      <h2 style="color:#7B61FF; margin-bottom:1.5em;">📚 Vocabulaire Kabyle</h2>
-      <p style="color:var(--text-light); font-size:1.1rem; margin-bottom:1.5em;">
-        Liste de nos 320 mots français-kabyle.
-      </p>
-
-      <div id="vocabulaire-content"
-        style="min-height:200px; padding:1em; background:#f8f9fa; border-radius:12px; border:2px dashed #7B61FF33;">
-        <div style="text-align:center; color:var(--text-light);">
-          <div style="font-size:2em; margin-bottom:0.5em;">⏳</div>
-          <div>Chargement du vocabulaire...</div>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer>
     © 2025 Dialect
   </footer>
 
-  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+
   <script src="ui.js" type="module"></script>
 
   <!-- Script pour le menu mobile -->
@@ -254,58 +245,7 @@
     // Mettre à jour le compteur au chargement (si possible)
     updateDueCount();
 
-    console.log('📚 Script vocabulaire chargé !');
 
-    // Fonction simple pour afficher le vocabulaire
-    function afficherVocabulaire(data) {
-      console.log('🎯 afficherVocabulaire appelée avec:', data);
-
-      let html = '<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1em;">';
-
-      data.forEach((row, index) => {
-        const fr = row['mot francais']?.trim();
-        const kab = row['traduction kabyle']?.trim();
-
-        console.log(`📝 Ligne ${index}: fr="${fr}", kab="${kab}"`);
-
-        if (fr && kab) {
-          html += `
-            <div style="background:#fff; padding:1em; border-radius:12px; border:1px solid #7B61FF33; box-shadow:0 2px 8px rgba(123,97,255,0.1);">
-              <div style="font-weight:600; color:#333; margin-bottom:0.5em;">${fr}</div>
-              <div style="color:#7B61FF; font-size:0.95em;">${kab}</div>
-            </div>
-          `;
-        }
-      });
-
-      html += '</div>';
-
-      const container = document.getElementById('vocabulaire-content');
-      if (container) {
-        container.innerHTML = html;
-        console.log('✅ Vocabulaire affiché !');
-      } else {
-        console.error('❌ Container vocabulaire non trouvé !');
-      }
-    }
-    console.log('🔄 Début du chargement CSV...');
-    Papa.parse('/data/320_mots_a_la_main.csv', {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      delimiter: ';',
-      complete: ({ data }) => {
-        console.log('📊 Données CSV chargées:', data);
-        console.log('📊 Nombre de lignes:', data.length);
-        console.log('📊 Première ligne:', data[0]);
-        console.log('📊 Colonnes disponibles:', Object.keys(data[0] || {}));
-        afficherVocabulaire(data);
-      },
-      error: (error) => {
-        console.error('❌ Erreur de chargement CSV:', error);
-        console.error('❌ Détails de l\'erreur:', error.message);
-      }
-    });
   </script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {

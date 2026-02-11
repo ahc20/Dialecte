@@ -1,11 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" fill="none">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#b7c7a3"/>
-      <stop offset="60%" stop-color="#e6ebdf"/>
-      <stop offset="100%" stop-color="#f5f3e7"/>
+    <linearGradient id="g" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#7C5CFC"/>
+      <stop offset="100%" stop-color="#9B7BFF"/>
     </linearGradient>
   </defs>
-  <rect width="64" height="64" rx="14" fill="url(#bg)"/>
-  <text x="50%" y="54%" text-anchor="middle" dominant-baseline="middle" font-family="'Playfair Display', serif" font-size="38" font-weight="700" fill="#7B61FF">D</text>
-</svg> 
+  <rect width="36" height="36" rx="8" fill="url(#g)"/>
+  <text x="18" y="27" font-family="Outfit,sans-serif" font-size="24" font-weight="800" fill="white" text-anchor="middle">D</text>
+</svg>

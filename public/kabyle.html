@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dialect – Kabyle</title>
-  <link rel="stylesheet" href="styles/style.css" />
+  <link rel="stylesheet" href="styles/style.css?v=4" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="icon" type="image/png" href="images/logo.png" />
@@ -21,8 +21,7 @@
     <a href="login.html">🔐 Connexion</a>
   </nav>
   <nav>
-    <div class="logo"><img src="images/logo.png" alt="Dialect logo" style="height:48px;vertical-align:middle;"
-        onerror="this.style.display='none';this.parentNode.textContent='Dialect.';"></div>
+    <a href="index.html" class="logo">Dialect</a>
     <div class="nav-links">
       <a href="index.html">Accueil</a>
       <a href="review.html">Apprendre</a>
@@ -59,7 +58,7 @@
         <div class="feature"><span class="emoji">📈</span><br>Suivi de tes<br>progrès</div>
       </div>
     </section>
-    <section class="card" style="max-width:700px;">
+    <section class="main-card" style="max-width:1000px; width:100%;">
       <h2>Lexique thématique</h2>
       <div class="lexique-controls">
         <label for="theme-select">Filtrer par thème :</label>
@@ -184,7 +183,7 @@
         displayLexique(e.target.value);
       });
     }
-    Papa.parse('data/data3.csv', {
+    Papa.parse('data/data3.csv?v=4', {
       download: true,
       header: true,
       skipEmptyLines: true,
