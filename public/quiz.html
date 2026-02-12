@@ -328,8 +328,8 @@
       updateProgress();
     }
 
-    // Initialisation
-    document.addEventListener('DOMContentLoaded', async () => {
+    // Initialisation — module scripts run after DOM parsing, so no need for DOMContentLoaded
+    (async () => {
       const questionButtons = document.querySelectorAll('.question-count-selector button');
       // Désactiver les boutons au départ
       questionButtons.forEach(btn => btn.disabled = true);
@@ -350,26 +350,27 @@
           startQuiz(count);
         });
       });
-    });
+    })();
 
-    document.addEventListener('DOMContentLoaded', function () {
+    // Active link dans la tabbar mobile
+    {
       const path = window.location.pathname.split('/').pop();
       document.querySelectorAll('.mobile-tabbar a').forEach(link => {
         if (link.getAttribute('href') === path) {
           link.classList.add('active');
         }
       });
-    });
+    }
 
     // Active link dans le menu burger
-    document.addEventListener('DOMContentLoaded', function () {
+    {
       const path = window.location.pathname.split('/').pop();
       document.querySelectorAll('.burger-menu a').forEach(link => {
         if (link.getAttribute('href') === path) {
           link.classList.add('active');
         }
       });
-    });
+    }
   </script>
 </body>
 
