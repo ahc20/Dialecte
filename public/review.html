@@ -98,25 +98,31 @@
   </script>
 
   <script type="module">
-    // Try to load Firebase auth, but don't let it block the review
+    // Logic to ensure we only start the review once we know the auth state
+    let appStarted = false;
+    const startReviewApp = () => {
+      if (appStarted) return;
+      appStarted = true;
+      if (window.reviewMode) window.reviewMode.startReview();
+    };
+
+    // Try to load Firebase auth
     try {
       const { auth, initAuthListener } = await import("./firebase.js");
       const { renderNavAuthButtons } = await import("./ui.js");
+
       initAuthListener(user => {
         renderNavAuthButtons(user);
+        // Auth is resolved (either logged in or null), we can start
+        startReviewApp();
       });
     } catch (e) {
       console.warn('[WARN] Firebase auth unavailable, skipping nav auth buttons:', e.message);
+      startReviewApp();
     }
 
-    // Start the review — cardManager and reviewMode should be ready from ui.js and review.js
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', () => {
-        if (window.reviewMode) window.reviewMode.startReview();
-      });
-    } else {
-      if (window.reviewMode) window.reviewMode.startReview();
-    }
+    // Fallback: if Firebase takes too long (e.g. 2s), start anyway to avoid stuck screen
+    setTimeout(startReviewApp, 2000);
   </script>
 
   <!-- Safety fallback: if module scripts fail entirely (e.g. Firebase CDN blocked),
