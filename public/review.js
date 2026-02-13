@@ -44,29 +44,74 @@ class ReviewMode {
         console.log(`[DEBUG] startReview: Total cartes dues (avant filtre niveau): ${allDue.length}`);
 
         // Filtrer les cartes à réviser :
-        // - Toutes les cartes du niveau <= niveauMax
-        // - + cartes des niveaux précédents non maîtrisées (interval < 15 jours ou répétition < 3)
+        // 1. D'abord, on prend TOUTES les cartes dues, peu importe le niveau, SI elles ont déjà été apprises (repetition > 0)
+        // 2. Pour les nouvelles cartes (repetition == 0), on ne prend que celles du niveau courant ou inférieur
         const due = allDue.filter(card => {
+            if (card.repetition > 0) return true;
             if (card.niveau <= niveauMax) return true;
-            if (card.niveau < niveauMax && (card.repetition < 3 || card.interval < 15)) {
-                console.log(`[DEBUG] Inclusion carte niveau inférieur non maîtrisée: ${card.fr} (Niv ${card.niveau})`);
-                return true;
-            }
             return false;
         });
 
-        console.log(`[DEBUG] startReview: Cartes dues après filtre niveau ${niveauMax}: ${due.length}`);
+        console.log(`[DEBUG] startReview: Cartes dues après filtre niveau ${niveauMax} + Learning: ${due.length}`);
 
-        // Tri par progressivité : les cartes les moins maîtrisées en premier
-        // Score de maîtrise = repetition * 2 + interval (plus c'est bas, plus la carte a besoin de travail)
+        // Tri par progressivité
         due.sort((a, b) => {
             const scoreA = (a.repetition || 0) * 2 + (a.interval || 0);
             const scoreB = (b.repetition || 0) * 2 + (b.interval || 0);
             return scoreA - scoreB;
         });
 
-        // Limiter à DAILY_LIMIT cartes par session
-        this.dueCards = due.slice(0, DAILY_LIMIT);
+        // Sélection initiale
+        let selectedCards = due.slice(0, DAILY_LIMIT);
+
+        // --- FEATURE: STUDY AHEAD ---
+        // Si on n'a pas atteint la limite quotidienne (5 cartes), on complète avec :
+        // 1. Des cartes "futures" du niveau courant/inférieur (Révision anticipée)
+        // 2. Des nouvelles cartes du niveau courant (si disponibles et non encore dues)
+
+        if (selectedCards.length < DAILY_LIMIT) {
+            const needed = DAILY_LIMIT - selectedCards.length;
+            console.log(`[DEBUG] startReview: Complétion de la session. Manque ${needed} cartes.`);
+
+            // Trouver des candidats : cartes non dues (date future)
+            const today = new Date();
+            const candidates = cardManager.cards.filter(card => {
+                // Exclure celles déjà sélectionnées
+                if (selectedCards.some(c => c.id === card.id)) return false;
+
+                // Critère 1: Cartes apprises (rep > 0) mais pas encore dues (Review Ahead)
+                const isLearnedAndFuture = card.repetition > 0 && new Date(card.dueDate) > today;
+
+                // Critère 2: Nouvelles cartes (rep 0) du niveau courant
+                const isNewAndCurrentLevel = card.repetition === 0 && card.niveau <= niveauMax;
+
+                return isLearnedAndFuture || isNewAndCurrentLevel;
+            });
+
+            // Trier les candidats:
+            // - Priorité aux cartes apprises (pour renforcer) -> tri par date (les plus proches)
+            // - Ensuite nouvelles cartes -> tri par niveau puis index
+            candidates.sort((a, b) => {
+                const aLearned = a.repetition > 0;
+                const bLearned = b.repetition > 0;
+
+                if (aLearned && !bLearned) return -1;
+                if (!aLearned && bLearned) return 1;
+
+                if (aLearned && bLearned) {
+                    return new Date(a.dueDate) - new Date(b.dueDate);
+                }
+
+                // Si les deux sont nouvelles
+                return a.niveau - b.niveau;
+            });
+
+            const fill = candidates.slice(0, needed);
+            console.log(`[DEBUG] startReview: Ajout de ${fill.length} cartes de remplissage`, fill.map(c => c.fr));
+            selectedCards = selectedCards.concat(fill);
+        }
+
+        this.dueCards = selectedCards;
         console.log(`[DEBUG] startReview: Sélection finale pour la session (${this.dueCards.length} cartes sur limite ${DAILY_LIMIT})`);
 
         // Mélanger pour varier l'ordre tout en gardant la priorité aux cartes faibles
