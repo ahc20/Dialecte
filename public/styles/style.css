@@ -1898,7 +1898,7 @@ footer {
 
 .btn-large-cta:hover {
   transform: scale(1.05);
-  box-shadow: 0 8px 30px rgba(124, 92, 252, 0.6);
+  box-shadow: 0 8px 30px rgba(0, 200, 83, 0.6);
 }
 
 /* Mobile Adjustments */
