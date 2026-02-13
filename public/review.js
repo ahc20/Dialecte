@@ -97,8 +97,9 @@ class ReviewMode {
                 const aLearned = a.repetition > 0;
                 const bLearned = b.repetition > 0;
 
-                if (aLearned && !bLearned) return -1;
-                if (!aLearned && bLearned) return 1;
+                // Inversion de logique : on veut voir les nouvelles cartes AVANT de réviser celles du futur
+                if (aLearned && !bLearned) return 1;
+                if (!aLearned && bLearned) return -1;
 
                 if (aLearned && bLearned) {
                     return new Date(a.dueDate) - new Date(b.dueDate);
