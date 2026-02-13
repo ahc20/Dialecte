@@ -59,7 +59,8 @@
         alert('Connexion réussie !');
         window.location.href = 'progres.html';
       } catch (err) {
-        alert('Erreur connexion : ' + err.message);
+        console.error('[Login Error]', err);
+        alert(`Erreur connexion (${err.code || 'unknown'}): ${err.message}`);
       }
     });
   </script>

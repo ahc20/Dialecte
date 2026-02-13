@@ -6,7 +6,9 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   onAuthStateChanged,
-  signOut
+  signOut,
+  setPersistence,
+  browserLocalPersistence
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 import {
   getFirestore,
@@ -30,8 +32,11 @@ const initFirebase = async () => {
 
     app = initializeApp(config);
     auth = getAuth(app);
+    // Force persistence for Safari/Mobile inconsistencies
+    await setPersistence(auth, browserLocalPersistence);
+
     db = getFirestore(app);
-    console.log('[Firebase] Initialized securely');
+    console.log('[Firebase] Initialized securely with persistence');
   } catch (e) {
     console.error('[Firebase] Init failed:', e);
   }
