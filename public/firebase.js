@@ -26,7 +26,14 @@ export let db;   // Export mutable let
 
 const initFirebase = async () => {
   try {
-    const res = await fetch('/api/config');
+    const controller = new AbortController();
+    // 8 second timeout to prevent hanging on Safari
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+    const res = await fetch('/api/config', { signal: controller.signal });
+    clearTimeout(timeoutId);
+
+    if (!res.ok) throw new Error(`HTTP Error ${res.status}`);
     const config = await res.json();
     if (!config.apiKey) throw new Error('No API Key found');
 
@@ -42,10 +49,13 @@ const initFirebase = async () => {
   }
 };
 
+// Capture promise to await it in exports
+const initPromise = initFirebase();
+
 // Start init immediately but export promises/functions needs care
 // Since this is an ES module, top-level await is supported in modern browsers
 try {
-  await initFirebase();
+  await initPromise;
 } catch (e) {
   console.error('[Firebase] Top-level await failed:', e);
 }
@@ -73,6 +83,13 @@ export async function signup(firstName, email, password) {
 
 // 3) Connexion
 export async function login(email, password) {
+  try {
+    await initPromise;
+  } catch (e) {
+    throw new Error("Initialisation Firebase échouée. Vérifiez votre connexion.");
+  }
+
+  if (!auth) throw new Error("Service d'authentification indisponible.");
   const { user } = await signInWithEmailAndPassword(auth, email, password);
   return user;
 }
