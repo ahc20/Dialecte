@@ -1,7 +1,7 @@
 // Module de gestion des cartes avec algorithme SM-2
 // Firebase imports are loaded dynamically to avoid blocking card loading
 // if the Firebase CDN is unreachable (slow network, adblocker, etc.)
-let saveUserCardsHistory = async () => {};
+let saveUserCardsHistory = async () => { };
 let loadUserCardsHistory = async () => [];
 let auth = null;
 
@@ -126,7 +126,7 @@ class CardManager {
             }
             console.log('[DEBUG] Après fusion cloud, cartes:', this.cards.length, this.cards.slice(0, 3));
             this.isInitialized = true;
-            
+
             console.log(`Chargé ${this.cards.length} cartes`);
             return this.cards;
         } catch (error) {
@@ -138,7 +138,7 @@ class CardManager {
 
     // Générer un UUID
     generateUUID() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             const r = Math.random() * 16 | 0;
             const v = c == 'x' ? r : (r & 0x3 | 0x8);
             return v.toString(16);
@@ -230,7 +230,7 @@ class CardManager {
         const sampler = this.cards.flatMap(card => Array(card.frequency).fill(card.id));
         const shuffled = this.shuffle([...sampler]);
         const selectedIds = shuffled.slice(0, count);
-        
+
         return selectedIds.map(id => this.cards.find(card => card.id === id)).filter(Boolean);
     }
 
@@ -251,23 +251,43 @@ class CardManager {
         // Log pour vérifier l'historique après ajout
         console.log('[DEBUG] processReview: historique après ajout pour', realCard.fr, realCard.history);
 
-        // SM-2 strict (comme Anki)
+        // SM-2 strict (comme Anki) adapté pour 3 choix : 1 (Difficile), 3 (Moyen), 5 (Facile)
         if (quality < 3) {
+            // Difficult (1) : Reset
             realCard.repetition = 0;
             realCard.interval = 1;
         } else {
+            // Medium (3) or Easy (5)
             if (realCard.repetition === 0) {
                 realCard.interval = 1;
             } else if (realCard.repetition === 1) {
-                realCard.interval = 6;
+                // Deuxième répétition : 3 jours si Moyen, 6 jours si Facile
+                realCard.interval = (quality === 3) ? 3 : 6;
             } else {
-                realCard.interval = Math.round(realCard.interval * realCard.easeFactor);
+                // Croissance exponentielle
+                let factor = realCard.easeFactor;
+                // Si "Moyen", on réduit légèrement le facteur pour ralentir la progression
+                if (quality === 3) {
+                    factor = Math.max(1.3, factor - 0.15);
+                }
+                realCard.interval = Math.round(realCard.interval * factor);
             }
             realCard.repetition++;
         }
-        // Mise à jour du easeFactor
-        realCard.easeFactor = realCard.easeFactor || 2.5;
-        realCard.easeFactor = realCard.easeFactor + (0.1 - (5 - quality) * (0.08 + (quality === 3 ? 0.02 : 0)));
+
+        // Mise à jour du easeFactor (standard SM-2)
+        // EF' = EF + (0.1 - (5-q)*(0.08+(5-q)*0.02))
+        // q=5 -> EF' = EF + 0.1
+        // q=3 -> EF' = EF - 0.14
+        // q=1 -> EF' = EF - 0.54 (mais ici traitée à part via le reset si < 3)
+        // On garde la formule standard pour l'ajustement global
+        if (quality >= 3) {
+            realCard.easeFactor = realCard.easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+        } else {
+            // Si échec, on pénalise un peu le facteur pour que les futures révisions soient plus fréquentes
+            realCard.easeFactor = Math.max(1.3, realCard.easeFactor - 0.2);
+        }
+
         if (realCard.easeFactor < 1.3) realCard.easeFactor = 1.3;
 
         realCard.dueDate = this.addDays(today, realCard.interval);
@@ -278,7 +298,7 @@ class CardManager {
     // Initialiser une carte pour le mode découverte
     async initializeCard(card, quality) {
         const today = new Date();
-        
+
         card.repetition = 1;
         card.easeFactor = 2.5;
         card.interval = 1;
@@ -287,7 +307,7 @@ class CardManager {
             date: today.toISOString(),
             quality: quality
         });
-        
+
         await this.saveCard(card);
         return card;
     }
@@ -320,7 +340,7 @@ class CardManager {
         const totalCards = this.cards.length;
         const dueCards = this.getDueCards().length;
         const learnedCards = this.cards.filter(card => card.repetition > 0).length;
-        console.log('[DEBUG] getStats: repetition de toutes les cartes', this.cards.map(c => ({fr: c.fr, repetition: c.repetition, history: c.history})));
+        console.log('[DEBUG] getStats: repetition de toutes les cartes', this.cards.map(c => ({ fr: c.fr, repetition: c.repetition, history: c.history })));
         return {
             total: totalCards,
             due: dueCards,
@@ -338,63 +358,63 @@ window.cardManager = cardManager;
 
 // Affichage dynamique des boutons d'authentification dans la nav
 export function renderNavAuthButtons(user) {
-  const navActions = document.querySelector('.nav-actions');
-  if (navActions) {
-    navActions.innerHTML = '';
-    if (user) {
-      // Si connecté : bouton Se déconnecter (gris)
-      const logoutBtn = document.createElement('button');
-      logoutBtn.textContent = 'Se déconnecter';
-      logoutBtn.className = 'btn btn-logout';
-      logoutBtn.onclick = async () => {
-        await import('./firebase.js').then(mod => mod.logout());
-        location.reload();
-      };
-      navActions.appendChild(logoutBtn);
-    } else {
-      // Si déconnecté : bouton Se connecter (violet) + S'inscrire (outline jaune)
-      const login = document.createElement('a');
-      login.href = 'login.html';
-      login.textContent = 'Se connecter';
-      login.className = 'btn btn-purple';
-      navActions.appendChild(login);
-      const signup = document.createElement('a');
-      signup.href = 'signup.html';
-      signup.textContent = "S'inscrire";
-      signup.className = 'btn btn-yellow';
-      navActions.appendChild(signup);
+    const navActions = document.querySelector('.nav-actions');
+    if (navActions) {
+        navActions.innerHTML = '';
+        if (user) {
+            // Si connecté : bouton Se déconnecter (gris)
+            const logoutBtn = document.createElement('button');
+            logoutBtn.textContent = 'Se déconnecter';
+            logoutBtn.className = 'btn btn-logout';
+            logoutBtn.onclick = async () => {
+                await import('./firebase.js').then(mod => mod.logout());
+                location.reload();
+            };
+            navActions.appendChild(logoutBtn);
+        } else {
+            // Si déconnecté : bouton Se connecter (violet) + S'inscrire (outline jaune)
+            const login = document.createElement('a');
+            login.href = 'login.html';
+            login.textContent = 'Se connecter';
+            login.className = 'btn btn-purple';
+            navActions.appendChild(login);
+            const signup = document.createElement('a');
+            signup.href = 'signup.html';
+            signup.textContent = "S'inscrire";
+            signup.className = 'btn btn-yellow';
+            navActions.appendChild(signup);
+        }
     }
-  }
-  // Mise à jour dynamique de l'onglet Connexion/Déconnexion dans la nav principale
-  const navLinks = document.querySelector('.nav-links');
-  if (navLinks) {
-    const links = navLinks.querySelectorAll('a');
-    let loginLink = null;
-    links.forEach(link => {
-      if (link.textContent.trim() === 'Connexion' || link.textContent.trim() === 'Déconnexion') {
-        loginLink = link;
-      }
-    });
-    if (user) {
-      // Remplacer Connexion par Déconnexion
-      if (loginLink) {
-        loginLink.textContent = 'Déconnexion';
-        loginLink.className = 'btn btn-logout';
-        loginLink.href = '#';
-        loginLink.onclick = async (e) => {
-          e.preventDefault();
-          await import('./firebase.js').then(mod => mod.logout());
-          location.reload();
-        };
-      }
-    } else {
-      // Remettre Connexion
-      if (loginLink) {
-        loginLink.textContent = 'Connexion';
-        loginLink.className = '';
-        loginLink.href = 'login.html';
-        loginLink.onclick = null;
-      }
+    // Mise à jour dynamique de l'onglet Connexion/Déconnexion dans la nav principale
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks) {
+        const links = navLinks.querySelectorAll('a');
+        let loginLink = null;
+        links.forEach(link => {
+            if (link.textContent.trim() === 'Connexion' || link.textContent.trim() === 'Déconnexion') {
+                loginLink = link;
+            }
+        });
+        if (user) {
+            // Remplacer Connexion par Déconnexion
+            if (loginLink) {
+                loginLink.textContent = 'Déconnexion';
+                loginLink.className = 'btn btn-logout';
+                loginLink.href = '#';
+                loginLink.onclick = async (e) => {
+                    e.preventDefault();
+                    await import('./firebase.js').then(mod => mod.logout());
+                    location.reload();
+                };
+            }
+        } else {
+            // Remettre Connexion
+            if (loginLink) {
+                loginLink.textContent = 'Connexion';
+                loginLink.className = '';
+                loginLink.href = 'login.html';
+                loginLink.onclick = null;
+            }
+        }
     }
-  }
 } 

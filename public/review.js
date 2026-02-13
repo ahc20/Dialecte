@@ -26,7 +26,7 @@ class ReviewMode {
             niveauMax = await getUserLevel(window.auth.currentUser.uid);
         }
         this.niveauMax = niveauMax;
-        const DAILY_LIMIT = 7;
+        const DAILY_LIMIT = 5;
         // Filtrer les cartes à réviser :
         // - Toutes les cartes du niveau <= niveauMax
         // - + cartes des niveaux précédents non maîtrisées (interval < 15 jours ou répétition < 3)
