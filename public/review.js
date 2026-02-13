@@ -55,7 +55,7 @@ class ReviewMode {
         }
 
         this.niveauMax = niveauMax;
-        const DAILY_LIMIT = 5;
+        const DAILY_LIMIT = 10; // Augmenté de 5 à 10 pour plus de variété
 
         // Obtenir toutes les cartes dues
         const allDue = cardManager.getDueCards();
@@ -63,14 +63,15 @@ class ReviewMode {
 
         // Filtrer les cartes à réviser :
         // 1. D'abord, on prend TOUTES les cartes dues, peu importe le niveau, SI elles ont déjà été apprises (repetition > 0)
-        // 2. Pour les nouvelles cartes (repetition == 0), on ne prend que celles du niveau courant ou inférieur
+        // 2. Pour les nouvelles cartes (repetition == 0), on prend celles du niveau courant + les 2 niveaux suivants
+        // Cela permet de découvrir plus de mots sans être bloqué sur un petit niveau initial (ex: Level 1 has only 16 words)
         const due = allDue.filter(card => {
             if (card.repetition > 0) return true;
-            if (card.niveau <= niveauMax) return true;
+            if (card.niveau <= niveauMax + 2) return true;
             return false;
         });
 
-        console.log(`[DEBUG] startReview: Cartes dues après filtre niveau ${niveauMax} + Learning: ${due.length}`);
+        console.log(`[DEBUG] startReview: Cartes disponibles (Niveau ${niveauMax}..${niveauMax + 2}): ${due.length}`);
 
         // Tri par progressivité
         due.sort((a, b) => {
@@ -83,9 +84,9 @@ class ReviewMode {
         let selectedCards = due.slice(0, DAILY_LIMIT);
 
         // --- FEATURE: STUDY AHEAD ---
-        // Si on n'a pas atteint la limite quotidienne (5 cartes), on complète avec :
+        // Si on n'a pas atteint la limite quotidienne (10 cartes), on complète avec :
         // 1. Des cartes "futures" du niveau courant/inférieur (Révision anticipée)
-        // 2. Des nouvelles cartes du niveau courant (si disponibles et non encore dues)
+        // 2. Des nouvelles cartes du niveau courant + 2 (si disponibles et non encore dues)
 
         if (selectedCards.length < DAILY_LIMIT) {
             const needed = DAILY_LIMIT - selectedCards.length;
@@ -100,10 +101,10 @@ class ReviewMode {
                 // Critère 1: Cartes apprises (rep > 0) mais pas encore dues (Review Ahead)
                 const isLearnedAndFuture = card.repetition > 0 && new Date(card.dueDate) > today;
 
-                // Critère 2: Nouvelles cartes (rep 0) du niveau courant
-                const isNewAndCurrentLevel = card.repetition === 0 && card.niveau <= niveauMax;
+                // Critère 2: Nouvelles cartes (rep 0) des 3 premiers niveaux accessibles
+                const isNewAndAccessible = card.repetition === 0 && card.niveau <= niveauMax + 2;
 
-                return isLearnedAndFuture || isNewAndCurrentLevel;
+                return isLearnedAndFuture || isNewAndAccessible;
             });
 
             // Randomisation des candidats pour éviter de toujours voir les mêmes mots (alphabétique)

@@ -119,10 +119,17 @@ class CardManager {
                             // Tri par date croissante
                             allHist.sort((a, b) => new Date(a.date) - new Date(b.date));
                             localCard.history = allHist;
-                            localCard.repetition = allHist.length;
+                            // localCard.repetition = allHist.length; // This line is removed as per instruction
                             if (allHist.length > 0) {
                                 const last = allHist[allHist.length - 1];
-                                localCard.repetition = allHist.length;
+
+                                // Si l'historique contient les métadonnées (fix récent), on les utilise
+                                if (last.repetition !== undefined) {
+                                    localCard.repetition = last.repetition;
+                                } else {
+                                    // Fallback historique : on compte les révisions réussies (quality >= 3)
+                                    localCard.repetition = allHist.filter(h => h.quality >= 3).length;
+                                }
 
                                 // Si l'historique contient les métadonnées (fix récent), on les utilise
                                 if (last.interval !== undefined && last.dueDate !== undefined) {
@@ -365,13 +372,15 @@ class CardManager {
         card.easeFactor = 2.5;
         card.interval = 1;
         card.dueDate = this.addDays(today, 1);
+        // Ajouter à l'historique
+        if (!card.history) card.history = [];
         card.history.push({
-            date: today.toISOString(),
+            date: new Date().toISOString(),
             quality: quality,
             interval: card.interval,
             easeFactor: card.easeFactor,
             dueDate: card.dueDate.toISOString(),
-            repetition: card.repetition
+            repetition: card.repetition // Ajouté pour garantir une récupération exacte
         });
 
         await this.saveCard(card);
