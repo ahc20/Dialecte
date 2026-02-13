@@ -243,14 +243,6 @@ class CardManager {
             console.error('[DEBUG] Carte non trouvée dans cardManager.cards pour la révision !', card);
             return;
         }
-        // Ajouter à l'historique
-        realCard.history.push({
-            date: today.toISOString(),
-            quality: quality
-        });
-        // Log pour vérifier l'historique après ajout
-        console.log('[DEBUG] processReview: historique après ajout pour', realCard.fr, realCard.history);
-
         // SM-2 strict (comme Anki) adapté pour 3 choix : 1 (Difficile), 3 (Moyen), 5 (Facile)
         if (quality < 3) {
             // Difficult (1) : Reset
@@ -276,21 +268,29 @@ class CardManager {
         }
 
         // Mise à jour du easeFactor (standard SM-2)
-        // EF' = EF + (0.1 - (5-q)*(0.08+(5-q)*0.02))
-        // q=5 -> EF' = EF + 0.1
-        // q=3 -> EF' = EF - 0.14
-        // q=1 -> EF' = EF - 0.54 (mais ici traitée à part via le reset si < 3)
-        // On garde la formule standard pour l'ajustement global
         if (quality >= 3) {
             realCard.easeFactor = realCard.easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
         } else {
-            // Si échec, on pénalise un peu le facteur pour que les futures révisions soient plus fréquentes
             realCard.easeFactor = Math.max(1.3, realCard.easeFactor - 0.2);
         }
 
         if (realCard.easeFactor < 1.3) realCard.easeFactor = 1.3;
 
         realCard.dueDate = this.addDays(today, realCard.interval);
+
+        // Ajouter à l'historique AVEC l'état calculé (pour la reconstruction au chargement)
+        realCard.history.push({
+            date: today.toISOString(),
+            quality: quality,
+            interval: realCard.interval,
+            easeFactor: realCard.easeFactor,
+            dueDate: realCard.dueDate.toISOString(),
+            repetition: realCard.repetition
+        });
+
+        // Log pour vérifier l'historique après ajout
+        console.log('[DEBUG] processReview: historique après ajout pour', realCard.fr, realCard.history);
+
         await this.saveCard(realCard);
         return realCard;
     }
@@ -305,7 +305,11 @@ class CardManager {
         card.dueDate = this.addDays(today, 1);
         card.history.push({
             date: today.toISOString(),
-            quality: quality
+            quality: quality,
+            interval: card.interval,
+            easeFactor: card.easeFactor,
+            dueDate: card.dueDate.toISOString(),
+            repetition: card.repetition
         });
 
         await this.saveCard(card);
