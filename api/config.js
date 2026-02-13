@@ -1,5 +1,5 @@
-
-export default function handler(req, res) {
+// using CommonJS for compatibility without package.json
+module.exports = function (req, res) {
     // SECURITY: Restrict access to your own domain?
     // Start with '*' for development, lock down to your Vercel URL later.
     res.setHeader('Access-Control-Allow-Origin', '*');
