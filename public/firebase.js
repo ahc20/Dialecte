@@ -52,13 +52,8 @@ const initFirebase = async () => {
 // Capture promise to await it in exports
 const initPromise = initFirebase();
 
-// Start init immediately but export promises/functions needs care
-// Since this is an ES module, top-level await is supported in modern browsers
-try {
-  await initPromise;
-} catch (e) {
-  console.error('[Firebase] Top-level await failed:', e);
-}
+// REMOVED Top-level await to avoid Safari compatibility issues
+// The export 'login', 'signup' etc will await initPromise internally.
 
 // Exports are now handled inside initFirebase (reassigned)
 
