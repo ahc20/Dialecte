@@ -83,6 +83,11 @@ class CardManager {
             if (!this.cards || this.cards.length === 0) {
                 alert("Aucune carte n'a été chargée depuis le CSV. Vérifiez le fichier data3_niveaux.csv !");
             }
+
+            // CHARGEMENT LOCAL PRIMORDIAL : On récupère d'abord l'état local pour ne rien perdre
+            await this.loadSavedData();
+            console.log('[DEBUG] loadCards: Données locales fusionnées.');
+
             // Chargement cloud prioritaire si connecté
             const auth = getAuth();
             const currentUid = uid || (auth && auth.currentUser ? auth.currentUser.uid : null);
