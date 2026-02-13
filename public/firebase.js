@@ -17,18 +17,31 @@ import {
   increment
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCI5yQhUVJKKktWCG2svsxx4RaiCTHBahc",
-  authDomain: "dialecte-e23ae.firebaseapp.com",
-  projectId: "dialecte-e23ae",
-  storageBucket: "dialecte-e23ae.appspot.com",
-  messagingSenderId: "455539698432",
-  appId: "G-2RCV5ZR5WN"
+// Fetch config from secure endpoint
+let app;
+export let auth; // Export mutable let
+export let db;   // Export mutable let
+
+const initFirebase = async () => {
+  try {
+    const res = await fetch('/api/config');
+    const config = await res.json();
+    if (!config.apiKey) throw new Error('No API Key found');
+
+    app = initializeApp(config);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    console.log('[Firebase] Initialized securely');
+  } catch (e) {
+    console.error('[Firebase] Init failed:', e);
+  }
 };
 
-initializeApp(firebaseConfig);
-export const auth = getAuth();
-export const db = getFirestore();
+// Start init immediately but export promises/functions needs care
+// Since this is an ES module, top-level await is supported in modern browsers
+await initFirebase();
+
+// Exports are now handled inside initFirebase (reassigned)
 
 // 1) Écoute la session
 export function initAuthListener(cb) {
