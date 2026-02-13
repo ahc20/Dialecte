@@ -17,17 +17,14 @@ import {
   increment
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-let firebaseConfig;
-
-try {
-  const response = await fetch('/api/config');
-  if (!response.ok) throw new Error('Failed to load Firebase config');
-  firebaseConfig = await response.json();
-} catch (error) {
-  console.error('Error loading Firebase config:', error);
-  // Fallback or empty config to prevent crash, but Auth/Firestore won't work
-  firebaseConfig = {};
-}
+const firebaseConfig = {
+  apiKey: "AIzaSyCI5yQhUVJKKktWCG2svsxx4RaiCTHBahc",
+  authDomain: "dialecte-e23ae.firebaseapp.com",
+  projectId: "dialecte-e23ae",
+  storageBucket: "dialecte-e23ae.appspot.com",
+  messagingSenderId: "455539698432",
+  appId: "G-2RCV5ZR5WN"
+};
 
 initializeApp(firebaseConfig);
 export const auth = getAuth();
