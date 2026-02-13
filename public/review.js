@@ -16,18 +16,20 @@ class ReviewMode {
     }
 
     // Initialiser la session de révision
-    async startReview() {
+    async startReview(user = null) {
+        this.user = user || (window.auth ? window.auth.currentUser : null);
+
         console.log('[DEBUG] startReview: Début de l\'initialisation');
         if (!cardManager.isInitialized) {
             console.log('[DEBUG] startReview: Chargement des cartes...');
-            await cardManager.loadCards();
+            await cardManager.loadCards(this.user ? this.user.uid : null);
         }
 
         // Récupérer le niveau courant de l'utilisateur connecté
         let niveauMax = 1;
-        if (window.auth && window.auth.currentUser) {
+        if (this.user) {
             try {
-                niveauMax = await getUserLevel(window.auth.currentUser.uid);
+                niveauMax = await getUserLevel(this.user.uid);
                 console.log('[DEBUG] startReview: Niveau utilisateur récupéré:', niveauMax);
             } catch (e) {
                 console.error('[ERROR] startReview: Erreur récupération niveau', e);
@@ -256,7 +258,8 @@ class ReviewMode {
         // Vérifier si le niveau courant est maîtrisé (80% de cartes du niveau courant avec répétition >= 3 ou interval >= 15)
         let badgeUnlocked = false;
         let nextLevel = this.niveauMax;
-        if (window.auth && window.auth.currentUser) {
+
+        if (this.user) {
             const niveau = this.niveauMax;
             // Récupérer toutes les cartes du niveau courant
             const cardsNiveau = cardManager.cards.filter(c => c.niveau === niveau);
@@ -266,7 +269,7 @@ class ReviewMode {
             if (percent >= 0.8 && niveau < 20) {
                 // Débloquer le niveau suivant
                 nextLevel = niveau + 1;
-                await setUserLevel(window.auth.currentUser.uid, nextLevel);
+                await setUserLevel(this.user.uid, nextLevel);
                 badgeUnlocked = true;
             }
         }

@@ -171,7 +171,7 @@
           document.getElementById('next-level').textContent = level + 1;
 
           // Charger les stats via cardManager
-          await updateDashboard(level);
+          await updateDashboard(level, user.uid);
 
           actionArea.style.display = 'block';
         } catch (error) {
@@ -187,8 +187,8 @@
       }
     });
 
-    async function updateDashboard(level) {
-      await cardManager.loadCards();
+    async function updateDashboard(level, uid) {
+      await cardManager.loadCards(uid);
       const stats = cardManager.getStats(); // Utilise la nouvelle méthode avec streak
 
       // 1. Cercle de progression

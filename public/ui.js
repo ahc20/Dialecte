@@ -1,20 +1,23 @@
 // Module de gestion des cartes avec algorithme SM-2
 // Firebase imports are loaded dynamically to avoid blocking card loading
 // if the Firebase CDN is unreachable (slow network, adblocker, etc.)
+let fb = null;
 let saveUserCardsHistory = async () => { };
 let loadUserCardsHistory = async () => [];
-let auth = null;
 
 try {
-    const fb = await import('./firebase.js');
+    fb = await import('./firebase.js');
     saveUserCardsHistory = fb.saveUserCardsHistory;
     loadUserCardsHistory = fb.loadUserCardsHistory;
-    auth = fb.auth;
-    window.auth = auth;
+    // Do not capture auth here, it might be undefined. Access via fb.auth later.
     console.log('[DEBUG] Firebase loaded successfully');
 } catch (e) {
     console.warn('[WARN] Firebase unavailable, running in offline mode:', e.message);
-    window.auth = null;
+}
+
+// Helper to get current auth safely
+function getAuth() {
+    return fb ? fb.auth : null;
 }
 
 class CardManager {
@@ -24,7 +27,7 @@ class CardManager {
     }
 
     // Initialiser les cartes depuis le CSV
-    async loadCards() {
+    async loadCards(uid = null) {
         try {
             const response = await fetch('/data/data3_niveaux.csv');
             if (!response.ok) {
@@ -81,8 +84,12 @@ class CardManager {
                 alert("Aucune carte n'a été chargée depuis le CSV. Vérifiez le fichier data3_niveaux.csv !");
             }
             // Chargement cloud prioritaire si connecté
-            if (window.auth && window.auth.currentUser) {
-                const uid = window.auth.currentUser.uid;
+            const auth = getAuth();
+            const currentUid = uid || (auth && auth.currentUser ? auth.currentUser.uid : null);
+
+            if (currentUid) {
+                console.log(`[DEBUG] loadCards: Chargement pour UID ${currentUid}`);
+                const uid = currentUid; // Shadowing variable name for consistency with existing code
                 const cloudHistory = await loadUserCardsHistory(uid);
                 console.log('[DEBUG] Historique cloud chargé:', cloudHistory);
                 // Si cloud vide mais local non vide, on pousse le local sur Firebase
@@ -173,8 +180,9 @@ class CardManager {
             this.cards[index] = { ...card };
             await this.saveToStorage();
             // Sauvegarde cloud systématique
-            if (window.auth && window.auth.currentUser) {
-                const uid = window.auth.currentUser.uid;
+            const auth = getAuth();
+            if (auth && auth.currentUser) {
+                const uid = auth.currentUser.uid;
                 // Charger l'historique cloud avant sauvegarde
                 const cloudHistory = await loadUserCardsHistory(uid);
                 if (cloudHistory && cloudHistory.length > 0) {

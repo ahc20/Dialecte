@@ -100,10 +100,10 @@
   <script type="module">
     // Logic to ensure we only start the review once we know the auth state
     let appStarted = false;
-    const startReviewApp = () => {
+    const startReviewApp = (user = null) => {
       if (appStarted) return;
       appStarted = true;
-      if (window.reviewMode) window.reviewMode.startReview();
+      if (window.reviewMode) window.reviewMode.startReview(user);
     };
 
     // Try to load Firebase auth
@@ -114,7 +114,7 @@
       initAuthListener(user => {
         renderNavAuthButtons(user);
         // Auth is resolved (either logged in or null), we can start
-        startReviewApp();
+        startReviewApp(user);
       });
     } catch (e) {
       console.warn('[WARN] Firebase auth unavailable, skipping nav auth buttons:', e.message);
