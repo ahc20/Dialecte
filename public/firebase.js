@@ -39,7 +39,11 @@ const initFirebase = async () => {
 
 // Start init immediately but export promises/functions needs care
 // Since this is an ES module, top-level await is supported in modern browsers
-await initFirebase();
+try {
+  await initFirebase();
+} catch (e) {
+  console.error('[Firebase] Top-level await failed:', e);
+}
 
 // Exports are now handled inside initFirebase (reassigned)
 
