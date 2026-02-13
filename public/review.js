@@ -90,10 +90,11 @@ class ReviewMode {
                 return isLearnedAndFuture || isNewAndCurrentLevel;
             });
 
-            // Trier les candidats:
-            // - Priorité aux cartes apprises (pour renforcer) -> tri par date (les plus proches)
-            // - Ensuite nouvelles cartes -> tri par niveau puis index
-            candidates.sort((a, b) => {
+            // Randomisation des candidats pour éviter de toujours voir les mêmes mots (alphabétique)
+            // On mélange d'abord, puis on trie
+            const shuffledCandidates = cardManager.shuffle(candidates);
+
+            shuffledCandidates.sort((a, b) => {
                 const aLearned = a.repetition > 0;
                 const bLearned = b.repetition > 0;
 
@@ -105,11 +106,12 @@ class ReviewMode {
                     return new Date(a.dueDate) - new Date(b.dueDate);
                 }
 
-                // Si les deux sont nouvelles
-                return a.niveau - b.niveau;
+                // Si les deux sont nouvelles, on garde l'ordre aléatoire du shuffle !
+                // return a.niveau - b.niveau; // RETIRÉ pour éviter l'ordre déterministe
+                return 0;
             });
 
-            const fill = candidates.slice(0, needed);
+            const fill = shuffledCandidates.slice(0, needed);
             console.log(`[DEBUG] startReview: Ajout de ${fill.length} cartes de remplissage`, fill.map(c => c.fr));
             selectedCards = selectedCards.concat(fill);
         }
@@ -280,7 +282,8 @@ class ReviewMode {
 
                 console.log(`[DEBUG] finishReview: Niveau ${niveau}, Maîtrise ${mastered}/${total} (${Math.round(percent * 100)}%)`);
 
-                if (percent >= 0.8 && niveau < 20) {
+                // CRITÈRE ASSOUPLI : 50% de maîtrise au lieu de 80% pour éviter le blocage
+                if (percent >= 0.5 && niveau < 20) {
                     // Débloquer le niveau suivant
                     nextLevel = niveau + 1;
                     console.log(`[DEBUG] finishReview: Déblocage niveau ${nextLevel}`);
