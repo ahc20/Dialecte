@@ -833,6 +833,7 @@ footer {
   max-width: 500px;
   width: 100%;
   text-align: center;
+  margin: 2rem auto;
 }
 
 .feedback-card h3 {
@@ -1470,7 +1471,8 @@ footer {
   .question-card,
   .mode-card,
   .feedback-card,
-  .review-card {
+  .review-card,
+  .review-results {
     padding: 1.2rem 1rem;
     margin: 1rem auto;
     border-radius: var(--radius);
