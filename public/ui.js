@@ -340,13 +340,72 @@ class CardManager {
         const totalCards = this.cards.length;
         const dueCards = this.getDueCards().length;
         const learnedCards = this.cards.filter(card => card.repetition > 0).length;
-        console.log('[DEBUG] getStats: repetition de toutes les cartes', this.cards.map(c => ({ fr: c.fr, repetition: c.repetition, history: c.history })));
+
+        // Calcul du streak (série actuelle)
+        const streak = this.getStreak();
+
         return {
             total: totalCards,
             due: dueCards,
             learned: learnedCards,
-            progress: totalCards > 0 ? Math.round((learnedCards / totalCards) * 100) : 0
+            progress: totalCards > 0 ? Math.round((learnedCards / totalCards) * 100) : 0,
+            streak: streak
         };
+    }
+
+    // Calculer la série de jours consécutifs (streak)
+    getStreak() {
+        // Récupérer toutes les dates d'activité (historique de toutes les cartes)
+        const allDates = new Set();
+        this.cards.forEach(card => {
+            if (card.history && card.history.length > 0) {
+                card.history.forEach(h => {
+                    if (h.date) {
+                        allDates.add(new Date(h.date).toDateString());
+                    }
+                });
+            }
+        });
+
+        if (allDates.size === 0) return 0;
+
+        // Convertir en tableau trié (plus récent au plus ancien)
+        const sortedDates = Array.from(allDates).map(d => new Date(d)).sort((a, b) => b - a);
+
+        // Vérifier si jouer aujourd'hui ou hier pour continuer la série
+        const today = new Date().toDateString();
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toDateString();
+
+        let currentStreak = 0;
+        let lastDate = sortedDates[0];
+
+        // Si la dernière activité n'est ni aujourd'hui ni hier, la série est brisée (sauf si c'est 0)
+        if (lastDate.toDateString() !== today && lastDate.toDateString() !== yesterdayStr) {
+            return 0;
+        }
+
+        // Compter les jours consécutifs
+        // On commence par le premier jour valide (aujourd'hui ou hier)
+        let checkDate = lastDate;
+
+        // On itère pour trouver la continuité
+        for (let i = 0; i < sortedDates.length; i++) {
+            const d = sortedDates[i];
+            // Si c'est la même date (doublon potentiel malgré le Set sur string), on ignore
+            if (d.toDateString() === checkDate.toDateString()) {
+                currentStreak++;
+                // Préparer la date attendue suivante (jour d'avant)
+                checkDate = new Date(checkDate);
+                checkDate.setDate(checkDate.getDate() - 1);
+            } else {
+                // Trou dans la suite -> fin de série
+                break;
+            }
+        }
+
+        return currentStreak;
     }
 }
 

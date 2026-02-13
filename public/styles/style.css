@@ -1725,4 +1725,183 @@ footer {
 .logo img[alt][src=''],
 .logo img:not([src]) {
   display: none !important;
+}/* ═══════════════════════════════════════
+   PROGRESS PAGE REDESIGN
+   ═══════════════════════════════════════ */
+
+/* Header & Hero */
+.progress-hero {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(124, 92, 252, 0.1) 0%, transparent 60%);
+    animation: rotate 20s linear infinite;
+    z-index: 0;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+}
+
+.level-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #1a1a2e;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 800;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Progress Ring Container */
+.main-dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.progress-ring-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--card-border);
+    position: relative;
+}
+
+.progress-ring {
+    width: 180px;
+    height: 180px;
+}
+
+.progress-ring__circle {
+    transition: stroke-dashoffset 1s ease-in-out;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+
+.progress-text-centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.progress-percentage {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: white;
+    display: block;
+}
+
+.progress-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* Stats Grid Redesigned */
+.stats-grid-small {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.mini-stat-card {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.mini-stat-card:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.mini-stat-icon {
+    font-size: 2rem;
+}
+
+.mini-stat-info h4 {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 0.2rem;
+}
+
+.mini-stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+}
+
+/* CTA Button */
+.action-area {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.btn-large-cta {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    padding: 1rem 3rem;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px var(--primary-glow);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-large-cta:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 30px rgba(124, 92, 252, 0.6);
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .main-dashboard {
+        grid-template-columns: 1fr;
+    }
 }

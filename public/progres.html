@@ -35,50 +35,83 @@
   </nav>
 
   <main>
-    <section class="main-card">
-      <h1>Mes progrès</h1>
-      <div id="welcome" class="welcome-text">Bienvenue !</div>
-      <div id="username" class="username-text"></div>
-    </section>
-
-    <section class="card stats-section">
-      <h3>🧠 Grâce à la répétition intelligente, tu mémorises durablement les mots importants.</h3>
-      <div class="stats-overview">
-        <div class="stat-card">
-          <h4>📚 Cartes apprises</h4>
-          <div class="stat-number" id="learned-cards">0</div>
-          <div class="stat-label">sur <span id="total-cards">0</span> disponibles</div>
-        </div>
-        <div class="stat-card">
-          <h4>🔄 À réviser</h4>
-          <div class="stat-number" id="due-cards">0</div>
-          <div class="stat-label">cartes dues aujourd'hui</div>
-        </div>
-        <div class="stat-card">
-          <h4>📈 Progression</h4>
-          <div class="stat-number" id="progress-percent">0%</div>
-          <div class="stat-label">du lexique maîtrisé</div>
-        </div>
+    <!-- Hero Section -->
+    <section class="progress-hero">
+      <div class="hero-bg-anim"></div>
+      <div class="hero-content">
+        <div id="level-badge" class="level-badge">Niveau 1</div>
+        <h1 id="welcome-message">Bienvenue !</h1>
+        <p class="subtitle">Continue sur ta lancée pour devenir un expert.</p>
       </div>
     </section>
 
-    <section class="card stats-section">
-      <h3>🎯 Quiz Classique</h3>
-      <div class="score-summary">
-        <div class="score-label">Taux de réussite :</div>
-        <div class="progress-bar">
-          <div id="progress-fill" class="progress-fill"></div>
-        </div>
-        <div id="progress-percent-old" class="progress-percent">0 %</div>
-      </div>
-    </section>
+    <!-- Dashboard Grid -->
+    <div class="main-dashboard">
 
-    <section class="card stats-section">
-      <h3>📅 Historique des révisions</h3>
+      <!-- Left: Progress Ring -->
+      <div class="progress-ring-card">
+        <h3>Lexique Maîtrisé</h3>
+        <div style="position: relative; width: 180px; height: 180px; margin-top: 1rem;">
+          <svg class="progress-ring" width="180" height="180">
+            <circle class="progress-ring__circle-bg" stroke="rgba(255,255,255,0.1)" stroke-width="12" fill="transparent"
+              r="80" cx="90" cy="90" />
+            <circle class="progress-ring__circle" id="progress-circle" stroke="#7C5CFC" stroke-width="12"
+              fill="transparent" r="80" cx="90" cy="90" stroke-dasharray="502" stroke-dashoffset="502" />
+          </svg>
+          <div class="progress-text-centered">
+            <span class="progress-percentage" id="progress-percent-hero">0%</span>
+          </div>
+        </div>
+        <p class="progress-label" style="margin-top: 1rem;"><span id="learned-count-hero">0</span> mots appris sur <span
+            id="total-count-hero">0</span></p>
+      </div>
+
+      <!-- Right: Key Stats -->
+      <div class="stats-grid-small">
+
+        <!-- Streak Card -->
+        <div class="mini-stat-card">
+          <div class="mini-stat-icon">🔥</div>
+          <div class="mini-stat-info">
+            <h4>Série actuelle</h4>
+            <div class="mini-stat-value" id="streak-count">0 jours</div>
+          </div>
+        </div>
+
+        <!-- Due Card -->
+        <div class="mini-stat-card">
+          <div class="mini-stat-icon">🔄</div>
+          <div class="mini-stat-info">
+            <h4>À réviser</h4>
+            <div class="mini-stat-value" id="due-count-hero">0</div>
+          </div>
+        </div>
+
+        <!-- Next Goal -->
+        <div class="mini-stat-card">
+          <div class="mini-stat-icon">🎯</div>
+          <div class="mini-stat-info">
+            <h4>Prochain Objectif</h4>
+            <div class="mini-stat-value">Niveau <span id="next-level">2</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="action-area" id="action-area" style="display:none;">
+      <a href="review.html" class="btn-large-cta">Lancer ma session du jour 🚀</a>
+    </div>
+
+    <!-- Recent History -->
+    <section class="card stats-section" style="margin-top: 3rem;">
+      <h3>📅 Activité Récente</h3>
       <div id="history-container">
-        <p>Chargement de l'historique...</p>
+        <p style="text-align: center; color: var(--text-muted);">Chargement de l'activité...</p>
       </div>
     </section>
+
   </main>
 
   <footer>
@@ -118,130 +151,124 @@
   </script>
 
   <script type="module">
-    import { auth, logout, initAuthListener, getScore, getUserLevel } from "./firebase.js";
+    import { auth, logout, initAuthListener, getUserLevel } from "./firebase.js";
     import { renderNavAuthButtons } from "./ui.js";
 
-    initAuthListener(user => {
-      renderNavAuthButtons(user);
-      // Masquer l'onglet 'Se connecter' si connecté
-      const loginLink = document.getElementById('sidebar-login-link');
-      if (loginLink) {
-        loginLink.style.display = user ? 'none' : '';
-      }
-    });
-
-    // Afficher l'historique des révisions (adapté au niveau courant)
-    function displayRevisionHistory(niveauCourant) {
-      const historyContainer = document.getElementById('history-container');
-      try {
-        // Log pour vérifier le contenu de toutes les cartes et leurs historiques
-        console.log('[DEBUG] Affichage historique : cardManager.cards =', cardManager.cards);
-        // Récupérer toutes les révisions de toutes les cartes du niveau courant
-        let allRevisions = [];
-        cardManager.cards.forEach(card => {
-          if (card.niveau === niveauCourant && card.history && card.history.length > 0) {
-            card.history.forEach(rev => {
-              allRevisions.push({
-                fr: card.fr,
-                kab: card.kab,
-                date: rev.date,
-                quality: rev.quality
-              });
-            });
-          }
-        });
-        // Trier par date décroissante
-        allRevisions.sort((a, b) => new Date(b.date) - new Date(a.date));
-        if (allRevisions.length === 0) {
-          historyContainer.innerHTML = '<p>Aucune révision effectuée pour ce niveau pour le moment.</p>';
-        } else {
-          let html = '<div class="history-list">';
-          allRevisions.forEach(rev => {
-            const date = new Date(rev.date).toLocaleDateString('fr-FR');
-            const quality = rev.quality;
-            const qualityText = quality >= 4 ? 'Excellent' : quality >= 3 ? 'Correct' : 'Difficile';
-            const qualityColor = quality >= 4 ? '#4CAF50' : quality >= 3 ? '#FF9800' : '#E53935';
-            html += `
-              <div class="history-item">
-                <div class="history-word">
-                  <strong>${rev.fr}</strong> → ${rev.kab}
-                </div>
-                <div class="history-details">
-                  <span class="history-date">${date}</span>
-                  <span class="history-quality" style="color: ${qualityColor}">${qualityText}</span>
-                </div>
-              </div>
-            `;
-          });
-          html += '</div>';
-          historyContainer.innerHTML = html;
-        }
-      } catch (e) {
-        historyContainer.innerHTML = '<p>Erreur lors du chargement de l\'historique.</p>';
-        console.error('Erreur historique:', e);
-      }
-    }
-
-    // Mettre à jour les statistiques SM-2 (adaptées au niveau courant)
-    async function updateStats(niveauCourant) {
-      await cardManager.loadCards();
-      // Filtrer les cartes du niveau courant
-      const cardsNiveau = cardManager.cards.filter(c => c.niveau === niveauCourant);
-      const learned = cardsNiveau.filter(c => c.repetition > 0).length;
-      const total = cardsNiveau.length;
-      const due = cardsNiveau.filter(c => new Date(c.dueDate) <= new Date()).length;
-      const progress = total > 0 ? Math.round((learned / total) * 100) : 0;
-      document.getElementById('learned-cards').textContent = learned;
-      document.getElementById('total-cards').textContent = total;
-      document.getElementById('due-cards').textContent = due;
-      document.getElementById('progress-percent').textContent = progress + '%';
-      // Afficher l'historique des révisions pour ce niveau
-      displayRevisionHistory(niveauCourant);
-    }
-
-    // Afficher le niveau courant dans la page
-    function displayNiveau(niveauCourant) {
-      let statsSection = document.querySelector('.stats-section');
-      if (statsSection && !document.getElementById('niveau-courant')) {
-        const niveauDiv = document.createElement('div');
-        niveauDiv.id = 'niveau-courant';
-        niveauDiv.style = 'font-size:1.2em; font-weight:600; color:#4F8A8B; margin-bottom:1em;';
-        niveauDiv.innerHTML = `Niveau actuel : <span style="color:#bfa100;">${niveauCourant}</span>`;
-        statsSection.insertBefore(niveauDiv, statsSection.firstChild);
-      } else if (statsSection) {
-        document.getElementById('niveau-courant').innerHTML = `Niveau actuel : <span style="color:#bfa100;">${niveauCourant}</span>`;
-      }
-    }
-
-    // Progression utilisateur (quiz classique)
     initAuthListener(async user => {
-      const w = document.getElementById('welcome');
-      const u = document.getElementById('username');
-      const fill = document.getElementById('progress-fill');
-      const pct = document.getElementById('progress-percent-old');
-      let niveauCourant = 1;
-      if (user && user.displayName) {
-        w.textContent = 'Bienvenue !';
-        u.textContent = user.displayName;
-        const { totalAnswers, correctAnswers } = await getScore(user.uid);
-        const percent = totalAnswers
-          ? Math.round((correctAnswers / totalAnswers) * 100)
-          : 0;
-        fill.style.width = percent + '%';
-        pct.textContent = percent + ' %';
-        // Récupérer le niveau courant depuis Firebase
-        niveauCourant = await getUserLevel(user.uid);
+      renderNavAuthButtons(user);
+
+      const welcomeMsg = document.getElementById('welcome-message');
+      const levelBadge = document.getElementById('level-badge');
+      const actionArea = document.getElementById('action-area');
+
+      if (user) {
+        if (user.displayName) welcomeMsg.textContent = `Content de te revoir, ${user.displayName.split(' ')[0]} !`;
+
+        // Charger le niveau
+        const level = await getUserLevel(user.uid);
+        levelBadge.textContent = `Niveau ${level}`;
+        document.getElementById('next-level').textContent = level + 1;
+
+        // Charger les stats via cardManager
+        await updateDashboard(level);
+
+        actionArea.style.display = 'block';
       } else {
-        w.textContent = 'Bienvenue invité !';
-        u.textContent = '';
-        fill.style.width = '0%';
-        pct.textContent = '0 %';
+        welcomeMsg.textContent = 'Bienvenue sur Dialect !';
+        levelBadge.style.display = 'none';
+        actionArea.style.display = 'none';
+        document.getElementById('history-container').innerHTML = '<p style="text-align: center;">Connecte-toi pour voir tes progrès.</p>';
       }
-      // Afficher le niveau courant
-      displayNiveau(niveauCourant);
-      // Mettre à jour les nouvelles statistiques pour ce niveau
-      await updateStats(niveauCourant);
     });
+
+    async function updateDashboard(level) {
+      await cardManager.loadCards();
+      const stats = cardManager.getStats(); // Utilise la nouvelle méthode avec streak
+
+      // 1. Cercle de progression
+      const circle = document.getElementById('progress-circle');
+      const radius = circle.r.baseVal.value;
+      const circumference = radius * 2 * Math.PI;
+
+      circle.style.strokeDasharray = `${circumference} ${circumference}`;
+      circle.style.strokeDashoffset = circumference;
+
+      const offset = circumference - (stats.progress / 100) * circumference;
+      // Petit délai pour l'animation
+      setTimeout(() => {
+        circle.style.strokeDashoffset = offset;
+      }, 500);
+
+      document.getElementById('progress-percent-hero').textContent = `${stats.progress}%`;
+      document.getElementById('learned-count-hero').textContent = stats.learned;
+      document.getElementById('total-count-hero').textContent = stats.total;
+
+      // 2. Stats Grid
+      document.getElementById('streak-count').textContent = `${stats.streak} jour${stats.streak > 1 ? 's' : ''}`;
+      // Animation feu si streak > 0
+      if (stats.streak > 0) {
+        document.getElementById('streak-count').innerHTML = `${stats.streak} jour${stats.streak > 1 ? 's' : ''} 🔥`;
+      }
+
+      document.getElementById('due-count-hero').textContent = stats.due;
+      if (stats.due > 0) {
+        document.getElementById('due-count-hero').style.color = '#FFD700'; // Gold warning
+      }
+
+      // 3. Historique Récent
+      displayRecentActivity(level);
+    }
+
+    function displayRecentActivity(level) {
+      const container = document.getElementById('history-container');
+      const history = [];
+
+      cardManager.cards.forEach(card => {
+        if (card.history && card.history.length > 0) {
+          card.history.forEach(h => {
+            history.push({
+              fr: card.fr,
+              kab: card.kab,
+              date: new Date(h.date),
+              quality: h.quality
+            });
+          });
+        }
+      });
+
+      // Trier par date décroissante
+      history.sort((a, b) => b.date - a.date);
+      // Prendre les 5 derniers
+      const recent = history.slice(0, 5);
+
+      if (recent.length === 0) {
+        container.innerHTML = '<p style="text-align:center; opacity:0.7;">Aucune activité récente.</p>';
+        return;
+      }
+
+      let html = '<div class="history-list">';
+      recent.forEach(item => {
+        const isMastered = item.quality >= 4;
+        const icon = isMastered ? '✨' : '📝';
+        const color = isMastered ? '#4CAF50' : '#FF9800';
+
+        html += `
+          <div class="history-item">
+            <div style="font-size: 1.2rem; margin-right: 1rem;">${icon}</div>
+            <div class="history-word">
+              <strong>${item.fr}</strong>
+              <div style="font-size: 0.85rem; opacity: 0.7;">${item.kab}</div>
+            </div>
+            <div class="history-details">
+              <span class="history-date">${item.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}</span>
+              <span class="history-quality" style="color: ${color}">${isMastered ? 'Maîtrisé' : 'Révisé'}</span>
+            </div>
+          </div>
+        `;
+      });
+      html += '</div>';
+      container.innerHTML = html;
+    }
   </script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
