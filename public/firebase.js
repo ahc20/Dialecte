@@ -59,11 +59,20 @@ const initPromise = initFirebase();
 
 // 1) Écoute la session
 export function initAuthListener(cb) {
-  onAuthStateChanged(auth, user => cb(user));
+  // onAuthStateChanged expects auth to be ready immediately or we need to wait
+  initPromise.then(() => {
+    if (auth) {
+      onAuthStateChanged(auth, user => cb(user));
+    } else {
+      console.error("Auth not initialized in listener");
+    }
+  }).catch(e => console.error("Listener init failed", e));
 }
 
 // 2) Inscription (initialise les compteurs)
 export async function signup(firstName, email, password) {
+  await initPromise;
+  if (!auth) throw new Error("Service d'authentification indisponible.");
   const { user } = await createUserWithEmailAndPassword(auth, email, password);
   await updateProfile(user, { displayName: firstName });
   await setDoc(doc(db, "users", user.uid), {
@@ -90,12 +99,17 @@ export async function login(email, password) {
 }
 
 // 4) Déconnexion
-export function logout() {
+export async function logout() {
+  await initPromise;
+  if (!auth) return;
   return signOut(auth);
 }
 
 // 5) Sauvegarde d'une réponse : incrémente total et, si correct, correctAnswers
 export async function saveAnswer(uid, isCorrect) {
+  try { await initPromise; } catch (e) { } // best effort
+  if (!db) return; // Should not happen if init passed
+
   const userRef = doc(db, "users", uid);
   try {
     const snap = await getDoc(userRef);
@@ -119,6 +133,9 @@ export async function saveAnswer(uid, isCorrect) {
 
 // 6) Récupération des compteurs
 export async function getScore(uid) {
+  try { await initPromise; } catch (e) { }
+  if (!db) return { totalAnswers: 0, correctAnswers: 0 };
+
   const snap = await getDoc(doc(db, "users", uid));
   if (!snap.exists()) return { totalAnswers: 0, correctAnswers: 0 };
   const d = snap.data();
@@ -130,6 +147,8 @@ export async function getScore(uid) {
 
 // Récupérer le niveau courant de l'utilisateur
 export async function getUserLevel(uid) {
+  try { await initPromise; } catch (e) { }
+  if (!db) return 1;
   const snap = await getDoc(doc(db, "users", uid));
   if (!snap.exists()) return 1;
   const d = snap.data();
@@ -138,6 +157,8 @@ export async function getUserLevel(uid) {
 
 // Mettre à jour le niveau courant de l'utilisateur
 export async function setUserLevel(uid, niveau) {
+  try { await initPromise; } catch (e) { }
+  if (!db) return;
   const userRef = doc(db, "users", uid);
   await updateDoc(userRef, { niveauMax: niveau });
 }
@@ -150,6 +171,9 @@ export async function setUserLevel(uid, niveau) {
  * @param {Array} cards - Tableau de cartes (avec historique)
  */
 export async function saveUserCardsHistory(uid, cards) {
+  try { await initPromise; } catch (e) { }
+  if (!db) return;
+
   if (!uid || !cards) return;
 
   // Filtrer pour ne garder que les cartes avec un historique
@@ -183,6 +207,8 @@ export async function saveUserCardsHistory(uid, cards) {
  * @returns {Promise<Array>} - Tableau de {fr, kab, history}
  */
 export async function loadUserCardsHistory(uid) {
+  try { await initPromise; } catch (e) { }
+  if (!db) return [];
   if (!uid) return [];
   const userDoc = doc(db, "users", uid);
   const snap = await getDoc(userDoc);
