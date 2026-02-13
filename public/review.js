@@ -255,23 +255,40 @@ class ReviewMode {
     async finishReview() {
         localStorage.removeItem('review_current_index');
         const reviewContainer = document.getElementById('review-container');
+
+        // Afficher un chargement immédiat pour éviter l'effet "gelé"
+        reviewContainer.innerHTML = `
+            <div class="review-loading card">
+                <h3>Finalisation de la session...</h3>
+                <div class="loading-spinner"></div>
+            </div>
+        `;
+
         // Vérifier si le niveau courant est maîtrisé (80% de cartes du niveau courant avec répétition >= 3 ou interval >= 15)
         let badgeUnlocked = false;
         let nextLevel = this.niveauMax;
 
-        if (this.user) {
-            const niveau = this.niveauMax;
-            // Récupérer toutes les cartes du niveau courant
-            const cardsNiveau = cardManager.cards.filter(c => c.niveau === niveau);
-            const total = cardsNiveau.length;
-            const mastered = cardsNiveau.filter(c => c.repetition >= 3 || c.interval >= 15).length;
-            const percent = total > 0 ? mastered / total : 0;
-            if (percent >= 0.8 && niveau < 20) {
-                // Débloquer le niveau suivant
-                nextLevel = niveau + 1;
-                await setUserLevel(this.user.uid, nextLevel);
-                badgeUnlocked = true;
+        try {
+            if (this.user) {
+                const niveau = this.niveauMax;
+                // Récupérer toutes les cartes du niveau courant
+                const cardsNiveau = cardManager.cards.filter(c => c.niveau === niveau);
+                const total = cardsNiveau.length;
+                const mastered = cardsNiveau.filter(c => c.repetition >= 3 || c.interval >= 15).length;
+                const percent = total > 0 ? mastered / total : 0;
+
+                console.log(`[DEBUG] finishReview: Niveau ${niveau}, Maîtrise ${mastered}/${total} (${Math.round(percent * 100)}%)`);
+
+                if (percent >= 0.8 && niveau < 20) {
+                    // Débloquer le niveau suivant
+                    nextLevel = niveau + 1;
+                    console.log(`[DEBUG] finishReview: Déblocage niveau ${nextLevel}`);
+                    await setUserLevel(this.user.uid, nextLevel);
+                    badgeUnlocked = true;
+                }
             }
+        } catch (e) {
+            console.error('[ERROR] finishReview: Erreur lors du calcul de niveau', e);
         }
         // Affichage classique
         reviewContainer.innerHTML = `
