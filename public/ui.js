@@ -110,9 +110,30 @@ class CardManager {
                             localCard.repetition = allHist.length;
                             if (allHist.length > 0) {
                                 const last = allHist[allHist.length - 1];
-                                localCard.interval = last.interval || 0;
-                                localCard.easeFactor = last.easeFactor || 2.5;
-                                localCard.dueDate = last.dueDate ? new Date(last.dueDate) : new Date();
+                                localCard.repetition = allHist.length;
+
+                                // Si l'historique contient les métadonnées (fix récent), on les utilise
+                                if (last.interval !== undefined && last.dueDate !== undefined) {
+                                    localCard.interval = last.interval;
+                                    localCard.easeFactor = last.easeFactor || 2.5;
+                                    localCard.dueDate = new Date(last.dueDate);
+                                } else {
+                                    // MODE RETROCOMPATIBLE : Reconstruction pour les vieux historiques
+                                    // On estime l'intervalle basé sur le nombre de répétitions (SM-2 approx)
+                                    let estInterval = 1;
+                                    if (localCard.repetition > 1) estInterval = 6;
+                                    if (localCard.repetition > 2) estInterval = 15;
+                                    if (localCard.repetition > 3) estInterval = Math.round(15 * Math.pow(2.5, localCard.repetition - 3));
+
+                                    localCard.interval = estInterval;
+                                    localCard.easeFactor = 2.5;
+
+                                    // La date due est calculée à partir de la dernière révision
+                                    const lastDate = last.date ? new Date(last.date) : new Date();
+                                    const due = new Date(lastDate);
+                                    due.setDate(due.getDate() + estInterval);
+                                    localCard.dueDate = due;
+                                }
                             }
                             console.log('[DEBUG] Fusion historique local/cloud pour', localCard.fr, allHist);
                         }
@@ -174,9 +195,27 @@ class CardManager {
                             localCard.repetition = allHist.length;
                             if (allHist.length > 0) {
                                 const last = allHist[allHist.length - 1];
-                                localCard.interval = last.interval || 0;
-                                localCard.easeFactor = last.easeFactor || 2.5;
-                                localCard.dueDate = last.dueDate ? new Date(last.dueDate) : new Date();
+                                localCard.repetition = allHist.length;
+
+                                if (last.interval !== undefined && last.dueDate !== undefined) {
+                                    localCard.interval = last.interval;
+                                    localCard.easeFactor = last.easeFactor || 2.5;
+                                    localCard.dueDate = new Date(last.dueDate);
+                                } else {
+                                    // Reconstruction rétrocompatible (même logique que loadCards)
+                                    let estInterval = 1;
+                                    if (localCard.repetition > 1) estInterval = 6;
+                                    if (localCard.repetition > 2) estInterval = 15;
+                                    if (localCard.repetition > 3) estInterval = Math.round(15 * Math.pow(2.5, localCard.repetition - 3));
+
+                                    localCard.interval = estInterval;
+                                    localCard.easeFactor = 2.5;
+
+                                    const lastDate = last.date ? new Date(last.date) : new Date();
+                                    const due = new Date(lastDate);
+                                    due.setDate(due.getDate() + estInterval);
+                                    localCard.dueDate = due;
+                                }
                             }
                             console.log('[DEBUG] Fusion avant sauvegarde cloud pour', localCard.fr, allHist);
                         }
