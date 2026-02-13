@@ -87,6 +87,15 @@
           </div>
         </div>
 
+        <!-- Quiz Performance -->
+        <div class="mini-stat-card">
+          <div class="mini-stat-icon">🏆</div>
+          <div class="mini-stat-info">
+            <h4>Quiz Classique</h4>
+            <div class="mini-stat-value" id="quiz-score-global">0/0</div>
+          </div>
+        </div>
+
         <!-- Next Goal -->
         <div class="mini-stat-card">
           <div class="mini-stat-icon">🎯</div>
@@ -151,7 +160,7 @@
   </script>
 
   <script type="module">
-    import { auth, logout, initAuthListener, getUserLevel } from "./firebase.js";
+    import { auth, logout, initAuthListener, getUserLevel, getScore } from "./firebase.js";
     import { renderNavAuthButtons } from "./ui.js";
 
     initAuthListener(async user => {
@@ -189,7 +198,8 @@
 
     async function updateDashboard(level, uid) {
       await cardManager.loadCards(uid);
-      const stats = cardManager.getStats(); // Utilise la nouvelle méthode avec streak
+      const stats = cardManager.getStats();
+      const globalScore = await getScore(uid); // Nouveau : Récupérer les stats globales Quiz
 
       // 1. Cercle de progression
       const circle = document.getElementById('progress-circle');
@@ -220,6 +230,8 @@
       if (stats.due > 0) {
         document.getElementById('due-count-hero').style.color = '#FFD700'; // Gold warning
       }
+
+      document.getElementById('quiz-score-global').textContent = `${globalScore.correctAnswers}/${globalScore.totalAnswers}`;
 
       // 3. Historique Récent
       displayRecentActivity(level);

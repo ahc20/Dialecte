@@ -103,12 +103,14 @@
   </script>
 
   <script type="module">
-    import { auth, logout, initAuthListener } from "./firebase.js";
+    import { auth, logout, initAuthListener, saveAnswer } from "./firebase.js";
     import { renderNavAuthButtons } from "./ui.js";
 
     initAuthListener(user => {
       renderNavAuthButtons(user);
     });
+
+    // ... (rest of imports and variables) ...
 
     // Variables globales pour le quiz
     let quizData = [];
@@ -246,11 +248,11 @@
         });
       }
 
-      // Sauvegarder le score si connecté (désactivé)
-      // const user = auth.currentUser;
-      // if (user) {
-      //   await saveScore(user.uid, isCorrect);
-      // }
+      // Sauvegarder le score si connecté
+      const user = auth.currentUser;
+      if (user) {
+        await saveAnswer(user.uid, isCorrect);
+      }
 
       // Passer à la question suivante
       setTimeout(() => {

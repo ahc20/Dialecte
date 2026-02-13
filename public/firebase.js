@@ -160,7 +160,7 @@ export async function setUserLevel(uid, niveau) {
   try { await initPromise; } catch (e) { }
   if (!db) return;
   const userRef = doc(db, "users", uid);
-  await updateDoc(userRef, { niveauMax: niveau });
+  await setDoc(userRef, { niveauMax: niveau }, { merge: true });
 }
 
 // === Synchronisation de l'historique SM-2 dans Firestore ===

@@ -1,10 +1,12 @@
 // Dynamic import to avoid blocking if Firebase CDN is unreachable
 let getUserLevel = async () => 1;
+let setUserLevel = async () => { };
 try {
     const fb = await import('./firebase.js');
     getUserLevel = fb.getUserLevel;
+    setUserLevel = fb.setUserLevel;
 } catch (e) {
-    console.warn('[WARN] Firebase unavailable in review.js, defaulting to level 1');
+    console.warn('[WARN] Firebase unavailable in review.js, defaulting to local/offline mode');
 }
 
 // Module pour le mode révision (algorithme SM-2)
