@@ -261,7 +261,17 @@ class CardManager {
     // Obtenir les cartes dues pour la révision
     getDueCards() {
         const today = new Date();
-        return this.cards.filter(card => new Date(card.dueDate) <= today);
+        const due = this.cards.filter(card => {
+            if (!card.dueDate) return true; // Si pas de date, c'est dû (ou bug)
+            return new Date(card.dueDate) <= today;
+        });
+
+        console.log(`[DEBUG] getDueCards: ${due.length} cartes dues sur ${this.cards.length} total.`);
+        if (due.length < 5) {
+            console.log('[DEBUG] Détail des 3 premières cartes dues:', due.slice(0, 3).map(c => ({ fr: c.fr, dueDate: c.dueDate })));
+        }
+
+        return due;
     }
 
     // Sélectionner des cartes pour le mode découverte (pondérées par fréquence)

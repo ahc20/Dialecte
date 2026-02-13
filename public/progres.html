@@ -164,15 +164,21 @@
       if (user) {
         if (user.displayName) welcomeMsg.textContent = `Content de te revoir, ${user.displayName.split(' ')[0]} !`;
 
-        // Charger le niveau
-        const level = await getUserLevel(user.uid);
-        levelBadge.textContent = `Niveau ${level}`;
-        document.getElementById('next-level').textContent = level + 1;
+        try {
+          // Charger le niveau
+          const level = await getUserLevel(user.uid);
+          levelBadge.textContent = `Niveau ${level}`;
+          document.getElementById('next-level').textContent = level + 1;
 
-        // Charger les stats via cardManager
-        await updateDashboard(level);
+          // Charger les stats via cardManager
+          await updateDashboard(level);
 
-        actionArea.style.display = 'block';
+          actionArea.style.display = 'block';
+        } catch (error) {
+          console.error('[ERROR] Erreur chargement tableau de bord:', error);
+          document.getElementById('history-container').innerHTML =
+            `<p style="text-align: center; color: #ff5252;">Erreur lors du chargement des données (${error.message}). <br>Veuillez rafraîchir la page.</p>`;
+        }
       } else {
         welcomeMsg.textContent = 'Bienvenue sur Dialect !';
         levelBadge.style.display = 'none';

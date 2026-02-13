@@ -17,24 +17,46 @@ class ReviewMode {
 
     // Initialiser la session de révision
     async startReview() {
+        console.log('[DEBUG] startReview: Début de l\'initialisation');
         if (!cardManager.isInitialized) {
+            console.log('[DEBUG] startReview: Chargement des cartes...');
             await cardManager.loadCards();
         }
+
         // Récupérer le niveau courant de l'utilisateur connecté
         let niveauMax = 1;
         if (window.auth && window.auth.currentUser) {
-            niveauMax = await getUserLevel(window.auth.currentUser.uid);
+            try {
+                niveauMax = await getUserLevel(window.auth.currentUser.uid);
+                console.log('[DEBUG] startReview: Niveau utilisateur récupéré:', niveauMax);
+            } catch (e) {
+                console.error('[ERROR] startReview: Erreur récupération niveau', e);
+            }
+        } else {
+            console.log('[DEBUG] startReview: Pas d\'utilisateur connecté, niveau par défaut 1');
         }
+
         this.niveauMax = niveauMax;
         const DAILY_LIMIT = 5;
+
+        // Obtenir toutes les cartes dues
+        const allDue = cardManager.getDueCards();
+        console.log(`[DEBUG] startReview: Total cartes dues (avant filtre niveau): ${allDue.length}`);
+
         // Filtrer les cartes à réviser :
         // - Toutes les cartes du niveau <= niveauMax
         // - + cartes des niveaux précédents non maîtrisées (interval < 15 jours ou répétition < 3)
-        const due = cardManager.getDueCards().filter(card => {
+        const due = allDue.filter(card => {
             if (card.niveau <= niveauMax) return true;
-            if (card.niveau < niveauMax && (card.repetition < 3 || card.interval < 15)) return true;
+            if (card.niveau < niveauMax && (card.repetition < 3 || card.interval < 15)) {
+                console.log(`[DEBUG] Inclusion carte niveau inférieur non maîtrisée: ${card.fr} (Niv ${card.niveau})`);
+                return true;
+            }
             return false;
         });
+
+        console.log(`[DEBUG] startReview: Cartes dues après filtre niveau ${niveauMax}: ${due.length}`);
+
         // Tri par progressivité : les cartes les moins maîtrisées en premier
         // Score de maîtrise = repetition * 2 + interval (plus c'est bas, plus la carte a besoin de travail)
         due.sort((a, b) => {
@@ -42,17 +64,24 @@ class ReviewMode {
             const scoreB = (b.repetition || 0) * 2 + (b.interval || 0);
             return scoreA - scoreB;
         });
+
         // Limiter à DAILY_LIMIT cartes par session
         this.dueCards = due.slice(0, DAILY_LIMIT);
+        console.log(`[DEBUG] startReview: Sélection finale pour la session (${this.dueCards.length} cartes sur limite ${DAILY_LIMIT})`);
+
         // Mélanger pour varier l'ordre tout en gardant la priorité aux cartes faibles
         this.dueCards = cardManager.shuffle(this.dueCards);
+
         // Charger l'index de progression sauvegardé
         const savedIndex = parseInt(localStorage.getItem('review_current_index') || '0', 10);
         this.currentCardIndex = (!isNaN(savedIndex) && savedIndex < this.dueCards.length) ? savedIndex : 0;
+
         if (this.dueCards.length === 0) {
+            console.log('[DEBUG] startReview: Aucune carte à réviser, affichage message.');
             this.showNoCardsMessage();
             return;
         }
+
         this.displayCard();
         this.updateProgress();
     }

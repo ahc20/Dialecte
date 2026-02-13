@@ -134,17 +134,30 @@ export async function setUserLevel(uid, niveau) {
  */
 export async function saveUserCardsHistory(uid, cards) {
   if (!uid || !cards) return;
-  console.log('[DEBUG] saveUserCardsHistory: appelée avec uid', uid, 'cartes:', cards.length);
+
+  // Filtrer pour ne garder que les cartes avec un historique
+  const cardsHistory = cards
+    .filter(card => card.history && card.history.length > 0)
+    .map(card => ({
+      fr: card.fr,
+      kab: card.kab,
+      history: card.history
+    }));
+
+  if (cardsHistory.length === 0) {
+    console.log('[DEBUG] saveUserCardsHistory: Aucune carte avec historique à sauvegarder. Annulation.');
+    return;
+  }
+
+  console.log(`[DEBUG] saveUserCardsHistory: Sauvegarde de ${cardsHistory.length} cartes avec historique pour ${uid}`);
+
   const userDoc = doc(db, "users", uid);
-  // On ne stocke que l'historique, pas tout le contenu des cartes
-  const cardsHistory = cards.map(card => ({
-    fr: card.fr,
-    kab: card.kab,
-    history: card.history || []
-  }));
-  const nonEmpty = cardsHistory.filter(c => c.history && c.history.length > 0);
-  console.log('[DEBUG] saveUserCardsHistory: cartes avec historique non vide =', nonEmpty.length, nonEmpty.slice(0, 1));
-  await setDoc(userDoc, { cardsHistory }, { merge: true });
+  try {
+    await setDoc(userDoc, { cardsHistory }, { merge: true });
+    console.log('[DEBUG] saveUserCardsHistory: Succès');
+  } catch (e) {
+    console.error('[ERROR] saveUserCardsHistory: Échec de la sauvegarde', e);
+  }
 }
 
 /**
