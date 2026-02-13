@@ -25,17 +25,31 @@ class ReviewMode {
             await cardManager.loadCards(this.user ? this.user.uid : null);
         }
 
-        // Récupérer le niveau courant de l'utilisateur connecté
+        // Récupérer le niveau courant (Priorité : LocalStorage > Firestore pour éviter la régression)
         let niveauMax = 1;
+        const localLevel = parseInt(localStorage.getItem('dialect_user_level') || '1', 10);
+
         if (this.user) {
             try {
-                niveauMax = await getUserLevel(this.user.uid);
-                console.log('[DEBUG] startReview: Niveau utilisateur récupéré:', niveauMax);
+                const remoteLevel = await getUserLevel(this.user.uid);
+                // On prend le MAX entre le local et le distant pour ne jamais régresser
+                niveauMax = Math.max(localLevel, remoteLevel);
+                // Si le distant est en retard, on le met à jour silencieusement
+                if (localLevel > remoteLevel) {
+                    setUserLevel(this.user.uid, localLevel);
+                }
+                // Si le distant est en avance (ex: autre appareil), on met à jour le local
+                if (remoteLevel > localLevel) {
+                    localStorage.setItem('dialect_user_level', remoteLevel.toString());
+                }
+                console.log(`[DEBUG] Niveau synchronisé : ${niveauMax} (Local: ${localLevel}, Remote: ${remoteLevel})`);
             } catch (e) {
-                console.error('[ERROR] startReview: Erreur récupération niveau', e);
+                console.warn('[WARN] Impossible de récupérer le niveau distant, utilisation du local', e);
+                niveauMax = localLevel;
             }
         } else {
-            console.log('[DEBUG] startReview: Pas d\'utilisateur connecté, niveau par défaut 1');
+            niveauMax = localLevel;
+            console.log(`[DEBUG] Mode hors ligne ou invité, niveau utilisé : ${niveauMax}`);
         }
 
         this.niveauMax = niveauMax;
@@ -283,10 +297,16 @@ class ReviewMode {
                 console.log(`[DEBUG] finishReview: Niveau ${niveau}, Maîtrise ${mastered}/${total} (${Math.round(percent * 100)}%)`);
 
                 // CRITÈRE ASSOUPLI : 50% de maîtrise au lieu de 80% pour éviter le blocage
+                // CRITÈRE ASSOUPLI : 50% de maîtrise au lieu de 80% pour éviter le blocage
                 if (percent >= 0.5 && niveau < 20) {
                     // Débloquer le niveau suivant
                     nextLevel = niveau + 1;
                     console.log(`[DEBUG] finishReview: Déblocage niveau ${nextLevel}`);
+
+                    // MISE À JOUR OPTIMISTE ET LOCALE IMMÉDIATE
+                    this.niveauMax = nextLevel;
+                    localStorage.setItem('dialect_user_level', nextLevel.toString());
+
                     await setUserLevel(this.user.uid, nextLevel);
                     badgeUnlocked = true;
                 }
