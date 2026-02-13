@@ -17,18 +17,21 @@ import {
   increment
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCI5yQhUVJKKktWCG2svsxx4RaiCTHBahc",
-  authDomain: "dialecte-e23ae.firebaseapp.com",
-  projectId: "dialecte-e23ae",
-  storageBucket: "dialecte-e23ae.appspot.com",
-  messagingSenderId: "455539698432",
-  appId: "G-2RCV5ZR5WN"
-};
+let firebaseConfig;
+
+try {
+  const response = await fetch('/api/config');
+  if (!response.ok) throw new Error('Failed to load Firebase config');
+  firebaseConfig = await response.json();
+} catch (error) {
+  console.error('Error loading Firebase config:', error);
+  // Fallback or empty config to prevent crash, but Auth/Firestore won't work
+  firebaseConfig = {};
+}
 
 initializeApp(firebaseConfig);
 export const auth = getAuth();
-export const db   = getFirestore();
+export const db = getFirestore();
 
 // 1) Écoute la session
 export function initAuthListener(cb) {
@@ -73,9 +76,9 @@ export async function saveAnswer(uid, isCorrect) {
       });
       console.log('Document utilisateur créé pour', uid);
     } else {
-  const updates = { totalAnswers: increment(1) };
-  if (isCorrect) updates.correctAnswers = increment(1);
-  await updateDoc(userRef, updates);
+      const updates = { totalAnswers: increment(1) };
+      if (isCorrect) updates.correctAnswers = increment(1);
+      await updateDoc(userRef, updates);
       console.log('Réponse enregistrée pour', uid, 'isCorrect:', isCorrect);
     }
   } catch (e) {
@@ -126,7 +129,7 @@ export async function saveUserCardsHistory(uid, cards) {
     history: card.history || []
   }));
   const nonEmpty = cardsHistory.filter(c => c.history && c.history.length > 0);
-  console.log('[DEBUG] saveUserCardsHistory: cartes avec historique non vide =', nonEmpty.length, nonEmpty.slice(0,1));
+  console.log('[DEBUG] saveUserCardsHistory: cartes avec historique non vide =', nonEmpty.length, nonEmpty.slice(0, 1));
   await setDoc(userDoc, { cardsHistory }, { merge: true });
 }
 

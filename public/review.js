@@ -26,22 +26,26 @@ class ReviewMode {
             niveauMax = await getUserLevel(window.auth.currentUser.uid);
         }
         this.niveauMax = niveauMax;
+        const DAILY_LIMIT = 7;
         // Filtrer les cartes à réviser :
         // - Toutes les cartes du niveau <= niveauMax
         // - + cartes des niveaux précédents non maîtrisées (interval < 15 jours ou répétition < 3)
         const due = cardManager.getDueCards().filter(card => {
             if (card.niveau <= niveauMax) return true;
-            // Si carte d'un niveau précédent mais pas maîtrisée, on la garde
             if (card.niveau < niveauMax && (card.repetition < 3 || card.interval < 15)) return true;
             return false;
         });
-        let weighted = [];
-        due.forEach(card => {
-            for (let i = 0; i < Math.max(1, card.frequency); i++) {
-                weighted.push(card);
-            }
+        // Tri par progressivité : les cartes les moins maîtrisées en premier
+        // Score de maîtrise = repetition * 2 + interval (plus c'est bas, plus la carte a besoin de travail)
+        due.sort((a, b) => {
+            const scoreA = (a.repetition || 0) * 2 + (a.interval || 0);
+            const scoreB = (b.repetition || 0) * 2 + (b.interval || 0);
+            return scoreA - scoreB;
         });
-        this.dueCards = cardManager.shuffle(weighted);
+        // Limiter à DAILY_LIMIT cartes par session
+        this.dueCards = due.slice(0, DAILY_LIMIT);
+        // Mélanger pour varier l'ordre tout en gardant la priorité aux cartes faibles
+        this.dueCards = cardManager.shuffle(this.dueCards);
         // Charger l'index de progression sauvegardé
         const savedIndex = parseInt(localStorage.getItem('review_current_index') || '0', 10);
         this.currentCardIndex = (!isNaN(savedIndex) && savedIndex < this.dueCards.length) ? savedIndex : 0;
@@ -80,10 +84,9 @@ class ReviewMode {
                 </div>
             </div>
             <div class="quality-buttons" id="quality-buttons" style="display: none;">
-                <button class="quality-btn" data-quality="0">Difficile</button>
-                <button class="quality-btn" data-quality="3">Correct</button>
-                <button class="quality-btn" data-quality="4">Facile</button>
-                <button class="quality-btn" data-quality="5">Très facile</button>
+                <button class="quality-btn quality-hard" data-quality="1">❌ Difficile</button>
+                <button class="quality-btn quality-medium" data-quality="3">🤔 Moyen</button>
+                <button class="quality-btn quality-easy" data-quality="5">✅ Facile</button>
             </div>
         `;
 
