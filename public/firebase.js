@@ -17,7 +17,7 @@ import {
   increment
 } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
-// Fetch config from secure endpoint
+// Fetch config from secure endpoint (Triggering Vercel rebuild with new env vars)
 let app;
 export let auth; // Export mutable let
 export let db;   // Export mutable let
