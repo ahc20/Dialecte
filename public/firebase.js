@@ -23,12 +23,8 @@ try {
   const response = await fetch('/api/config');
   if (!response.ok) throw new Error('Failed to load Firebase config');
   firebaseConfig = await response.json();
-  if (!firebaseConfig || !firebaseConfig.apiKey) {
-    throw new Error('Variables d\'environnement manquantes (apiKey invisible)');
-  }
 } catch (error) {
   console.error('Error loading Firebase config:', error);
-  alert("Problème de configuration sécurité : impossible de charger la clé Firebase.\n\nAvez-vous bien ajouté les 'Environment Variables' dans Vercel ?");
   // Fallback or empty config to prevent crash, but Auth/Firestore won't work
   firebaseConfig = {};
 }
